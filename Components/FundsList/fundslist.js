@@ -35,5 +35,5 @@ app.component('fundslist', {
     </div>
         `
     });
-        
+
 app.mount('#fundslist')
