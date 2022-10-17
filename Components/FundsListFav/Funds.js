@@ -1,7 +1,7 @@
 const fundfav = Vue.createApp({});
 
 // Funds Component
-fundfav.component('funds', {
+fundfav.component('fundfav', {
     data(){
         return {
             appName: 'Funds',
@@ -19,7 +19,7 @@ fundfav.component('funds', {
     },
     template:`
     <div>
-        <h1 class="text-center">Funds</h1>
+        <h1 class="text-center">Favorites</h1>
         <div class="row">
             <div class="col-md-4 col-sm-4 d-sm-block align-items-left" v-for="fund in funds" v-bind:key="fund">
                 <div class="card mb-4 shadow-sm">
@@ -39,4 +39,4 @@ fundfav.component('funds', {
         `
     });
         
-fundfav.mount('#funds')
+fundfav.mount('#fundfav')

@@ -2,21 +2,21 @@ const fund = Vue.createApp({})
 
 // Funds Component
 fund.component('fundslist', {
-    data(){
+    data() {
         return {
             appName: 'Fundslist',
-            'Funds':[1,2,3,4]
+            'Funds': [1, 2, 3, 4]
         };
     },
-    computed:{
-        funds(){
+    computed: {
+        funds() {
             // Axios Fetch from Databse //
             return this.Funds;
         }
     },
-    template:`
+    template: `
     <div>
-        <h1 class="text-center">Funds</h1>
+        <h1 class="text-center">All Funds</h1>
         <div class="row">
             <div class="col-md-4 col-sm-4 d-sm-block align-items-left" v-for="fund in funds" v-bind:key="fund">
                 <div class="card mb-4 shadow-sm">
@@ -34,6 +34,6 @@ fund.component('fundslist', {
         </div>
     </div>
         `
-    });
+});
 
 fund.mount('#fundslist')
