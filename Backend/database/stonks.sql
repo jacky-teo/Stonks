@@ -23,10 +23,9 @@ CREATE TABLE IF NOT EXISTS `funds` (
 
 DROP TABLE IF EXISTS `stocks`;
 CREATE TABLE IF NOT EXISTS `stocks` (
-  `stock_id` int NOT NULL,
-  `symbol` varchar (10) not null,
+  `stock_symbol` varchar (10) not null,
   `stock_name` varchar(50) NOT NULL,
-  PRIMARY KEY (`stock_id`)
+  PRIMARY KEY (`stock_symbol`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -34,12 +33,12 @@ DROP TABLE IF EXISTS `settlements`;
 CREATE TABLE IF NOT EXISTS `settlements`(
     `settlement_id` int not Null,
 	`user_id` int NOT NULL,
-    `stock_id` int NOT NULL,
+    `stock_symbol` varchar(50) NOT NULL,
     `stock_price` float not Null,
     `volume` int not Null,
 	 PRIMARY KEY (settlement_id),
      FOREIGN KEY (`user_id`) REFERENCES users(`user_id`),
-	 FOREIGN KEY (`stock_id`) REFERENCES stocks(`stock_id`)
+	 FOREIGN KEY (`stock_symbol`) REFERENCES stocks(`stock_symbol`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -70,11 +69,11 @@ DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE IF NOT EXISTS `transactions`(
     `transaction_id` int not Null,
 	`user_id` int NOT NULL,
-    `stock_id` int NOT NULL,
+    `stock_symbol` varchar(50) NOT NULL,
     `stock_price` float not Null,
     `volume` int not Null,
     `date` datetime not null,
 	 PRIMARY KEY (transaction_id),
      FOREIGN KEY (`user_id`) REFERENCES users(`user_id`),
-	 FOREIGN KEY (`stock_id`) REFERENCES stocks(`stock_id`)
+	 FOREIGN KEY (`stock_symbol`) REFERENCES stocks(`stock_symbol`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
