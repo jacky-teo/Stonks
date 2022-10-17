@@ -1,5 +1,6 @@
+const stocklist = Vue.createApp({});
 // Stocks Component
-app.component("stockslist", {
+stocklist.component("stockslist", {
   data() {
     return {
       stockList: [
@@ -26,6 +27,9 @@ app.component("stockslist", {
     },
   },
   template: `
+    <div>
+        <h1 class="text-center">Stocks</h1>
+    </div>     
     <h3 class="my-5 mx-auto" v-if="typeof stockList == null">Ooops.. there is no stocks now...</h3>
     <table class="table" v-else>
   <thead>
@@ -46,4 +50,4 @@ app.component("stockslist", {
         `,
 });
 
-app.mount("#stockslist");
+stocklist.mount("#stockslist");

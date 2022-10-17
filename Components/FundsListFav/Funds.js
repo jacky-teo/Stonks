@@ -1,14 +1,17 @@
-const app = Vue.createApp({})
+const fundfav = Vue.createApp({});
 
 // Funds Component
-app.component('funds', {
+fundfav.component('funds', {
     data(){
         return {
             appName: 'Funds',
             'Funds':[1,2,3,4]
         };
     },
-    computed:{
+    created() {
+
+    },
+    methods:{
         funds(){
             // Axios Fetch from Databse //
             return this.Funds;
@@ -36,4 +39,4 @@ app.component('funds', {
         `
     });
         
-app.mount('#funds')
+fundfav.mount('#funds')

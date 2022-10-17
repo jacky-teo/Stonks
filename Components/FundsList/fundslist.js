@@ -1,7 +1,7 @@
-const app = Vue.createApp({})
+const fund = Vue.createApp({})
 
 // Funds Component
-app.component('fundslist', {
+fund.component('fundslist', {
     data(){
         return {
             appName: 'Fundslist',
@@ -36,4 +36,4 @@ app.component('fundslist', {
         `
     });
 
-app.mount('#fundslist')
+fund.mount('#fundslist')
