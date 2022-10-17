@@ -62,16 +62,6 @@ CREATE TABLE IF NOT EXISTS `users_funds` (
   FOREIGN KEY (`fund_id`) REFERENCES funds(`fund_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-DROP TABLE IF EXISTS `users_favs`;
-CREATE TABLE IF NOT EXISTS `users_favs` (
-  `fund_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  PRIMARY KEY (`fund_id`),
-  FOREIGN KEY (`user_id`) REFERENCES users(`user_id`),
-  FOREIGN KEY (`fund_id`) REFERENCES funds(`fund_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
 -- When buying stock this table will be updated. if stock does not exist, the add. Stock price and volume will be updated--  
 
 
