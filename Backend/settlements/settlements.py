@@ -51,7 +51,7 @@ def get_all():
     ), 404
 
 #get all settlement by userid
-@app.route("/settlements/<int:user_id>")
+@app.route("/settlements/user/<int:user_id>")
 def find_by_user_id(user_id):
     settlement = Settlement.query.filter_by(user_id=user_id)
     if settlement:
@@ -87,7 +87,7 @@ def find_by_settlement_id(settlement_id):
     ), 404
 
 #Update a stock price
-@app.route("/settlements/<int:settlement_id>", methods=['PUT'])
+@app.route("/settlements/stockprice/<int:settlement_id>", methods=['PUT'])
 def update_stock_price(settlement_id):
     settlement = Settlement.query.filter_by(settlement_id=settlement_id).first()
     if settlement:
@@ -120,7 +120,7 @@ def update_stock_price(settlement_id):
     ), 404
 
 #-- Update Settlement volume and price--#
-@app.route("/settlements/<int:settlement_id>", methods=['PUT'])
+@app.route("/settlements/volume/<int:settlement_id>", methods=['PUT'])
 def update_settlement(settlement_id):
     settlement = Settlement.query.filter_by(settlement_id=settlement_id).first()
     if settlement:

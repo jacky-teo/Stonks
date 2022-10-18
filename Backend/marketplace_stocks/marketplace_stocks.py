@@ -64,7 +64,7 @@ def find_by_stock_symbol_and_marketplace_id(stock_symbol, marketplace_id):
     ), 404
 
 #--volume volume in marketplace and stock symbol--#
-@app.route("/marketplace_stocks/<string:stock_symbol>/<int:marketplace_id>", methods=['PUT'])
+@app.route("/marketplace_stocks/transaction/<string:stock_symbol>/<int:marketplace_id>", methods=['PUT'])
 def update_marketplace_stocks(stock_symbol, marketplace_id):
     marketplaceStocks = MarketplaceStocks.query.filter_by(stock_symbol=stock_symbol, marketplace_id=marketplace_id)
     if marketplaceStocks:

@@ -67,7 +67,7 @@ def find_by_fund_id(fund_id):
     ), 404
 
 ## -- Add a Fund --##
-@app.route("/funds", methods=['POST'])
+@app.route("/funds/add", methods=['POST'])
 def create_fund():
     data = request.get_json()
     fund = Funds(**data)

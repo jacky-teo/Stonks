@@ -63,7 +63,7 @@ def find_by_fund_id(fund_id):
     ), 404
 
 ## add a new fund settlement id
-@app.route("/funds_settlement", methods=['POST'])
+@app.route("/funds_settlement/add", methods=['POST'])
 def create_fund_settlement():
     data = request.get_json()
     fundSettlement = FundsSettlement(**data)

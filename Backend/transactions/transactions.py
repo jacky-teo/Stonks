@@ -57,7 +57,7 @@ def get_all():
     ), 404
 
 ## get all transactions by userid
-@app.route("/transactions/<int:user_id>")
+@app.route("/transactions/user/<int:user_id>")
 def find_by_user_id(user_id):
     transaction = Transactions.query.filter_by(user_id=user_id)
     if transaction:
@@ -75,7 +75,7 @@ def find_by_user_id(user_id):
     ), 404
 
 ## add new transaction
-@app.route("/transactions", methods=['POST'])
+@app.route("/transactions/add", methods=['POST'])
 def create_transaction():
     data = request.get_json()
     transaction = Transactions(**data)

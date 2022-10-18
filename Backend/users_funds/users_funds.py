@@ -45,7 +45,7 @@ def get_all():
     ), 404
 
 #--Get all Users Funds by user_id--#
-@app.route("/users_funds/<int:user_id>")
+@app.route("/users_funds/user/<int:user_id>")
 def find_by_user_id(user_id):
     usersFundsList = UsersFunds.query.filter_by(user_id=user_id)
     if usersFundsList:
@@ -64,7 +64,7 @@ def find_by_user_id(user_id):
     ), 404
 
 ##-- add a new user fund --##
-@app.route("/users_funds", methods=['POST'])
+@app.route("/users_funds/add", methods=['POST'])
 def create_user_fund():
     data = request.get_json()
     user_id = data['user_id']
