@@ -12,18 +12,20 @@ db = SQLAlchemy(app)
 
 class Transactions(db.Model):
     __tablename__ = 'transactions'
-
+# (`transaction_id`, `user_id`,`marketplace_id`, `stock_symbol`,`stock_price`,`volume`,`date`)
     transaction_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
+    marketplace_id = db.Column(db.Integer, nullable=False)
     stock_symbol = db.Column(db.String(50), nullable=False)
     transaction_quantity = db.Column(db.Integer, nullable=False)
     stock_priice = db.Column(db.Float(precision=2), nullable=False)
     volume = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, transaction_id, user_id, stock_symbol, transaction_quantity, stock_price, volume, date):
+    def __init__(self, transaction_id, user_id, marketplace_id,stock_symbol, transaction_quantity, stock_price, volume, date):
         self.transaction_id = transaction_id
         self.user_id = user_id
+        self.marketplace_id = marketplace_id
         self.stock_symbol = stock_symbol
         self.transaction_quantity = transaction_quantity
         self.stock_price = stock_price
@@ -31,7 +33,7 @@ class Transactions(db.Model):
         self.date = date
     
     def json(self):
-        return {"transaction_id": self.transaction_id, "user_id": self.user_id, "stock_symbol": self.stock_symbol, "transaction_quantity": self.transaction_quantity, "stock_price": self.stock_price, "volume": self.volume, "date": self.date}
+        return {"transaction_id": self.transaction_id, "user_id": self.user_id, "marketplace_id":self.marketplace_id,"stock_symbol": self.stock_symbol, "transaction_quantity": self.transaction_quantity, "stock_price": self.stock_price, "volume": self.volume, "date": self.date}
 
 #--Get all Transactions--#
 @app.route("/transactions")
