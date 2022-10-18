@@ -113,6 +113,8 @@ CREATE TABLE IF NOT EXISTS `marketplace`(
 INSERT INTO `marketplace` (`marketplace_id`, `marketplace_name`) VALUES
 (1,'Stonk Stock Exchange');
 
+
+-- Marketplace and number of stocks available for that marketplace --
 DROP TABLE IF EXISTS `marketplace_stocks`;
 CREATE TABLE IF NOT EXISTS `marketplace_stocks`(
 	`marketplace_id` int not Null,
