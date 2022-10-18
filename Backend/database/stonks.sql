@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `funds` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_goals`,`fund_investment_amount`) VALUES
-(1, 'My First Fund',40000000, 1,00000),
+(1, 'My First Fund',40000000, 100000),
 (2, 'My Second Fund', 50000000,  1000000),
 (3, 'My Third Fund', 60000000,  1000000);
 
@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS `stocks` (
 
 INSERT INTO `stocks` (`stock_name`, `stock_symbol`) VALUES
 ('YZJ Shipbldg SGD', 'BS6.SI'),
-(`Singtel`, `Z74.SI`)
-(`DBS`,` D05.SI`)
+('Singtel', 'Z74.SI'),
+('DBS', 'D05.SI');
 
 
 -- Stocks owned by a customer -- 
@@ -65,11 +65,11 @@ CREATE TABLE IF NOT EXISTS `settlements`(
 INSERT INTO `settlements` (`settlement_id`, `user_id`, `stock_symbol`,`stock_price`,`volume`) VALUES
 (1,1, 'BS6.SI', 0.5, 1000),
 (2,1, 'Z74.SI', 3.5, 1000),
-(3,1, 'D05.SI', 22.5, 1000);
+(3,1, 'D05.SI', 22.5, 1000);    
 
 
 
---  Fund has what  stock -- 
+--  Fund has what stock -- 
 DROP TABLE IF EXISTS `funds_settlement`;
 CREATE TABLE IF NOT EXISTS `funds_settlement` (
   `fund_id` int NOT NULL,
@@ -102,20 +102,31 @@ INSERT INTO `users_funds` (`user_id`, `fund_id`) VALUES
 
 
 -- Stocks available in the marketplace this will act as the CDP -- 
-DROP TABLE IF EXISTS `market_place`;
-CREATE TABLE IF NOT EXISTS `market_place`(
-    `market_place_id` int not Null,
-    `stock_symbol` varchar(50) NOT NULL,
-    `volume` int not Null,
-     PRIMARY KEY (`market_place_id`),
-     FOREIGN KEY (`stock_symbol`) REFERENCES stocks(`stock_symbol`)
+DROP TABLE IF EXISTS `marketplace`;
+CREATE TABLE IF NOT EXISTS `marketplace`(
+    `marketplace_id` int not Null,
+    `marketplace_name` varchar(50) NOT NULL,
+     PRIMARY KEY (`marketplace_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
     
-INSERT INTO `market_place` (`stock_symbol`, `volume`) VALUES
-(1,'BS6.SI', 1000000),
-(1,'Z74.SI', 1000000),
-(1,'D05.SI', 1000000);
+INSERT INTO `marketplace` (`marketplace_id`, `marketplace_name`) VALUES
+(1,'Stonk Stock Exchange');
 
+DROP TABLE IF EXISTS `marketplace_stocks`;
+CREATE TABLE IF NOT EXISTS `marketplace_stocks`(
+	`marketplace_id` int not Null,
+    `stock_symbol` varchar(50) NOT NULL,
+	`volume_in_market` int Not Null,
+    PRIMARY KEY (`marketplace_id`,`stock_symbol`),
+    FOREIGN KEY (`marketplace_id`) REFERENCES marketplace(`marketplace_id`),
+	FOREIGN KEY (`stock_symbol`) REFERENCES stocks(`stock_symbol`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `marketplace_stocks` (`marketplace_id`, `stock_symbol`,`volume_in_market`) VALUES
+(1,'BS6.SI',1000000),
+(1,'Z74.SI',1000000),
+(1,'D05.SI',1000000);
 
 
 -- This will be an insert only table -- 
@@ -124,7 +135,7 @@ DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE IF NOT EXISTS `transactions`(
     `transaction_id` int not Null,
 	`user_id` int NOT NULL,
-    `market_place_id` int NOT NULL,
+    `marketplace_id` int NOT NULL,
     `stock_symbol` varchar(50) NOT NULL,
     `stock_price` float not Null,
     `volume` int not Null,
@@ -132,12 +143,12 @@ CREATE TABLE IF NOT EXISTS `transactions`(
 	PRIMARY KEY (transaction_id),
     FOREIGN KEY (`user_id`) REFERENCES users(`user_id`),
 	FOREIGN KEY (`stock_symbol`) REFERENCES stocks(`stock_symbol`),
-    FOREIGN KEY (`market_place_id`) REFERENCES market_place(`market_place_id`)
+    FOREIGN KEY (`marketplace_id`) REFERENCES marketplace(`marketplace_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 -- all transactions with marketplace will be reflected here -- 
-INSERT INTO `transactions` (`transaction_id`, `user_id`,`market_place_id`, `stock_symbol`,`stock_price`,`volume`,`date`) VALUES
+INSERT INTO `transactions` (`transaction_id`, `user_id`,`marketplace_id`, `stock_symbol`,`stock_price`,`volume`,`date`) VALUES
 (1,1, 1,'BS6.SI', 0.5, 1000, '2020-01-01 00:00:00'),
 (2,1, 1,'Z74.SI', 3.5, -1000, '2020-01-01 00:00:00'),
 (3,1, 1,'D05.SI', 22.5, 1000, '2020-01-01 00:00:00');
