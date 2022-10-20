@@ -14,16 +14,16 @@ db = SQLAlchemy(app)
 class MarketplaceStocks(db.Model):
     __tablename__ = 'marketplace_stocks'
     marketplace_id = db.Column(db.Integer, primary_key=True)
-    stock_symbol=db.Column(db.String(50), nullable=False)
-    volume_in_marketplace=db.Column(db.Integer, nullable=False)
+    stock_id=db.Column(db.Integer,primary_key=True)
+    volume_in_market=db.Column(db.Integer, nullable=False)
 
-    def __init__(self, marketplace_id, stock_symbol, volume_in_marketplace):
+    def __init__(self, marketplace_id, stock_id, volume_in_market):
         self.marketplace_id = marketplace_id
-        self.stock_symbol = stock_symbol
-        self.volume_in_marketplace = volume_in_marketplace
+        self.stock_id = stock_id
+        self.volume_in_market = volume_in_market
     
     def json(self):
-        return {"marketplace_id": self.marketplace_id, "stock_symbol": self.stock_symbol, "volume_in_marketplace": self.volume_in_marketplace}
+        return {"marketplace_id": self.marketplace_id, "stock_symbol": self.stock_id, "volume_in_marketplace": self.volume_in_market}
 
 #--Get all Marketplace Stocks--#
 @app.route("/marketplace_stocks")
@@ -46,14 +46,14 @@ def get_all():
     ), 404
 
 # --Get Marketplce Stocks by Symbol and Marketplace ID--#
-@app.route("/marketplace_stocks/<string:stock_symbol>/<int:marketplace_id>")
-def find_by_stock_symbol_and_marketplace_id(stock_symbol, marketplace_id):
-    marketplaceStocks = MarketplaceStocks.query.filter_by(stock_symbol=stock_symbol, marketplace_id=marketplace_id)
-    if marketplaceStocks:
+@app.route("/marketplace_stocks/<int:stock_id>/<int:marketplace_id>")
+def find_by_stock_symbol_and_marketplace_id(stock_id, marketplace_id):
+    marketplaceStocksList = MarketplaceStocks.query.filter_by(stock_id=stock_id, marketplace_id=marketplace_id).all()
+    if marketplaceStocksList:
         return jsonify(
             {
                 "code": 200,
-                "data": marketplaceStocks.json()
+                "data": [marketplaceStocks.json() for marketplaceStocks in marketplaceStocksList]
             }
         ),200
     return jsonify(
@@ -64,9 +64,9 @@ def find_by_stock_symbol_and_marketplace_id(stock_symbol, marketplace_id):
     ), 404
 
 #--volume volume in marketplace and stock symbol--#
-@app.route("/marketplace_stocks/transaction/<string:stock_symbol>/<int:marketplace_id>", methods=['PUT'])
-def update_marketplace_stocks(stock_symbol, marketplace_id):
-    marketplaceStocks = MarketplaceStocks.query.filter_by(stock_symbol=stock_symbol, marketplace_id=marketplace_id)
+@app.route("/marketplace_stocks/transaction/<int:stock_id>/<int:marketplace_id>", methods=['PUT'])
+def update_marketplace_stocks(stock_id, marketplace_id):
+    marketplaceStocks = MarketplaceStocks.query.filter_by(stock_id=stock_id, marketplace_id=marketplace_id)
     if marketplaceStocks:
         data = request.get_json()
         if data['transaction_type'] == "buy":
@@ -99,3 +99,7 @@ def update_marketplace_stocks(stock_symbol, marketplace_id):
             "message": "Marketplace Stocks not found."
         }
     ), 404
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5008, debug=True)

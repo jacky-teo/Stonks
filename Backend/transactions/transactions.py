@@ -17,24 +17,22 @@ class Transactions(db.Model):
     transaction_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
     marketplace_id = db.Column(db.Integer, nullable=False)
-    stock_symbol = db.Column(db.String(50), nullable=False)
-    transaction_quantity = db.Column(db.Integer, nullable=False)
-    stock_priice = db.Column(db.Float(precision=2), nullable=False)
+    stock_id = db.Column(db.Integer, nullable=False)
+    stock_price = db.Column(db.Float(precision=2), nullable=False)
     volume = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, transaction_id, user_id, marketplace_id,stock_symbol, transaction_quantity, stock_price, volume, date):
+    def __init__(self, transaction_id, user_id, marketplace_id,stock_id, stock_price, volume, date):
         self.transaction_id = transaction_id
         self.user_id = user_id
         self.marketplace_id = marketplace_id
-        self.stock_symbol = stock_symbol
-        self.transaction_quantity = transaction_quantity
+        self.stock_id = stock_id
         self.stock_price = stock_price
         self.volume = volume
         self.date = date
     
     def json(self):
-        return {"transaction_id": self.transaction_id, "user_id": self.user_id, "marketplace_id":self.marketplace_id,"stock_symbol": self.stock_symbol, "transaction_quantity": self.transaction_quantity, "stock_price": self.stock_price, "volume": self.volume, "date": self.date}
+        return {"transaction_id": self.transaction_id, "user_id": self.user_id, "marketplace_id":self.marketplace_id,"stock_id": self.stock_id,  "stock_price": self.stock_price, "volume": self.volume, "date": self.date}
 
 #--Get all Transactions--#
 @app.route("/transactions")
@@ -59,12 +57,12 @@ def get_all():
 ## get all transactions by userid
 @app.route("/transactions/user/<int:user_id>")
 def find_by_user_id(user_id):
-    transaction = Transactions.query.filter_by(user_id=user_id)
-    if transaction:
+    transactionList = Transactions.query.filter_by(user_id=user_id).all()
+    if transactionList:
         return jsonify(
             {
                 "code": 200,
-                "data": transaction.json()
+                "data": [transaction.json() for transaction in transactionList]
             }
         ), 200
     return jsonify(

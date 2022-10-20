@@ -12,13 +12,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Settlement(db.Model):
-    __tablename__ = 'settlement'
+    __tablename__ = 'settlements'
 
     settlement_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
-    stock_symbol=db.Column(db.String(50), nullable=False)
-    stock_price =db.Cloumn(db.Float(precision=2), nullable=False)
-    volumne = db.Column(db.Float(precision=2), nullable=False)
+    stock_id = db.Column(db.Integer, nullable=False)
+    stock_price = db.Column(db.Float(precision=2), nullable=False)
+    volume = db.Column(db.Integer, nullable=False)
     
     def __init__(self, settlement_id, user_id, stock_id, stock_price, volume):
         self.settlement_id = settlement_id
@@ -28,7 +28,7 @@ class Settlement(db.Model):
         self.volume = volume
     
     def json(self):
-        return {"settlement_id": self.settlement_id, "user_id": self.user_id, "stock_id": self.stock_id, "stock_price": self.stock_price, "volume": self.volume}
+        return {"settlement_id": self.settlement_id, "user_id": self.user_id, "stock_symbol": self.stock_id, "stock_price": self.stock_price, "volume": self.volume}
 
 #--Get all Settlements--#
 @app.route("/settlements")
@@ -53,12 +53,12 @@ def get_all():
 #get all settlement by userid
 @app.route("/settlements/user/<int:user_id>")
 def find_by_user_id(user_id):
-    settlement = Settlement.query.filter_by(user_id=user_id)
-    if settlement:
+    settlementList = Settlement.query.filter_by(user_id=user_id)
+    if settlementList:
         return jsonify(
             {
                 "code": 200,
-                "data": settlement.json()
+                "data":[settlement.json() for settlement in settlementList]
             }
         ), 200
     return jsonify(

@@ -15,7 +15,7 @@ class FundsSettlement(db.Model):
     __tablename__ = 'funds_settlement'
 
     fund_id = db.Column(db.Integer, primary_key=True)
-    settlement_id = db.Column(db.Integer, nullable=False)
+    settlement_id = db.Column(db.Integer, primary_key=True)
    
     def __init__(self, fund_id, settlement_id):
         self.fund_id = fund_id

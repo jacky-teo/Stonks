@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 
 INSERT INTO `users` (`user_id`, `username`, `password`) VALUES
-(1, 'admin', 'admin');
+(1, 'admin', 'admin'),
+(2, 'user2', 'user2');
 
 
 -- Funds ownd by custoemr -- 
@@ -97,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `users_funds` (
 INSERT INTO `users_funds` (`user_id`, `fund_id`) VALUES
 (1, 1),
 (1, 2),
-(1, 3);
+(2, 3);
 
 
 

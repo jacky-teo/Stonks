@@ -66,3 +66,6 @@ def find_by_marketplace_id(marketplace_id):
             "message": "Marketplace not found."
         }
     ), 404
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5009, debug=True)

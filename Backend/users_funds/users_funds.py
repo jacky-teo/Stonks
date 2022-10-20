@@ -11,11 +11,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-class UsersFunds(db.Model):
+class Usersfunds(db.Model):
     __tablename__ = 'users_funds'
 
     user_id = db.Column(db.Integer, primary_key=True)
-    fund_id = db.Column(db.Integer, nullable=False)
+    fund_id = db.Column(db.Integer, primary_key=True)
 
     def __init__(self, user_id, fund_id):
         self.user_id = user_id
@@ -27,7 +27,8 @@ class UsersFunds(db.Model):
 #--Get all Users Funds--#
 @app.route("/users_funds")
 def get_all():
-    usersFundsList = UsersFunds.query.all()
+    usersFundsList = Usersfunds.query.all()
+    print(usersFundsList)
     if len(usersFundsList):
         return jsonify(
             {
@@ -47,19 +48,18 @@ def get_all():
 #--Get all Users Funds by user_id--#
 @app.route("/users_funds/user/<int:user_id>")
 def find_by_user_id(user_id):
-    usersFundsList = UsersFunds.query.filter_by(user_id=user_id)
+    usersFundsList = Usersfunds.query.filter_by(user_id=user_id).all()
     if usersFundsList:
-        usersFundsList = [users_funds.json() for users_funds in usersFundsList]
         return jsonify(
             {
                 "code": 200,
-                "data": usersFundsList
+                "data": [users_funds.json() for users_funds in usersFundsList]
             }
         ), 200
     return jsonify(
         {
             "code": 404,
-            "message": "User fund not found."
+            "message": "Users funds not found."
         }
     ), 404
 
@@ -70,7 +70,7 @@ def create_user_fund():
     user_id = data['user_id']
     fund_id = data['fund_id']
 
-    if (UsersFunds.query.filter_by(user_id=user_id, fund_id=fund_id).first()):
+    if (Usersfunds.query.filter_by(user_id=user_id, fund_id=fund_id).first()):
         return jsonify(
             {
                 "code": 400,
@@ -82,7 +82,7 @@ def create_user_fund():
             }
         ), 400
 
-    user_fund = UsersFunds(user_id, fund_id)
+    user_fund = Usersfunds(user_id, fund_id)
 
     try:
         db.session.add(user_fund)

@@ -13,16 +13,18 @@ db = SQLAlchemy(app)
 
 class Stocks(db.Model):
     __tablename__ = 'stocks'
-    stock_symbol = db.Column(db.String(50), primary_key=True)
+    stock_id = db.Column(db.Integer, primary_key=True)
+    stock_symbol = db.Column(db.String(50),  nullable=False)
     stock_name = db.Column(db.String(64), nullable=False)
 
 
-    def __init__(self, stock_symbol, stock_name):
+    def __init__(self, stock_id,stock_symbol, stock_name):
+        self.stock_id = stock_id
         self.stock_symbol = stock_symbol
         self.stock_name = stock_name
     
     def json(self):
-        return {"stock_symbol": self.stock_symbol, "stock_name": self.stock_name}
+        return {"stock_id": self.stock_id,"stock_symbol": self.stock_symbol, "stock_name": self.stock_name}
     
 #get all stocks 
 @app.route("/stocks")
