@@ -3,47 +3,36 @@ const stocklist = Vue.createApp({});
 stocklist.component("stockslist", {
   data() {
     return {
-      stockList: [
-        {
-          Symbol: "TSLA",
-          Price: "$388",
-          Change: "$122",
-          ChangePercent: "30%",
-          Volume: "39000000",
-        },
-      ],
-      stockTitle: ["Symbol", "Price", "Change", "Change %", "Volume"],
+      stockList: [],
+      stockTitle: ["Symbol", "Name", "Price", "Change %", "Volume"],
     };
   },
-  computed: {
-    stocks() {
-      //   let response = axios
-      //     .get("http://localhost:8000/api/stocks")
-      //     .then((response) => {
-      //       this.stockList = response.data;
-      //     });
-
-      return this.stockList;
-    },
+  async created() {
+        await this.getStocks();
+  },
+  methods: {
+    getStocks() {
+      axios.get("http://localhost:5003/stocks").then((response) => {
+            this.stockList = response.data.data.stocks;
+          });
+      console.log(Math.floor(Date.now() / 1000))
+    }
   },
   template: `
     <div>
         <h1 class="text-center">Stocks</h1>
     </div>     
-    <h3 class="my-5 mx-auto" v-if="typeof stockList == null">Ooops.. there is no stocks now...</h3>
+    <h3 class="my-5 mx-auto" v-if="stockList.length == 0">Ooops.. there is no stocks now...</h3>
     <table class="table" v-else>
   <thead>
-    <tr v-for="stock of stockTitle">
-      <th scope="col">{{stock.title}}</th>
+    <tr>
+      <th scope="col" v-for="(value, key) in stockTitle" v-bind:key="key">{{value}}</th>
     </tr>
   </thead>
   <tbody>
-    <tr v-for="listings of stockList">
-      <th scope="row">{{listings.Symbol}}</th>
-      <td>{{listings.Price}}</td>
-        <td>{{listings.Change}}</td>
-        <td>{{listings.ChangePercent}}</td>
-        <td>{{listings.Volume}}</td>
+    <tr v-for="(value, key) in stockList" v-bind:key="key">
+      <td>{{value.stock_symbol}}</td>
+      <td>{{value.stock_name}}</td>
     </tr>
   </tbody>
   </table>
