@@ -7,17 +7,35 @@ fund.component('fundslist', {
             appName: 'Fundslist',
             fundList: [],
             users_funds_list: [],
-            user_id: 1
-            
-            
+            user_id: 1,
+            mappedList: [],
+
+
         };
     },
-    async created(){
+    async created() {
         await this.getFunds();
         await this.getUsersFunds();
+        
     },
     computed: {
-        
+        mappedFunds() {
+            var mappedList = [];
+            for (uf of this.users_funds_list){
+                
+                if(uf.user_id == this.user_id){
+                    
+                    for (f of this.fundList){
+                        console.log("im here")
+                        if (f.fund_id == uf.fund_id){
+                            
+                            mappedList.push(f);
+                        }
+                    }
+                }
+            }
+            return mappedList
+        }
     },
     methods: {
         getFunds() {
@@ -31,9 +49,11 @@ fund.component('fundslist', {
                 });
         },
         getUsersFunds() {
-            axios.get('http://localhost:5006/users_funds/'+ this.user_id)
+            axios.get('http://localhost:5006/users_funds/user/' + this.user_id)
                 .then(response => {
-                    this.users_funds_list = response.data.users_funds;
+                    
+                    this.users_funds_list = response.data.data;
+                    console.log(this.users_funds_list)
                 })
                 .catch(error => {
                     console.log(error);
@@ -44,7 +64,7 @@ fund.component('fundslist', {
     <div>
         <h1 class="text-center">All Funds</h1>
         <div class="row">
-            <div class="col-md-4 col-sm-4 d-sm-block align-items-left" v-for="fund in fundList" v-bind:key="fund">
+            <div class="col-md-4 col-sm-4 d-sm-block align-items-left" v-for="fund in mappedFunds" v-bind:key="fund">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
                         <p class="card-text">Fund {{fund.fund_name}}</p>
