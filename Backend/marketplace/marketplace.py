@@ -15,16 +15,16 @@ class Marketplace(db.Model):
     __tablename__ = 'marketplace'
 
     marketplace_id = db.Column(db.Integer, primary_key=True)
-    stock_symbol=db.Column(db.String(50), nullable=False)
+    marketplace_name=db.Column(db.String(50), nullable=False)
     
-    def __init__(self, marketplace_id, stock_symbol):
+    def __init__(self, marketplace_id, marketplace_name):
         self.marketplace_id = marketplace_id
-        self.stock_symbol = stock_symbol
+        self.marketplace_name = marketplace_name
 
 
     
     def json(self):
-        return {"marketplace_id": self.marketplace_id, "stock_symbol": self.stock_symbol}
+        return {"marketplace_id": self.marketplace_id, "marketplace_name": self.marketplace_name}
 
 #--Get all Marketplace--#
 @app.route("/marketplace")
