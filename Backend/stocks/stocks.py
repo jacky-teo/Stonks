@@ -2,6 +2,10 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS  # enable CORS
+import sys
+sys.path.append("../")
+from settlements.settlements import Settlement
+from funds_settlements.funds_settlements import FundsSettlement
 
 app = Flask(__name__)
 cors =CORS(app)
@@ -43,6 +47,38 @@ def get_all():
         {
             "code": 404,
             "message": "There are no stocks."
+        }
+    ), 404
+
+#get stocks by fund_id 
+@app.route("/fund_stocks/<int:fund_id>")
+def get_stocks_by_fund_id(fund_id):
+    fundsSettlementStockList = db.session.query(FundsSettlement.fund_id)\
+        .filter(FundsSettlement.fund_id == fund_id)\
+        .join(Settlement, FundsSettlement.settlement_id == Settlement.settlement_id)\
+        .add_columns(Settlement.volume)\
+        .join(Stocks, Settlement.stock_id == Stocks.stock_id)\
+        .add_columns(Stocks.stock_name)\
+        .all()
+
+    if len(fundsSettlementStockList):
+        print("------------------------------" + str(fundsSettlementStockList[0]))
+        return jsonify(
+            {
+                "code": 200,
+                "data":[
+                    {
+                        "fund_id":fundSettlement[0], 
+                        "volume":fundSettlement[1], 
+                        "stock_name":fundSettlement[2]
+                    } for fundSettlement in fundsSettlementStockList
+                ]
+            }
+        ), 200
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Fund stocks not found."
         }
     ), 404
 
