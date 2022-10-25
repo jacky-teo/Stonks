@@ -160,13 +160,21 @@ def find_by_user_id_tbank(user_id):
     user_info = Users.query.filter_by(user_id=user_id).first()
     if user_info:
         user_stocks = getCustomerStocks(userID = user_info.user_acc_id,PIN = user_info.user_pin)
+        if user_stocks:
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "user_stocks": [users for users in user_stocks['Depository']]
+                    }
+                }
+            ),200
         return jsonify(
             {
-                "code": 200,
-                "data": {
-                    "user_stocks": [users for users in user_stocks['Depository']]
-                }
+                "code": 404,
+                "message": "There are no stocks for this user."
             }
-        ),200
+        ), 404
+        
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002, debug=True)
