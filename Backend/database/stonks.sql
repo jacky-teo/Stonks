@@ -9,13 +9,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_id` int NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
-  PRIMARY KEY (`user_id`)
+   `user_acc_id` varchar(50) NOT NULL,
+   `user_pin` int NOT NULL,
+   `settlemnt_acc` int NOT NULL,
+   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-INSERT INTO `users` (`user_id`, `username`, `password`) VALUES
-(1, 'admin', 'admin'),
-(2, 'user2', 'user2');
+INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,`settlemnt_acc`) VALUES
+(1, 'admin', 'admin','Z312312','148986','0000009301'),
+(2, 'user2', 'user2','B930284','828676','0000009302');
 
 
 -- Funds ownd by custoemr -- 
@@ -29,9 +32,8 @@ CREATE TABLE IF NOT EXISTS `funds` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_goals`,`fund_investment_amount`) VALUES
-(1, 'My First Fund',40000000, 100000),
-(2, 'My Second Fund', 50000000,  1000000),
-(3, 'My Third Fund', 60000000,  1000000);
+(1, 'My First Fund',5000, 3589);
+
 
 -- Stocks available for trade with Stonks -- 
 DROP TABLE IF EXISTS `stocks`;
@@ -45,43 +47,52 @@ CREATE TABLE IF NOT EXISTS `stocks` (
 INSERT INTO `stocks` (`stock_id`,`stock_name`, `stock_symbol`) VALUES
 (1,'YZJ Shipbldg SGD', 'BS6.SI'),
 (2,'Singtel', 'Z74.SI'),
-(3,'DBS', 'D05.SI');
+(3,'DBS', 'D05.SI'),
+(4,'Comfortdelgro Corporation Ltd','C52.SI'),
+(5,'Jardine Cycle & Carriage Ltd','C07.SI'),
+(6,'StarHub Ltd','CC3.SI'),
+(7,'Singapore Exchange Limited','S68.SI'),
+(8,'Olam Group Limited','VC2.SI'),
+(9,'Panacea Acquisition Corp. II','PANA.SI'),
+(10,'Alphabet Inc.','GOOG');
+
 
 
 -- Stocks owned by a customer -- 
 -- When buying stock this table will be updated. if stock does not exist, the add. Stock price and volume will be updated--  
-DROP TABLE IF EXISTS `settlements`;
-CREATE TABLE IF NOT EXISTS `settlements`(
-    `settlement_id` int not Null,
+DROP TABLE IF EXISTS `users_stocks`;
+CREATE TABLE IF NOT EXISTS `users_stocks`(
+    `user_stock_id` int not Null,
 	`user_id` int NOT NULL,
     `stock_id` int NOT NULL,
     `stock_price` float not Null,
     `volume` int not Null,
-	 PRIMARY KEY (settlement_id),
+	 PRIMARY KEY (user_stock_id),
      FOREIGN KEY (`user_id`) REFERENCES users(`user_id`),
 	 FOREIGN KEY (`stock_id`) REFERENCES stocks(`stock_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 
-INSERT INTO `settlements` (`settlement_id`, `user_id`, `stock_id`,`stock_price`,`volume`) VALUES
-(1,1, 1, 0.5, 1000),
-(2,1, 2, 3.5, 1000),
-(3,1, 3, 22.5, 1000);    
+INSERT INTO `users_stocks` (`user_stock_id`, `user_id`, `stock_id`,`stock_price`,`volume`) VALUES
+(1,1, 1, 1.22, 100),
+(2,1, 2, 2.38, 100),
+(3,1, 3, 32.39, 100);    
 
 
 
 --  Fund has what stock -- 
-DROP TABLE IF EXISTS `funds_settlement`;
-CREATE TABLE IF NOT EXISTS `funds_settlement` (
+
+DROP TABLE IF EXISTS `funds_users_stocks`;
+CREATE TABLE IF NOT EXISTS `funds_users_stocks` (
   `fund_id` int NOT NULL,
-  `settlement_id` int NOT NULL,
-  PRIMARY KEY (`fund_id`,`settlement_id`),
+  `user_stock_id` int NOT NULL,
+  PRIMARY KEY (`fund_id`,`user_stock_id`),
   FOREIGN KEY (`fund_id`) REFERENCES funds(`fund_id`),
-  FOREIGN KEY (`settlement_id`) REFERENCES settlements(`settlement_id`)
+  FOREIGN KEY (`user_stock_id`) REFERENCES users_stocks(`user_stock_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `funds_settlement` (`fund_id`, `settlement_id`) VALUES
+INSERT INTO `funds_users_stocks` (`fund_id`, `user_stock_id`) VALUES
 (1, 1),
 (1, 2),
 (1, 3);
@@ -97,9 +108,8 @@ CREATE TABLE IF NOT EXISTS `users_funds` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `users_funds` (`user_id`, `fund_id`) VALUES
-(1, 1),
-(1, 2),
-(2, 3);
+(1, 1);
+
 
 
 

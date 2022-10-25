@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS  # enable CORS
 
+
+
 app = Flask(__name__)
 cors =CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/stonks'
@@ -11,29 +13,30 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-class FundsSettlement(db.Model):
-    __tablename__ = 'funds_settlement'
+class FundsUsersStocks(db.Model):
+    __tablename__ = 'funds_users_stocks'
 
     fund_id = db.Column(db.Integer, primary_key=True)
-    settlement_id = db.Column(db.Integer, primary_key=True)
+    user_stock_id = db.Column(db.Integer, primary_key=True)
    
-    def __init__(self, fund_id, settlement_id):
+    def __init__(self, fund_id, user_stock_id):
         self.fund_id = fund_id
-        self.settlement_id = settlement_id
+        self.user_stock_id = user_stock_id
     
     def json(self):
-        return {"fund_id": self.fund_id, "settlement_id": self.settlement_id}
+        return {"fund_id": self.fund_id, "user_stock_id": self.user_stock_id}
+
 
 #--Get all Funds settlement id--#
-@app.route("/funds_settlement")
+@app.route("/funds_users_stocks")
 def get_all():
-    fundsSettlementList = FundsSettlement.query.all()
-    if len(fundsSettlementList):
+    fundsUsersStocks = FundsUsersStocks.query.all()
+    if len(fundsUsersStocks):
         return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "fundsSettlement": [fundSettlement.json() for fundSettlement in fundsSettlementList]
+                    "fundsSettlement": [fundsuserStock.json() for fundsuserStock in fundsUsersStocks]
                 }
             }
         ),200
@@ -45,9 +48,9 @@ def get_all():
     ), 404
 
 #-- Get a Fund settlement id --#
-@app.route("/funds_settlement/<int:fund_id>")
+@app.route("/funds_users_stocks/<int:fund_id>")
 def find_by_fund_id(fund_id):
-    fundSettlement = FundsSettlement.query.filter_by(fund_id=fund_id)
+    fundSettlement = FundsUsersStocks.query.filter_by(fund_id=fund_id)
     if fundSettlement:
         return jsonify(
             {
@@ -62,11 +65,12 @@ def find_by_fund_id(fund_id):
         }
     ), 404
 
+
 ## add a new fund settlement id
-@app.route("/funds_settlement/add", methods=['POST'])
+@app.route("/funds_users_stocks/add", methods=['POST'])
 def create_fund_settlement():
     data = request.get_json()
-    fundSettlement = FundsSettlement(**data)
+    fundSettlement = FundsUsersStocks(**data)
     try:
         db.session.add(fundSettlement)
         db.session.commit()
@@ -76,7 +80,7 @@ def create_fund_settlement():
                 "code": 500,
                 "data": {
                     "fund_id": fundSettlement.fund_id,
-                    "settlement_id": fundSettlement.settlement_id
+                    "user_stock_id": fundSettlement.user_stock_id
                 },
                 "message": "An error occurred while creating the fund settlement."
             }
