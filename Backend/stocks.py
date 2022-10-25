@@ -4,8 +4,8 @@ from os import environ
 from flask_cors import CORS  # enable CORS
 import sys
 sys.path.append("../")
-from settlements.settlements import Settlement
-from funds_settlements.funds_settlements import FundsSettlement
+from users_stocks import UsersStocks
+from funds_users_stocks import FundsUsersStocks
 
 app = Flask(__name__)
 cors =CORS(app)
@@ -53,11 +53,11 @@ def get_all():
 #get stocks by fund_id 
 @app.route("/fund_stocks/<int:fund_id>")
 def get_stocks_by_fund_id(fund_id):
-    fundsSettlementStockList = db.session.query(FundsSettlement.fund_id)\
-        .filter(FundsSettlement.fund_id == fund_id)\
-        .join(Settlement, FundsSettlement.settlement_id == Settlement.settlement_id)\
-        .add_columns(Settlement.volume)\
-        .join(Stocks, Settlement.stock_id == Stocks.stock_id)\
+    fundsSettlementStockList = db.session.query(FundsUsersStocks.fund_id)\
+        .filter(FundsUsersStocks.fund_id == fund_id)\
+        .join(UsersStocks, FundsUsersStocks.user_stock_id == UsersStocks.user_stock_id)\
+        .add_columns(UsersStocks.volume)\
+        .join(Stocks, UsersStocks.stock_id == Stocks.stock_id)\
         .add_columns(Stocks.stock_name)\
         .all()
 
@@ -81,6 +81,7 @@ def get_stocks_by_fund_id(fund_id):
             "message": "Fund stocks not found."
         }
     ), 404
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5003, debug=True)

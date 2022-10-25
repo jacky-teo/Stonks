@@ -16,14 +16,21 @@ class Users(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
+    user_acc_id = db.Column(db.String(64), nullable=False)
+    user_pin = db.Column(db.Integer, nullable=False)
+    settlement_acc = db.Column(db.String(64), nullable=False)
 
-    def __init__(self, user_id, username, password):
+    def __init__(self, user_id, username, password, user_acc_id, user_pin, settlement_acc):
         self.user_id = user_id
         self.username = username
         self.password = password
+        self.user_acc_id = user_acc_id
+        self.user_pin = user_pin
+        self.settlement_acc = settlement_acc
+
 
     def json(self):
-        return {"user_id": self.user_id, "username": self.username, "password": self.password}
+        return {"user_id": self.user_id, "username": self.username, "password": self.password, "user_acc_id": self.user_acc_id, "user_pin": self.user_pin, "settlement_acc": self.settlement_acc}
 
 #--Get all Users--#
 @app.route("/users")

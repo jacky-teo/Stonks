@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS  # enable CORS
-
+from users import Users
+from getCustomerStocks import getCustomerStocks
 app = Flask(__name__)
 cors =CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/stonks'
@@ -153,5 +154,19 @@ def update_settlement(user_stock_id):
         }
     ), 404
 
+#Get Stocks Owned By User In tBank via getCustomerStocks.py
+@app.route("/users_stocks/tbank/<int:user_id>")
+def find_by_user_id_tbank(user_id):
+    user_info = Users.query.filter_by(user_id=user_id).first()
+    if user_info:
+        user_stocks = getCustomerStocks(userID = user_info.user_acc_id,PIN = user_info.user_pin)
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "user_stocks": [users for users in user_stocks['Depository']]
+                }
+            }
+        ),200
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002, debug=True)
