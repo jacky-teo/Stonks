@@ -6,9 +6,6 @@ from getStockSymbols import getStockSymbols
 def getCustomerStocks(serviceName = 'getCustomerStocks',userID = '',PIN = '',OTP = '999999'):
     #Header
     serviceName = 'getCustomerStocks'
-    userID = 'Z312312'
-    PIN = '148986'
-    OTP = '999999'
     
     headerObj = {
                         'Header': {
