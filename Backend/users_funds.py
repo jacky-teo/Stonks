@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-class Usersfunds(db.Model):
+class UsersFunds(db.Model):
     __tablename__ = 'users_funds'
 
     user_id = db.Column(db.Integer, primary_key=True)
@@ -26,7 +26,7 @@ class Usersfunds(db.Model):
 #--Get all Users Funds--#
 @app.route("/users_funds")
 def get_all():
-    usersFundsList = Usersfunds.query.all()
+    usersFundsList = UsersFunds.query.all()
     print(usersFundsList)
     if len(usersFundsList):
         return jsonify(
@@ -47,7 +47,7 @@ def get_all():
 #--Get all Users Funds by user_id--#
 @app.route("/users_funds/user/<int:user_id>")
 def find_by_user_id(user_id):
-    usersFundsList = Usersfunds.query.filter_by(user_id=user_id).all()
+    usersFundsList = UsersFunds.query.filter_by(user_id=user_id).all()
     if usersFundsList:
         return jsonify(
             {
@@ -69,7 +69,7 @@ def create_user_fund():
     user_id = data['user_id']
     fund_id = data['fund_id']
 
-    if (Usersfunds.query.filter_by(user_id=user_id, fund_id=fund_id).first()):
+    if (UsersFunds.query.filter_by(user_id=user_id, fund_id=fund_id).first()):
         return jsonify(
             {
                 "code": 400,
@@ -81,7 +81,7 @@ def create_user_fund():
             }
         ), 400
 
-    user_fund = Usersfunds(user_id, fund_id)
+    user_fund = UsersFunds(user_id, fund_id)
 
     try:
         db.session.add(user_fund)
