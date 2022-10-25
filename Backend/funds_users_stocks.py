@@ -3,8 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS  # enable CORS
 
-
-
 app = Flask(__name__)
 cors =CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/stonks'
@@ -18,13 +16,14 @@ class FundsUsersStocks(db.Model):
 
     fund_id = db.Column(db.Integer, primary_key=True)
     user_stock_id = db.Column(db.Integer, primary_key=True)
-   
-    def __init__(self, fund_id, user_stock_id):
+    allocation = db.Column(db.Float(precision=2), nullable=False)
+    def __init__(self, fund_id, user_stock_id, allocation):
         self.fund_id = fund_id
         self.user_stock_id = user_stock_id
+        self.allocation = allocation
     
     def json(self):
-        return {"fund_id": self.fund_id, "user_stock_id": self.user_stock_id}
+        return {"fund_id": self.fund_id, "user_stock_id": self.user_stock_id, "allocation": self.allocation}
 
 
 #--Get all Funds settlement id--#
@@ -92,6 +91,7 @@ def create_fund_settlement():
             "data": fundSettlement.json()
         }
     ), 201
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
