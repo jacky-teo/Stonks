@@ -38,7 +38,7 @@ INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_goals`,`fund_investment_amoun
 -- Stocks available for trade with Stonks -- 
 DROP TABLE IF EXISTS `stocks`;
 CREATE TABLE IF NOT EXISTS `stocks` (
-	`stock_id` int not null,
+    `stock_id` int not null,
   `stock_symbol` varchar (10) not null,
   `stock_name` varchar(50) NOT NULL,
   PRIMARY KEY (`stock_id`)
@@ -87,15 +87,16 @@ DROP TABLE IF EXISTS `funds_users_stocks`;
 CREATE TABLE IF NOT EXISTS `funds_users_stocks` (
   `fund_id` int NOT NULL,
   `user_stock_id` int NOT NULL,
+  `allocation`float Not Null,
   PRIMARY KEY (`fund_id`,`user_stock_id`),
   FOREIGN KEY (`fund_id`) REFERENCES funds(`fund_id`),
   FOREIGN KEY (`user_stock_id`) REFERENCES users_stocks(`user_stock_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `funds_users_stocks` (`fund_id`, `user_stock_id`) VALUES
-(1, 1),
-(1, 2),
-(1, 3);
+INSERT INTO `funds_users_stocks` (`fund_id`, `user_stock_id`,`allocation`) VALUES
+(1, 1,0.4),
+(1, 2,0.3),
+(1, 3,0.3);
 
 -- Who owns which fund --
 DROP TABLE IF EXISTS `users_funds`;
