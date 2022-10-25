@@ -11,12 +11,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(255) NOT NULL,
    `user_acc_id` varchar(50) NOT NULL,
    `user_pin` int NOT NULL,
-   `settlemnt_acc` int NOT NULL,
+   `settlement_acc` int NOT NULL,
    PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,`settlemnt_acc`) VALUES
+INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,`settlement_acc`) VALUES
 (1, 'admin', 'admin','Z312312','148986','0000009301'),
 (2, 'user2', 'user2','B930284','828676','0000009302');
 
