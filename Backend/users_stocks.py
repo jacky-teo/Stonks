@@ -4,6 +4,7 @@ from os import environ
 from flask_cors import CORS  # enable CORS
 from users import Users
 from getCustomerStocks import getCustomerStocks
+from getStockSymbols import getStockSymbols
 app = Flask(__name__)
 cors =CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/stonks'
@@ -157,15 +158,32 @@ def update_settlement(user_stock_id):
 #Get Stocks Owned By User In tBank via getCustomerStocks.py
 @app.route("/users_stocks/tbank/<int:user_id>")
 def find_by_user_id_tbank(user_id):
+    
     user_info = Users.query.filter_by(user_id=user_id).first()
     if user_info:
         user_stocks = getCustomerStocks(userID = user_info.user_acc_id,PIN = user_info.user_pin)
         if user_stocks:
+            stocks = []
+            for x in user_stocks['Depository']:
+                p = {
+                    "customerID": x['customerID'],
+                    "price": x['price'],
+                    "quantity": x['quantity'],
+                    "symbol": x['symbol'],
+                    "company": getStockSymbols(x['symbol']),
+                    "tradingDate": x['tradingDate']
+                } 
+                stocks.append(p)
+
+
             return jsonify(
                 {
                     "code": 200,
                     "data": {
-                        "user_stocks": [users for users in user_stocks['Depository']]
+                        "user_stocks": [
+                            # users for users in user_stocks['Depository']
+                            stocks
+                            ]
                     }
                 }
             ),200
