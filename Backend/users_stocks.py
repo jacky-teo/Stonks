@@ -4,6 +4,7 @@ from os import environ
 from flask_cors import CORS  # enable CORS
 from users import Users
 from getCustomerStocks import getCustomerStocks
+from getStockPrice import getStockPrice
 from getStockSymbols import getStockSymbols
 app = Flask(__name__)
 cors =CORS(app)
@@ -194,5 +195,6 @@ def find_by_user_id_tbank(user_id):
             }
         ), 404
         
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002, debug=True)
