@@ -11,6 +11,7 @@ Project leverages on SMU tBanks' APIs to buy/sell stocks through a customer's ac
 - APIs
 - Firebase
 - SMU tBank
+- SQL
 
 ### Components
 - [ ] Navbar
