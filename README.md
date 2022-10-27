@@ -1,5 +1,7 @@
 # Stonks
-This is a School project on fintech -- Portfolio Management
+Project on FinTech exploration -- Portfolio Management
+
+Project leverages on SMU tBanks' APIs to buy/sell stocks through a customer's account which stocks are grouped into funds customized by the user themselves. The application aims to help users to manage their stocks in a fund through a internal fund balancing algorithm in accordance to the customer's specified allocation percentage of each stock in a fund.
 
 
 ```
