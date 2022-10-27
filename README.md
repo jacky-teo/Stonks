@@ -8,8 +8,8 @@ Project leverages on SMU tBanks' APIs to buy/sell stocks through a customer's ac
 ### Components
 - [ ] Navbar
 - [ ] Login
-- [ ] Portfolio Fund List
-- [ ] Stonks Stock List
+- [X] Portfolio Fund List
+- [X] Stonks Stock List
 - [ ] Create Fund 
 - [ ] Fund Details
 - [ ] Fund Rebalance
