@@ -3,14 +3,14 @@ This is a School project on fintech -- Portfolio Management
 
 
 ```
-python funds/funds.py
-python funds_settlements/funds_settlements.py
-python marketplace/marketplace.py
-python marketplace_stocks/marketplace_stocks.py
-python settlements/settlements.py
-python stocks/stocks.py
-python transactions/transactions.py
-python users/users.py
-python users_funds/users_funds.py
+python funds.py
+python funds_users_stocks.py
+python marketplace.py
+python marketplace_stocks.py
+python users_stocks.py
+python stocks.py
+python transactions.py
+python users.py
+python users_funds.py
 
 ```
