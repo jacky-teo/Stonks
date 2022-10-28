@@ -8,13 +8,13 @@ def getCustomerStocks(serviceName = 'getCustomerStocks',userID = '',PIN = '',OTP
     serviceName = 'getCustomerStocks'
     
     headerObj = {
-                        'Header': {
-                        'serviceName': serviceName,
-                        'userID': userID,
-                        'PIN': PIN,
-                        'OTP':OTP
-                        }
-                        }
+        'Header': {
+            'serviceName': serviceName,
+            'userID': userID,
+            'PIN': PIN,
+            'OTP':OTP
+        }
+    }
     
     final_url="{0}?Header={1}".format(url(),json.dumps(headerObj))
     response = requests.post(final_url)
