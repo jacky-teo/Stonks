@@ -4,9 +4,11 @@ createFund.component("createfunds", {
   data() {
     return {
         items: [],
+        stocks: {},
         tbank_stocks: [],
         total_allocations: 0,
         tbankStock_loaded: false,
+        stockExistInFund: false,
     };
   },
    async mounted() {
@@ -16,14 +18,7 @@ createFund.component("createfunds", {
     this.tbank_stocks = loadTbankStocks
   },
   watch: {
-    'items': {
-      handler (newValue, oldValue) {
-        newValue.forEach((item) => {
-          this.total_allocations += item.allocation;
-        })
-      },
-      deep: true
-    },
+    
   },
   methods: {
     getStocks() {
@@ -44,16 +39,22 @@ createFund.component("createfunds", {
         return date;
       },
     AddItem(symbol, company, price){
-        this.items.push({
-          stock_symbol: symbol,
-          company: company,
-          current_price: price,
-          stock_allocation: 0
-        })
+        var itemExist = this.items.filter(item => item.stock_symbol === symbol)
+        itemExist == 0 ?  this.items.push({stock_symbol: symbol,company: company,current_price: price,stock_allocation: 0}) : this.stockExistInFund=true; // only push non duplicate items
       },
       removeItem(){
         this.items.splice(this.items, 1)
+      },
+      calculateAllocations(amount, stock) {
+        this.stocks[stock] = amount;
       }
+  },
+  computed: {
+    totalAllocations() {
+      return this.items.reduce((a, c) => {
+        return a + Number(c.stock_allocation);
+      }, 0)
+    },
   },
   template: `
   <!-- Modal -->
@@ -150,18 +151,20 @@ createFund.component("createfunds", {
                           <td>{{item.stock_symbol}}</td>
                           <td>{{item.company}}</td>
                           <td>{{item.current_price}}</td>
-                          <td><input type="text" v-model="item.allocation"> %</td>
+                          <td><input type="number" v-model="item.stock_allocation"> %</td>
                           <td><button class="btn btn-danger" @click="removeItem">Unmap</button></td>
                       </tr>
                       
                       </tbody>
               </table>
               <div class="d-flex justify-content-between">
-                  <p><span class="fw-bold">Total Stock Allocation:</span> {{this.total_allocations}}%</p>   
+                  <p><span class="fw-bold">Total Stock Allocation:</span> {{totalAllocations}}%</p>   
               </div>
             </div>
+            <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add new stock</button>
-            <button type="button" class="btn btn-dark ml-3">Create Fund</button>
+            <button type="button" class="btn btn-dark">Create Fund</button>
+            </div>
       </form>
         `,
 });
