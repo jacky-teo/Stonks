@@ -74,7 +74,7 @@ def process_rebalance(additional_invest, allocation, price, current_shares, user
 
 # tBank Functions
 
-    # placeMarketOrder(): Place market order for buying or selling a single stock on tBank
+    
     # getCustomerStocks(): Get all stocks owned by customer (including 0 quantity)
 
 # ====================
