@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from getStockPrice import getStockPrice
+from users import Users
 from os import environ
 from flask_cors import CORS  # enable CORS
 import sys
@@ -47,6 +49,39 @@ def get_all():
                 "code": 200,
                 "data": {
                     "stocks": [stocks.json() for stocks in stocksList]
+                }
+            }
+        ),200
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no stocks."
+        }
+    ), 404
+
+
+    
+#get all stocks 
+@app.route("/stocks-with-price/<int:user_id>")
+def get_all_with_price(user_id):
+    stocksList = Stocks.query.all()
+    user_info = Users.query.filter_by(user_id=user_id).first()
+    if len(stocksList):
+        stocks = []
+        for stock in stocksList:
+            p = {
+                "stock_id": stock.stock_id,
+                "stock_symbol": stock.stock_symbol,
+                "stock_name": stock.stock_name,
+                "stock_price": getStockPrice(userID = user_info.user_acc_id,PIN = user_info.user_pin,symbol=stock.stock_symbol)
+            }
+            stocks.append(p)
+
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "stocks": stocks
                 }
             }
         ),200
