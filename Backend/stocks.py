@@ -4,8 +4,15 @@ from os import environ
 from flask_cors import CORS  # enable CORS
 import sys
 sys.path.append("../")
-from users_stocks import UsersStocks
-from funds_users_stocks import FundsUsersStocks
+
+### REFACTORING NEEDED ####
+# from users_stocks import UsersStocks
+### ------------------ ####
+
+# from funds_stocks import FundsStocks
+
+# from users import Users
+
 
 app = Flask(__name__)
 cors =CORS(app)
@@ -50,37 +57,41 @@ def get_all():
         }
     ), 404
 
-#get stocks by fund_id 
-@app.route("/fund_stocks/<int:fund_id>")
-def get_stocks_by_fund_id(fund_id):
-    fundsSettlementStockList = db.session.query(FundsUsersStocks.fund_id)\
-        .filter(FundsUsersStocks.fund_id == fund_id)\
-        .join(UsersStocks, FundsUsersStocks.user_stock_id == UsersStocks.user_stock_id)\
-        .add_columns(UsersStocks.volume)\
-        .join(Stocks, UsersStocks.stock_id == Stocks.stock_id)\
-        .add_columns(Stocks.stock_name)\
-        .all()
 
-    if len(fundsSettlementStockList):
-        print("------------------------------" + str(fundsSettlementStockList[0]))
-        return jsonify(
-            {
-                "code": 200,
-                "data":[
-                    {
-                        "fund_id":fundSettlement[0], 
-                        "volume":fundSettlement[1], 
-                        "stock_name":fundSettlement[2]
-                    } for fundSettlement in fundsSettlementStockList
-                ]
-            }
-        ), 200
-    return jsonify(
-        {
-            "code": 404,
-            "message": "Fund stocks not found."
-        }
-    ), 404
+#### Refactoring Needed ####
+
+#get stocks by fund_id 
+# @app.route("/fund_stocks/<int:fund_id>")
+# def get_stocks_by_fund_id(fund_id):
+#     fundsSettlementStockList = db.session.query(FundsStocks.fund_id)\
+#         .filter(FundsStocks.fund_id == fund_id)\
+#         .join(UsersStocks, FundsStocks .user_stock_id == UsersStocks.user_stock_id)\
+#         .add_columns(UsersStocks.volume)\
+#         .join(Stocks, UsersStocks.stock_id == Stocks.stock_id)\
+#         .add_columns(Stocks.stock_name)\
+#         .all()
+
+#     if len(fundsSettlementStockList):
+#         print("------------------------------" + str(fundsSettlementStockList[0]))
+#         return jsonify(
+#             {
+#                 "code": 200,
+#                 "data":[
+#                     {
+#                         "fund_id":fundSettlement[0], 
+#                         "volume":fundSettlement[1], 
+#                         "stock_name":fundSettlement[2]
+#                     } for fundSettlement in fundsSettlementStockList
+#                 ]
+#             }
+#         ), 200
+#     return jsonify(
+#         {
+#             "code": 404,
+#             "message": "Fund stocks not found."
+#         }
+#     ), 404
+## ------------------------ ##
 
 
 if __name__ == '__main__':
