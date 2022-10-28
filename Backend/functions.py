@@ -2,7 +2,7 @@ import requests, json
 
 def getRecord(record):
    try:
-      recordCount = len(record);
+      recordCount = len(record)
       for i in range(0,recordCount,1):
          acc = record[i]
          return recordCount
