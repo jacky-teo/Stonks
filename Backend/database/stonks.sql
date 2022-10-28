@@ -11,12 +11,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(255) NOT NULL,
    `user_acc_id` varchar(50) NOT NULL,
    `user_pin` int NOT NULL,
-   `settlemnt_acc` int NOT NULL,
+   `settlement_acc` int NOT NULL,
    PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,`settlemnt_acc`) VALUES
+INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,`settlement_acc`) VALUES
 (1, 'admin', 'admin','Z312312','148986','0000009301'),
 (2, 'user2', 'user2','B930284','828676','0000009302');
 
@@ -27,18 +27,19 @@ CREATE TABLE IF NOT EXISTS `funds` (
   `fund_id` int NOT NULL,
   `fund_name` varchar(50) NOT NULL,
   `fund_goals` float NOT NULL,
+  `fund_interval` int NOT NULL,
   `fund_investment_amount` float Not Null, 
   PRIMARY KEY (`fund_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_goals`,`fund_investment_amount`) VALUES
-(1, 'My First Fund',5000, 3589);
+INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_goals`, `fund_interval`,`fund_investment_amount`) VALUES
+(1, 'My First Fund',5000,30, 3589);
 
 
 -- Stocks available for trade with Stonks -- 
 DROP TABLE IF EXISTS `stocks`;
 CREATE TABLE IF NOT EXISTS `stocks` (
-	`stock_id` int not null,
+    `stock_id` int not null,
   `stock_symbol` varchar (10) not null,
   `stock_name` varchar(50) NOT NULL,
   PRIMARY KEY (`stock_id`)
@@ -63,7 +64,7 @@ INSERT INTO `stocks` (`stock_id`,`stock_name`, `stock_symbol`) VALUES
 DROP TABLE IF EXISTS `users_stocks`;
 CREATE TABLE IF NOT EXISTS `users_stocks`(
     `user_stock_id` int not Null,
-	`user_id` int NOT NULL,
+	  `user_id` int NOT NULL,
     `stock_id` int NOT NULL,
     `stock_price` float not Null,
     `volume` int not Null,
@@ -87,15 +88,16 @@ DROP TABLE IF EXISTS `funds_users_stocks`;
 CREATE TABLE IF NOT EXISTS `funds_users_stocks` (
   `fund_id` int NOT NULL,
   `user_stock_id` int NOT NULL,
+  `allocation`float Not Null,
   PRIMARY KEY (`fund_id`,`user_stock_id`),
   FOREIGN KEY (`fund_id`) REFERENCES funds(`fund_id`),
   FOREIGN KEY (`user_stock_id`) REFERENCES users_stocks(`user_stock_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `funds_users_stocks` (`fund_id`, `user_stock_id`) VALUES
-(1, 1),
-(1, 2),
-(1, 3);
+INSERT INTO `funds_users_stocks` (`fund_id`, `user_stock_id`,`allocation`) VALUES
+(1, 1,0.4),
+(1, 2,0.3),
+(1, 3,0.3);
 
 -- Who owns which fund --
 DROP TABLE IF EXISTS `users_funds`;

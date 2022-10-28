@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stonks</title>
 
-    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
+    <!-- <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" /> -->
 
     <!-- bootstrap 5 css -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-    
+    <link href="Util/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="Util/bootstrap-icons.css">
+
     <!-- custom css -->
     <link rel="stylesheet" href="../../style/style.css" />
 
     <!-- axios -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+    <script src="Util/axios.min.js"></script>
 
 </head>
 <body>
@@ -27,42 +27,47 @@
                 <h1>Portfolio Overview</h1>
             </div>
         </div>
+        <!-- Funds Placeholder -->
         <div class="row">
             <div class="col-12">
-                <!-- Funds Placeholder -->
                 <div id="fundslist">
                     <fundslist></fundslist>
                 </div>
             </div>
         </div>
         
+        <!-- Unowned Stocks Placeholder -->
         <div class="row">
              <div class="col-12">
-                <!-- Stocks Placeholder -->
-                <div id="stockslist">
-                    <stockslist></stockslist>
+                <div id="unownedstocks">
+                    <unownedstocks></unownedstocks>
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-12">
+               <!-- Stocks Placeholder -->
+               <div id="createfunds">
+                   <createfunds></createfunds>
+               </div>
+           </div>
+       </div>
     </div>
-
-
-    
-    
-
-    
-    
-
 
 
 
 <!-- bootstrap js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="Util/bootstrap.bundle.min.js"></script>
     <!-- vue.js -->
-    <script src="https://unpkg.com/vue@next"></script>
+    <!-- <script src="https://unpkg.com/vue@next"></script> -->
+    <script src="Util/vue.global.prod.min.js"></script>
     <!-- external js -->
     <script src="Components/FundsList/fundslist.js"></script>
     <script src="Components/StocksList/StocksList.js"></script>
+    <script src="Components/StocksList/UnownedStocks.js"></script>
+    <script src="Components/NewFund/createfund.js"></script>
+    
 </body>
 </body>
 
