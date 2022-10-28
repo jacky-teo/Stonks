@@ -1,3 +1,7 @@
+import requests, json
+from functions import url
+
+# placeMarketOrder(): Place market order for buying or selling a single stock on tBank
 def placeMarketOrder(userID, PIN, settlementAccount, buyOrSell, symbol, quantity, OTP):
     '''
         Takes in the following inputs:
