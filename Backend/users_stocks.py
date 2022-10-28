@@ -194,7 +194,6 @@ def find_by_user_id_tbank(user_id):
                 "message": "There are no stocks for this user."
             }
         ), 404
-        
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002, debug=True)

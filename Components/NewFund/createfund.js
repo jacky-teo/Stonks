@@ -3,48 +3,52 @@ const createFund = Vue.createApp({});
 createFund.component("createfunds", {
   data() {
     return {
-        items: [
-            {
-              name: '',
-              quantity: 0,
-              amount: 0,
-              total: 0
-            }
-          ]
+        items: [],
+        tbank_stocks: [],
+        total_allocations: 0,
+        tbankStock_loaded: false,
     };
   },
-  async created() {
-        // await this.getStocks();
+   async mounted() {
+    var loadTbankStocks = await this.getStocks()
+    console.log(loadTbankStocks)
+    loadTbankStocks ? this.tbankStock_loaded = true : console.log("Error loading stocks")
+    this.tbank_stocks = loadTbankStocks
   },
   watch: {
     'items': {
       handler (newValue, oldValue) {
         newValue.forEach((item) => {
-          item.total = item.quantity * item.amount
+          this.total_allocations += item.allocation;
         })
       },
       deep: true
-    }
+    },
   },
   methods: {
     getStocks() {
       var customer_id = 1
 
-      axios.get("http://localhost:5003/users_stocks/tbank/" + customer_id).then((response) => {
-            this.stockList = response.data.data.stocks;
-          });
+      return new Promise((resolve, reject) => {
+        axios.get("http://localhost:5002/users_stocks/tbank/" + customer_id).then((response) => {
+            resolve(response.data.data.user_stocks)
+          }).catch(error => {
+            reject(error);
+        });
+      })
+     
     },
     currentDate() {
         const current = new Date();
         const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
         return date;
       },
-    AddItem(){
+    AddItem(symbol, company, price){
         this.items.push({
-          name: '',
-          quantity: 0,
-          amount: 0,
-          total: 0
+          stock_symbol: symbol,
+          company: company,
+          current_price: price,
+          stock_allocation: 0
         })
       },
       removeItem(){
@@ -79,11 +83,11 @@ createFund.component("createfunds", {
     </div>
   
       <h1>Create new fund</h1>
-      <form>
+      <form @submit.prevent="createFund" method="POST">
           <div class="mb-3 row">
-              <label for="staticEmail" class="col-sm-2 col-form-label">Fund Name</label>
+              <label for="inputFundName" class="col-sm-2 col-form-label">Fund Name</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="staticEmail" placeholder="E.g. my best fund">
+                <input type="text" class="form-control" id="inputFundName" placeholder="E.g. my best fund">
               </div>
             </div>
             <div class="mb-3 row">
@@ -93,29 +97,36 @@ createFund.component("createfunds", {
               </div>
             </div>
             <div class="mb-3 row">
-              <label for="inputPassword" class="col-sm-2 col-form-label">Fund Interval (Days)</label>
+              <label for="inputGoal" class="col-sm-2 col-form-label">Fund Goal</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputGoal">
+              </div>
+            </div>
+            <div class="mt-3 mb-3 row">
+              <label for="inputInterval" class="col-sm-2 col-form-label">Fund Interval (Days)</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="inputInterval" placeholder="30">
               </div>
             </div>
   
-            <div class="mb-3 row">
+            <div class="mt-3 mb-3 row">
               <h3>TBank Stocks</h3>
-              <table id="my_table_1" data-toggle="table" data-sort-stable="true">
+              <table class="table table-hover">
                   <thead>
                   <tr>
-                      <th data-sortable="true">Stock Symbol</th>
-                      <th data-sortable="true">Company</th>
-                      <th data-sortable="true">Order Price</th>
-                      <th data-sortable="false">Map to Fund?</th>
+                      <th>Stock Symbol</th>
+                      <th>Company</th>
+                      <th>Order Price</th>
+                      <th>Map to Fund?</th>
                   </tr>
                   </thead>
+                  
                  <tbody>
-                      <tr>
-                          <td>CC3.SI</td>
-                          <td>StarHub</td>
-                          <td>$300</td>
-                          <td><button class="btn btn-primary">Map</button></td>
+                      <tr v-if="tbank_stocks.length > 0" v-for="(stock, index) in tbank_stocks[0]" :key="index" v-if="tbankStock_loaded">
+                          <td>{{stock.symbol}}</td>
+                          <td>{{stock.company}}</td>
+                          <td>$ {{stock.price}}</td>
+                          <td><button class="btn btn-primary" @click="AddItem(stock.symbol, stock.company, stock.price)">Map</button></td>
                       </tr>
                       
                       </tbody>
@@ -124,33 +135,33 @@ createFund.component("createfunds", {
   
             <div class="mb-3 row">
               <h3>New fund stocks</h3>
-              <table id="my_table_1" data-toggle="table" data-sort-stable="true">
+              <table class="table table-hover">
                   <thead>
                   <tr>
-                      <th data-sortable="true">Stock Symbol</th>
-                      <th data-sortable="true">Company</th>
-                      <th data-sortable="true">Current Price</th>
-                      <th data-sortable="false">Stock Allocation</th>
-                      <th data-sortable="false">Actions</th>
+                      <th>Stock Symbol</th>
+                      <th>Company</th>
+                      <th>Current Price</th>
+                      <th>Stock Allocation</th>
+                      <th>Actions</th>
                   </tr>
                   </thead>
                  <tbody>
-                      <tr>
-                          <td>DBS</td>
-                          <td>DBS</td>
-                          <td>$300</td>
-                          <td><input type="text"> %</td>
-                          <td><button class="btn btn-danger">Unmap</button></td>
+                      <tr v-if="items.length > 0" v-for="(item, index) in items" :key="index">
+                          <td>{{item.stock_symbol}}</td>
+                          <td>{{item.company}}</td>
+                          <td>{{item.current_price}}</td>
+                          <td><input type="text" v-model="item.allocation"> %</td>
+                          <td><button class="btn btn-danger" @click="removeItem">Unmap</button></td>
                       </tr>
                       
                       </tbody>
               </table>
               <div class="d-flex justify-content-between">
-                  <p><span class="fw-bold">Total Stock Allocation:</span> 60%</p>   
+                  <p><span class="fw-bold">Total Stock Allocation:</span> {{this.total_allocations}}%</p>   
               </div>
             </div>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add new stock</button>
-            <button type="button" class="btn btn-dark">Create Fund</button>
+            <button type="button" class="btn btn-dark ml-3">Create Fund</button>
       </form>
         `,
 });

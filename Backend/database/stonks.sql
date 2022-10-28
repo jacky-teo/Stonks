@@ -27,12 +27,13 @@ CREATE TABLE IF NOT EXISTS `funds` (
   `fund_id` int NOT NULL,
   `fund_name` varchar(50) NOT NULL,
   `fund_goals` float NOT NULL,
+  `fund_interval` int NOT NULL,
   `fund_investment_amount` float Not Null, 
   PRIMARY KEY (`fund_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_goals`,`fund_investment_amount`) VALUES
-(1, 'My First Fund',5000, 3589);
+INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_goals`, `fund_interval`,`fund_investment_amount`) VALUES
+(1, 'My First Fund',5000,30, 3589);
 
 
 -- Stocks available for trade with Stonks -- 
@@ -63,7 +64,7 @@ INSERT INTO `stocks` (`stock_id`,`stock_name`, `stock_symbol`) VALUES
 DROP TABLE IF EXISTS `users_stocks`;
 CREATE TABLE IF NOT EXISTS `users_stocks`(
     `user_stock_id` int not Null,
-	`user_id` int NOT NULL,
+	  `user_id` int NOT NULL,
     `stock_id` int NOT NULL,
     `stock_price` float not Null,
     `volume` int not Null,
