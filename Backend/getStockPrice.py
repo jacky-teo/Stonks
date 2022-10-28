@@ -35,5 +35,5 @@ def getStockPrice(serviceName = 'getStockPrice', userID = '',PIN = '',OTP = '999
             "company" : "{}".format(stockDetail['company']),
             "prevClose" : "{}".format(stockDetail['prevClose']),
         }
-     
+    
         return stock
