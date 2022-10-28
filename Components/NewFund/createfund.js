@@ -64,7 +64,7 @@ createFund.component("createfunds", {
       // Store the user_id, stock_id, stock_price, volume in users_stocks table
 
       // Store the fund_id, user_stock_id, allocations in funds_users_stocks table
-      } else if (this.totalAllocations > 100) {
+      } else if (this.totalAllocations < 100 || this.totalAllocations > 100) {
         Swal.fire({icon: 'error',title: 'Note',text: 'Stock allocation must equate to 100%'})
       }
     },
@@ -89,7 +89,7 @@ createFund.component("createfunds", {
     AddItem(symbol, company, price){
         var itemExist = this.items.filter(item => item.stock_symbol === symbol)
         if (itemExist ==  0) {
-          this.items.push({stock_symbol: symbol,company: company,current_price: price,stock_allocation: 0}) 
+          this.items.push({stock_symbol: symbol,company: company,current_price: price,stock_allocation: NaN}) 
         } else {
           Swal.fire({icon: 'warning',title: 'Oops...',text: 'Stock is in the funds already!'})
         }
