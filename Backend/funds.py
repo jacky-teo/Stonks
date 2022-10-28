@@ -9,9 +9,6 @@ from funds_users_stocks import FundsUsersStocks
 from users_stocks import UsersStocks
 from users_funds import UsersFunds
 
-import requests, json # for api requests
-from functions import url # tbank gateway endpoint
-
 app = Flask(__name__)
 cors =CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/stonks'
@@ -167,126 +164,7 @@ def get_funds_by_user_id(user_id):
         }
     ), 404
 
-# Utility Helper Functions
-def get_ending_shares_no(total_invest, allocation, price):
-    '''
-        Takes in the following inputs:
-            - Total Fund Investment Amount in SGD                           [Integer]       (e.g. 1000)
-            - Stocks (Ticker) with its Allocation Percentage in the fund    [Dictionary]    (e.g. { "GOOG": 0.4, "D05.SI": 0.4, "S68.SI": 0.2 })
-            - Price of each Stock in SGD                                    [Dictionary]    (e.g. { "GOOG": 103.485, "D05.SI": 32.76, "S68.SI": 8.35 })
-        and outputs:
-            - Number of shares to own for each stock                        [Dictionary]    (e.g. { "GOOG": 3, "D05.SI": 12, "S68.SI": 23 })
-    '''
-    ending_shares = {}
 
-    for ticker in allocation:
-        ticker_price = price[ticker]
-        ticker_allocation = allocation[ticker]
-        dollar_allocated = ticker_allocation * total_invest
-        quantity = int(dollar_allocated/ticker_price)
-        ending_shares[ticker] = quantity
-
-    return ending_shares
-
-def get_no_of_shares_to_purchase(ending_shares, current_shares):
-    '''
-        Takes in the following inputs:
-                - Quantity of ending stocks each        [Dictionary]    (e.g. { "GOOG": 3, "D05.SI": 12, "S68.SI": 23 })
-                - Quantity of current stocks each       [Dictionary]    (e.g. { "GOOG": 2, "D05.SI": 0, "S68.SI": 250 })
-            and outputs:
-                - Quantity of stocks to purchase each   [Dictionary]    (e.g. { "GOOG": 1, "D05.SI": 12, "S68.SI": -227 })
-    '''
-    qty_purchase = {}
-
-    for ticker in ending_shares:
-        ending = ending_shares[ticker]
-        starting = current_shares[ticker]
-        to_purchase = ending - starting
-        qty_purchase[ticker] = to_purchase
-
-    return qty_purchase
-
-def placeMarketOrder():
-    #Header
-    serviceName = 'placeMarketOrder'
-    userID = 'vasng'
-    PIN = '114581'
-    OTP = '999999'
-    #Content
-    settlementAccount = '0000009311'
-    symbol = 'TSLA'
-    buyOrSell = 'buy'
-    quantity = '1'
-    
-    headerObj = {
-        'Header': {
-            'serviceName': serviceName,
-            'userID': userID,
-            'PIN': PIN,
-            'OTP': OTP
-        }
-    }
-    contentObj = {
-        'Content': {
-            'settlementAccount': settlementAccount,
-            'symbol': symbol,
-            'buyOrSell': buyOrSell,
-            'quantity': quantity
-        }
-    }
-    final_url="{0}?Header={1}&Content={2}".format(url(),json.dumps(headerObj),json.dumps(contentObj))
-    response = requests.post(final_url)
-    serviceRespHeader = response.json()['Content']['ServiceResponse']['ServiceRespHeader']
-    errorCode = serviceRespHeader['GlobalErrorID']
-    
-    if errorCode == '010000':
-        marketOrder = response.json()['Content']['ServiceResponse']['StockOrder']
-        print("You have successfully placed a market order. The order ID is {}.".format(marketOrder['orderID']))
-
-    elif errorCode == '010041':
-        print("OTP has expired.\nYou will receiving a SMS")
-    else:
-        print(serviceRespHeader['ErrorText'])
-
-
-def process_rebalance(qty_purchase):
-    # get_ending_shares_no + get_current_shares > get_no_of_shares_to_purchase > 
-    #   if positive number (buy) > placemarketorder (buy)
-    #   if negative number (sell) > placemarketorder (sell)
-    # give JSON response from tBank? or custom
-    response = "Nothing happened"
-
-    
-
-    return response
-
-# --- Start of testing get_ending_shares_no() ---
-
-total_invest = 1000
-allocation = {
-    "GOOG": 0.4, 
-    "D05.SI": 0.4, 
-    "S68.SI": 0.2
-}
-price = {
-    "GOOG": 103.485, 
-    "D05.SI": 32.76, 
-    "S68.SI": 8.35 
-}
-
-ending_shares = get_ending_shares_no(total_invest, allocation, price)
-print(ending_shares)
-
-current_shares = {
-    "GOOG": 2, 
-    "D05.SI": 0, 
-    "S68.SI": 250
-}
-print(get_no_of_shares_to_purchase(ending_shares, current_shares))
-
-# placeMarketOrder()
-
-# --- End of testing get_ending_shares_no() ---
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
