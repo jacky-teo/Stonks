@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS  # enable CORS
 from users import Users
+from stocks import Stocks
 from getCustomerStocks import getCustomerStocks
 from getStockPrice import getStockPrice
 from getStockSymbols import getStockSymbols
@@ -14,152 +15,52 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-class UsersStocks(db.Model):
-    __tablename__ = 'users_stocks'
-
-    user_stock_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    stock_id = db.Column(db.Integer, nullable=False)
-    stock_price = db.Column(db.Float(precision=2), nullable=False)
-    volume = db.Column(db.Integer, nullable=False)
-    
-    def __init__(self, user_stock_id, user_id, stock_id, stock_price, volume):
-        self.user_stock_id = user_stock_id
-        self.user_id = user_id
-        self.stock_id = stock_id
-        self.stock_price = stock_price
-        self.volume = volume
-    
-    def json(self):
-        return {"user_stock_id": self.user_stock_id, "user_id": self.user_id, "stock_symbol": self.stock_id, "stock_price": self.stock_price, "volume": self.volume}
-
-#--Get all Settlements--#
-@app.route("/users_stocks")
-def get_all():
-    users_stocksList = UsersStocks.query.all()
-    if len(users_stocksList):
+# tBank Functions
+# --- Get all stocks not owned 
+@app.route("/not_owned_stocks/tbank/<int:user_id>")
+def get_stocks_by_not_owned_customer_id(user_id):
+    user_info = Users.query.filter_by(user_id=user_id).first()
+    stocksList = Stocks.query.all()
+    result = []
+    if user_info:
+        user_stocks = getCustomerStocks(userID = user_info.user_acc_id,PIN = user_info.user_pin)
+        usList = []
+        for us in user_stocks['Depository']:
+            
+            usList.append(us['symbol'])
+        for stock in stocksList:
+            if stock.stock_symbol not in usList:
+                # stock_symbol = stock.stock_symbol
+                # price = getStockPrice(userID = user_info.user_acc_id,PIN = user_info.user_pin,symbol=stock_symbol)['Price']
+                # print(price)
+                stock_details = {
+                    'stock_id':stock.stock_id,
+                    'stock_symbol':stock.stock_symbol,
+                    'stock_name':stock.stock_name,
+                }
+                result.append(stock_details)
+                # stock.stock_price = price
+                # result.append(stock)
+        print(result)
         return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "users_stocks": [users_stocks.json() for users_stocks in users_stocksList]
+                    "stocks": [stocks for stocks in result]
                 }
             }
         ),200
     return jsonify(
         {
             "code": 404,
-            "message": "There are no users stocks."
+            "message": "There are no stocks."
         }
     ), 404
-
-#get all settlement by userid
-@app.route("/users_stocks/user/<int:user_id>")
-def find_by_user_id(user_id):
-    users_stocksList = UsersStocks.query.filter_by(user_id=user_id)
-    if users_stocksList:
-        return jsonify(
-            {
-                "code": 200,
-                "data":[users_stocks.json() for users_stocks in users_stocksList]
-            }
-        ), 200
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no stocks for this user."
-        }
-    ), 404
-
-#-- Get a Settlement --#
-@app.route("/users_stocks/<int:user_stock_id>")
-def find_by_settlement_id(user_stock_id):
-    settlement = UsersStocks.query.filter_by(user_stock_id=user_stock_id).first()
-    if settlement:
-        return jsonify(
-            {
-                "code": 200,
-                "data": settlement.json()
-            }
-        ), 200
-    return jsonify(
-        {
-            "code": 404,
-            "message": "There are no funds for this user."
-        }
-    ), 404
-
-#Update a stock price
-@app.route("/users_stocks/stockprice/<int:user_stock_id>", methods=['PUT'])
-def update_stock_price(user_stock_id):
-    settlement = UsersStocks.query.filter_by(user_stock_id=user_stock_id).first()
-    if settlement:
-        data = request.get_json()
-        settlement.stock_price = data['stock_price']
-        try:
-            db.session.commit()
-        except:
-            return jsonify(
-                {
-                    "code": 500,
-                    "data": {
-                        "settlement_id": settlement.settlement_id
-                    },
-                    "message": "An error occurred updating the stock price."
-                }
-            ), 500
-
-        return jsonify(
-            {
-                "code": 200,
-                "data": settlement.json()
-            }
-        ), 200
-    return jsonify(
-        {
-            "code": 404,
-            "message": "Settlement not found."
-        }
-    ), 404
-
-#-- Update Settlement volume and price--#
-@app.route("/users_stocks/volume/<int:user_stock_id>", methods=['PUT'])
-def update_settlement(user_stock_id):
-    settlement = UsersStocks.query.filter_by(user_stock_id=user_stock_id).first()
-    if settlement:
-        data = request.get_json()
-        settlement.volume = data['volume']
-        settlement.stock_price = data['stock_price']
-        try:
-            db.session.commit()
-        except:
-            return jsonify(
-                {
-                    "code": 500,
-                    "data": {
-                        "settlement_id": settlement.settlement_id
-                    },
-                    "message": "An error occurred updating the settlement."
-                }
-            ), 500
-
-        return jsonify(
-            {
-                "code": 200,
-                "data": settlement.json()
-            }
-        ), 200
-    return jsonify(
-        {
-            "code": 404,
-            "message": "Settlement not found."
-        }
-    ), 404
-
+    
+# tBank Functions
 #Get Stocks Owned By User In tBank via getCustomerStocks.py
 @app.route("/users_stocks/tbank/<int:user_id>")
 def find_by_user_id_tbank(user_id):
-    
     user_info = Users.query.filter_by(user_id=user_id).first()
     if user_info:
         user_stocks = getCustomerStocks(userID = user_info.user_acc_id,PIN = user_info.user_pin)

@@ -39,4 +39,3 @@ def getStockPrice(serviceName = 'getStockPrice', userID = '',PIN = '',OTP = '999
         print(stock)
      
         return stock
-
