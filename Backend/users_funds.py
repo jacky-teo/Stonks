@@ -7,8 +7,6 @@ cors =CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/stonks'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-from funds_users_stocks import FundsUsersStocks
-from users_stocks import UsersStocks
 from stocks import Stocks
 from funds import Funds
 
@@ -27,40 +25,6 @@ class UsersFunds(db.Model):
     def json(self):
         return {"user_id": self.user_id, "fund_id": self.fund_id}
 
-## Get Stocks by Fund ID ##
-@app.route("/funds/stocks/<int:fund_id>")
-def get_stocks_by_fund_id(fund_id):
-    fundsSettlementStockList = db.session.query(FundsUsersStocks.fund_id)\
-        .filter(FundsUsersStocks.fund_id == fund_id)\
-        .join(UsersStocks, FundsUsersStocks.user_stock_id == UsersStocks.user_stock_id)\
-        .add_columns(FundsUsersStocks.allocation)\
-        .add_columns(UsersStocks.stock_price)\
-        .add_columns(UsersStocks.volume)\
-        .join(Stocks, UsersStocks.stock_id == Stocks.stock_id)\
-        .add_columns(Stocks.stock_name)\
-        .all()
-    if len(fundsSettlementStockList):
-        print("------------------------------" + str(fundsSettlementStockList[0]))
-        return jsonify(
-            {
-                "code": 200,
-                "data":[
-                    {
-                        "fund_id":fundSettlement[0],
-                        "allocation":fundSettlement[1], 
-                        "stock_price":fundSettlement[2],
-                        "volume":fundSettlement[3], 
-                        "stock_name":fundSettlement[4]
-                    } for fundSettlement in fundsSettlementStockList
-                ]
-            }
-        ), 200
-    return jsonify(
-        {
-            "code": 404,
-            "message": "Fund stocks not found."
-        }
-    ), 404
 
 ## Get Funds By User ID ##
 @app.route("/funds/user_funds/<int:user_id>")
@@ -154,7 +118,7 @@ def create_user_fund():
         ), 400
 
     user_fund = UsersFunds(user_id, fund_id)
-
+    
     try:
         db.session.add(user_fund)
         db.session.commit()
