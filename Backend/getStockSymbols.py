@@ -29,6 +29,3 @@ def getStockSymbols(symbol):
         return Company_List[index]
     else:
         return 'Record not found'
-
-
-
