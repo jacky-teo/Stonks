@@ -4,9 +4,15 @@ import ast
 
 import requests, json # for api requests
 from functions import url, getRecord # tbank gateway endpoint
+
 from placeMarketOrder import placeMarketOrder
 from getCustomerStocks import getStockSymbols
 
+# importing utilities
+from get_ending_shares_no import get_ending_shares_no
+from get_no_of_shares_to_purchase import get_no_of_shares_to_purchase
+from get_total_value_of_fund_portfolio import get_total_value_of_fund_portfolio
+from get_all_fund_portfolio import get_all_fund_portfolio
 
 app = Flask(__name__)
 
@@ -74,7 +80,6 @@ def process_rebalance(additional_invest, allocation, price, current_shares, user
 
 # tBank Functions
 
-    
     # getCustomerStocks(): Get all stocks owned by customer (including 0 quantity)
 
 # ====================
@@ -145,80 +150,6 @@ def getCustomerStocks(userID, PIN, OTP):
         print(serviceRespHeader['ErrorText'])
 
     return customer_portfolio
-
-# ====================
-
-# Utility Helper Functions
-
-    # get_ending_shares_no():               Get the ending amount of shares to own depending on allocation & total investment amount
-    # get_no_of_shares_to_purchase():       Get the number of shares to purchase each for a fund, based on the ending shares to own and the current shares in the fund
-    # get_all_fund_portfolio():             Get all customer stocks details which is in the fund
-    # get_total_value_of_fund_portfolio():  Get the total value of the fund portfolio
-
-# ====================
-
-
-def get_ending_shares_no(total_invest, allocation, price):
-    '''
-        Takes in the following inputs:
-            - Total Fund Investment Amount in SGD                           [Integer]       (e.g. 1000)
-            - Stocks (Ticker) with its Allocation Percentage in the fund    [Dictionary]    (e.g. { "GOOG": 0.4, "D05.SI": 0.4, "S68.SI": 0.2 })
-            - Price of each Stock in SGD                                    [Dictionary]    (e.g. { "GOOG": 103.485, "D05.SI": 32.76, "S68.SI": 8.35 })
-        and outputs:
-            - Number of shares to own for each stock                        [Dictionary]    (e.g. { "GOOG": 3, "D05.SI": 12, "S68.SI": 23 })
-    '''
-    ending_shares = {}
-
-    for ticker in allocation:
-        ticker_price = price[ticker]
-        ticker_allocation = float(allocation[ticker])
-        dollar_allocated = ticker_allocation * float(total_invest)
-        quantity = int(dollar_allocated/ticker_price)
-        ending_shares[ticker] = quantity
-
-    print("Ending Shares:", ending_shares)
-    return ending_shares
-
-def get_no_of_shares_to_purchase(ending_shares, current_shares):
-    '''
-        Takes in the following inputs:
-            - Quantity of ending stocks each        [Dictionary]    (e.g. { "GOOG": 3, "D05.SI": 12, "S68.SI": 23 })
-            - Quantity of current stocks each       [Dictionary]    (e.g. { "GOOG": 2, "D05.SI": 0, "S68.SI": 250 })
-        and outputs:
-            - Quantity of stocks to purchase each   [Dictionary]    (e.g. { "GOOG": 1, "D05.SI": 12, "S68.SI": -227 })
-    '''
-    qty_purchase = {}
-
-    for ticker in ending_shares:
-        ending = ending_shares[ticker]
-        starting = 0 if ticker not in current_shares else current_shares[ticker]
-        to_purchase = ending - starting
-        qty_purchase[ticker] = to_purchase
-
-    print("How much to buy:", qty_purchase)
-    return qty_purchase
-
-
-def get_all_fund_portfolio(userID, PIN, OTP, fund_stocks):
-    fund_portfolio = {}
-
-    customer_portfolio = getCustomerStocks(userID, PIN, OTP)
-
-    for ticker in customer_portfolio:
-        if ticker in fund_stocks:
-            fund_portfolio[ticker] = customer_portfolio[ticker]
-
-    return fund_portfolio
-
-def get_total_value_of_fund_portfolio(fund_portfolio):
-    total = 0
-
-    for ticker in fund_portfolio:
-            price = float(fund_portfolio[ticker]['price'])
-            quantity = float(fund_portfolio[ticker]['quantity'])
-            total += price * quantity
-
-    return total
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5010, debug=True)
