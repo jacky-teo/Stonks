@@ -14,7 +14,6 @@
     
     <!-- custom css -->
     <link rel="stylesheet" href="../../style/style.css" />
-    <link rel="stylesheet" href="Components/Navbar/style.css"/>
 
     <!-- axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -25,7 +24,6 @@
 </head>
 <body>
     <div id="app">
-        <div id="sidenav"><sidenav @colorchange=""></sidenav></div>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 text-center">
@@ -59,18 +57,6 @@
     <!-- external js -->
     <script src="Components/FundPieChart/FundPieChart.js"></script>
     <script src="Components/FundPieChart/PieChart.js"></script>
-    <script src="Components/Navbar/sidenav.js"></script>
-    <script>
-        const { createApp } = Vue
-
-        createApp({
-            data() {
-                return {
-                    colorchange: ""
-                }
-            }
-        }).mount("#app")
-    </script>
 
 </body>
 
