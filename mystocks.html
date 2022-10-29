@@ -14,6 +14,7 @@
     
     <!-- custom css -->
     <link rel="stylesheet" href="../../style/style.css" />
+    <link rel="stylesheet" href="Components/Navbar/style.css"/>
 
     <!-- axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -23,29 +24,33 @@
 
 </head>
 <body>
-    <!-- NavBar Placeholder -->
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1>Fund Overview</h1>
+    <div id="app">
+        <div id="sidenav"><sidenav @colorchange=""></sidenav></div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1>Fund Overview {{ colorchange }}</h1>
+                </div>
             </div>
-        </div>
 
-        <div class="row my-3">
-            <div class="col-5 m-1">
-               <!-- Stocks Placeholder -->
-               <div id="fundpiechart">
-                    <fundpiechart></fundpiechart>
-                </div>
-           </div>
-           <div class="col-6">
-            <!-- Stocks Placeholder -->
-                <div>
-                    Stock history
-                </div>
+            <div class="row my-3">
+                <div class="col-5 m-1">
+                <!-- Stocks Placeholder -->
+                <div id="fundpiechart">
+                        <fundpiechart></fundpiechart>
+                    </div>
             </div>
-       </div>
+            <div class="col-6">
+                <!-- Stocks Placeholder -->
+                    <div>
+                        Stock history
+                    </div>
+                </div>
+        </div>
+        </div>
     </div>
+    <!-- NavBar Placeholder -->
+    
 
 <!-- bootstrap js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
@@ -54,7 +59,19 @@
     <!-- external js -->
     <script src="Components/FundPieChart/FundPieChart.js"></script>
     <script src="Components/FundPieChart/PieChart.js"></script>
-</body>
+    <script src="Components/Navbar/sidenav.js"></script>
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    colorchange: ""
+                }
+            }
+        }).mount("#app")
+    </script>
+
 </body>
 
 </html>

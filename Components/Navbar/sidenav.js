@@ -9,6 +9,12 @@ sidenav.component("sidenav", {
         modeClick: false,
       };
     },
+    methods: { 
+        toggleColor() {
+            this.modeClick = !modeClick;
+            this.$emit('colorchange', this.modeClick);
+        }
+    },
     computed: {
         links(){
             return{
@@ -85,7 +91,7 @@ sidenav.component("sidenav", {
                     </div>
                     <span class="mode-text text">Mode</span>
 
-                    <div class="toggle-switch" @click="modeClick = !modeClick">
+                    <div class="toggle-switch" @click="toggleColor">
                         <span class="switch"></span>
                     </div>
                 </li>

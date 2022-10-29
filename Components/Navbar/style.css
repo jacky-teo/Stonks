@@ -243,3 +243,7 @@ body{
     left: 20px;
 }
 
+.menu-links , .nav-link{
+    padding-left: 0;
+}
+
