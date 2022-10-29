@@ -17,5 +17,4 @@ def get_ending_shares_no(total_invest, allocation, price):
         quantity = int(dollar_allocated/ticker_price)
         ending_shares[ticker] = quantity
 
-    print("Ending Shares:", ending_shares)
     return ending_shares

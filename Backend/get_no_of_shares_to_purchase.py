@@ -11,9 +11,8 @@ def get_no_of_shares_to_purchase(ending_shares, current_shares):
 
     for ticker in ending_shares:
         ending = ending_shares[ticker]
-        starting = 0 if ticker not in current_shares else current_shares[ticker]
+        starting = 0 if ticker not in current_shares else float(current_shares[ticker]["quantity"])
         to_purchase = ending - starting
         qty_purchase[ticker] = to_purchase
 
-    print("How much to buy:", qty_purchase)
     return qty_purchase
