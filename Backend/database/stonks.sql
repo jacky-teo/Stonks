@@ -27,19 +27,19 @@ CREATE TABLE IF NOT EXISTS `funds` (
   `fund_id` int NOT NULL,
   `fund_name` varchar(50) NOT NULL,
   `fund_goals` float NOT NULL,
-  `fund_interval` int NOT NULL,
   `fund_investment_amount` float Not Null, 
   PRIMARY KEY (`fund_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_goals`, `fund_interval`,`fund_investment_amount`) VALUES
-(1, 'My First Fund',5000,30, 3589);
+INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_goals`,`fund_investment_amount`) VALUES
+(1, 'My First Fund',5000, 3589),
+(2, 'My Second Fund',5000, 3589);
 
 
 -- Stocks available for trade with Stonks -- 
 DROP TABLE IF EXISTS `stocks`;
 CREATE TABLE IF NOT EXISTS `stocks` (
-    `stock_id` int not null,
+  `stock_id` int not null,
   `stock_symbol` varchar (10) not null,
   `stock_name` varchar(50) NOT NULL,
   PRIMARY KEY (`stock_id`)
@@ -58,43 +58,19 @@ INSERT INTO `stocks` (`stock_id`,`stock_name`, `stock_symbol`) VALUES
 (10,'Alphabet Inc.','GOOG');
 
 
-
--- Stocks owned by a customer -- 
--- When buying stock this table will be updated. if stock does not exist, the add. Stock price and volume will be updated--  
-DROP TABLE IF EXISTS `users_stocks`;
-CREATE TABLE IF NOT EXISTS `users_stocks`(
-    `user_stock_id` int not Null,
-	  `user_id` int NOT NULL,
-    `stock_id` int NOT NULL,
-    `stock_price` float not Null,
-    `volume` int not Null,
-	 PRIMARY KEY (user_stock_id),
-     FOREIGN KEY (`user_id`) REFERENCES users(`user_id`),
-	 FOREIGN KEY (`stock_id`) REFERENCES stocks(`stock_id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-INSERT INTO `users_stocks` (`user_stock_id`, `user_id`, `stock_id`,`stock_price`,`volume`) VALUES
-(1,1, 1, 1.22, 100),
-(2,1, 2, 2.38, 100),
-(3,1, 3, 32.39, 100);    
-
-
-
 --  Fund has what stock -- 
 
-DROP TABLE IF EXISTS `funds_users_stocks`;
-CREATE TABLE IF NOT EXISTS `funds_users_stocks` (
+DROP TABLE IF EXISTS `funds_stocks`;
+CREATE TABLE IF NOT EXISTS `funds_stocks` (
   `fund_id` int NOT NULL,
-  `user_stock_id` int NOT NULL,
+  `stock_id` int NOT NULL,
   `allocation`float Not Null,
-  PRIMARY KEY (`fund_id`,`user_stock_id`),
+  PRIMARY KEY (`fund_id`,`stock_id`),
   FOREIGN KEY (`fund_id`) REFERENCES funds(`fund_id`),
-  FOREIGN KEY (`user_stock_id`) REFERENCES users_stocks(`user_stock_id`)
+  FOREIGN KEY (`stock_id`) REFERENCES stocks(`stock_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `funds_users_stocks` (`fund_id`, `user_stock_id`,`allocation`) VALUES
+INSERT INTO `funds_stocks` (`fund_id`, `stock_id`,`allocation`) VALUES
 (1, 1,0.4),
 (1, 2,0.3),
 (1, 3,0.3);
@@ -110,11 +86,8 @@ CREATE TABLE IF NOT EXISTS `users_funds` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `users_funds` (`user_id`, `fund_id`) VALUES
-(1, 1);
-
-
-
-
+(1, 1),
+(1, 2);
 
 -- Stocks available in the marketplace this will act as the CDP -- 
 DROP TABLE IF EXISTS `marketplace`;
@@ -170,4 +143,3 @@ INSERT INTO `transactions` (`transaction_id`, `user_id`,`marketplace_id`, `stock
 (2,1, 1,2, 3.5, -1000, '2020-01-01 00:00:00'),
 (3,1, 1,3, 22.5, 1000, '2020-01-01 00:00:00'),
 (4,2, 1,3, 22.5, 1000, '2020-01-01 00:00:00');
-
