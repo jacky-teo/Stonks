@@ -84,14 +84,14 @@ def process_rebalance(additional_invest, allocation, price, userID, PIN, settlem
             }
     
     # Output Statement - for debugging purpose
-    print("User Details:", userID, PIN, settlementAccount, OTP)
-    print("\n Fund Details:", allocation)
-    print("Current prices for the fund stocks:", price)
-    print("\n Current Fund Portfolio:", fund_portfolio)
-    print("\n Initial + Additional Investment: ", inital_invest, "+" , additional_invest, "=", total_invest)
-    print("\n Ending Fund Portfolio:", ending_shares)
-    print("\n How much to purchase to reach end:", qty_purchase)
-    print("Response:", response_dict)
+    # print("User Details:", userID, PIN, settlementAccount, OTP)
+    # print("\n Fund Details:", allocation)
+    # print("Current prices for the fund stocks:", price)
+    # print("\n Current Fund Portfolio:", fund_portfolio)
+    # print("\n Initial + Additional Investment: ", inital_invest, "+" , additional_invest, "=", total_invest)
+    # print("\n Ending Fund Portfolio:", ending_shares)
+    # print("\n How much to purchase to reach end:", qty_purchase)
+    # print("Response:", response_dict)
 
     return response_dict
 
