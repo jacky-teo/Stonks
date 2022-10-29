@@ -59,9 +59,35 @@ def get_all():
         }
     ), 404
 
+# Add stock
+@app.route("/stocks/add", methods=['POST'])
+def add_stock():
+    data = request.get_json()
+    stock_symbol = data['stock_symbol']
+    stock_name = data['stock_name']
+    stock = Stocks(stock_symbol, stock_name)
+    try:
+        db.session.add(stock)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "stock_id": stock.stock_id
+                },
+                "message": "An error occurred while creating the stock."
+            }
+        ), 500
 
+    return jsonify(
+        {
+            "code": 201,
+            "data": stock.json()
+        }
+    ), 201
     
-#get all stocks 
+#get all stocks by user_id 
 @app.route("/stocks-with-price/<int:user_id>")
 def get_all_with_price(user_id):
     stocksList = Stocks.query.all()

@@ -25,6 +25,37 @@ class MarketplaceStocks(db.Model):
     def json(self):
         return {"marketplace_id": self.marketplace_id, "stock_symbol": self.stock_id, "volume_in_marketplace": self.volume_in_market}
 
+#-- Add marplace_stocks --##
+@app.route("/marketplace_stocks", methods=['POST'])
+def add_marketplace_stocks():
+    data = request.get_json()
+    marketplace_id = 1
+    stock_id = data['stock_id']
+    volume_in_market = 1000000
+    marketplace_stocks = MarketplaceStocks(marketplace_id, stock_id, volume_in_market)
+    try:
+        db.session.add(marketplace_stocks)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "marketplace_id": marketplace_id,
+                    "stock_id": stock_id,
+                    "volume_in_market": volume_in_market
+                },
+                "message": "An error occurred while adding the marketplace_stocks."
+            }
+        ), 500
+
+    return jsonify(
+        {
+            "code": 201,
+            "data": marketplace_stocks.json()
+        }
+    ), 201
+
 #--Get all Marketplace Stocks--#
 @app.route("/marketplace_stocks")
 def get_all():

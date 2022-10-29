@@ -19,27 +19,25 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,`settlement_acc`) VALUES
 (1, 'admin', 'admin','Z312312','148986','0000009301'),
 (2, 'user2', 'user2','B930284','828676','0000009302');
-
-
 -- Funds ownd by custoemr -- 
 DROP TABLE IF EXISTS `funds`;
 CREATE TABLE IF NOT EXISTS `funds` (
   `fund_id` int NOT NULL,
   `fund_name` varchar(50) NOT NULL,
-  `fund_goals` float NOT NULL,
   `fund_investment_amount` float Not Null, 
+  `fund_creation_date`	datetime Not Null,
   PRIMARY KEY (`fund_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_goals`,`fund_investment_amount`) VALUES
-(1, 'My First Fund',5000, 3589),
-(2, 'My Second Fund',5000, 3589);
+INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_investment_amount`,`fund_creation_date`) VALUES
+(1, 'My First Fund', 3589,'2020-10-27 00:00:00'),
+(2, 'My Second Fund', 3589,'2020-10-27 00:00:00');
 
 
 -- Stocks available for trade with Stonks -- 
 DROP TABLE IF EXISTS `stocks`;
 CREATE TABLE IF NOT EXISTS `stocks` (
-  `stock_id` int not null,
+  `stock_id` int not null auto_increment,
   `stock_symbol` varchar (10) not null,
   `stock_name` varchar(50) NOT NULL,
   PRIMARY KEY (`stock_id`)
@@ -130,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `transactions`(
     `stock_price` float not Null,
     `volume` int not Null,
     `date` datetime not null,
-	PRIMARY KEY (transaction_id),
+	PRIMARY KEY (`transaction_id`),
     FOREIGN KEY (`user_id`) REFERENCES users(`user_id`),
 	FOREIGN KEY (`stock_id`) REFERENCES stocks(`stock_id`),
     FOREIGN KEY (`marketplace_id`) REFERENCES marketplace(`marketplace_id`)
