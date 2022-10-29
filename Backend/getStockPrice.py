@@ -1,23 +1,26 @@
 import requests, json
 from functions import url
 
-def getStockPrice(serviceName = 'getStockPrice', userID = '',PIN = '',OTP = '999999', symbol=''):
+def getStockPrice(symbol):
     #Header
     serviceName = 'getStockPrice'
+    userID = ''
+    PIN = ''
+    OTP = ''
     
     headerObj = {
-                        'Header': {
-                        'serviceName': serviceName,
-                        'userID': userID,
-                        'PIN': PIN,
-                        'OTP': OTP
-                        }
-                        }
+        'Header': {
+            'serviceName': serviceName,
+            'userID': userID,
+            'PIN': PIN,
+            'OTP': OTP
+        }
+    }
     contentObj = {
-                        'Content': {
-                        'symbol': symbol
-                        }
-                        }
+        'Content': {
+            'symbol': symbol
+        }
+    }
     final_url="{0}?Header={1}&Content={2}".format(url(),json.dumps(headerObj),json.dumps(contentObj))
     response = requests.post(final_url)
     serviceRespHeader = response.json()['Content']['ServiceResponse']['ServiceRespHeader']
