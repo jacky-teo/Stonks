@@ -22,10 +22,10 @@ INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,
 -- Funds ownd by custoemr -- 
 DROP TABLE IF EXISTS `funds`;
 CREATE TABLE IF NOT EXISTS `funds` (
-  `fund_id` int NOT NULL,
+  `fund_id` int(11) NOT NULL AUTO_INCREMENT,
   `fund_name` varchar(50) NOT NULL,
   `fund_investment_amount` float Not Null, 
-  `fund_creation_date`	datetime Not Null,
+  `fund_creation_date`	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`fund_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
