@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
+from datetime import datetime
 from flask_cors import CORS  # enable CORS
 import sys
 sys.path.append("../")
@@ -17,20 +18,14 @@ db = SQLAlchemy(app)
 class Funds(db.Model):
     __tablename__ = 'funds'
 
-    fund_id = db.Column(db.String(24), primary_key=True)
+    fund_id = db.Column(db.Integer, primary_key=True)
     fund_name = db.Column(db.String(64), nullable=False)
     fund_investment_amount = db.Column(db.Float(precision=2),nullable=False)
-    fund_creation_date = db.Column(db.DateTime,nullable=False)
-
-    def __init__(self, fund_id, fund_name, fund_creation_date, fund_investment_amount):
-        self.fund_id = fund_id
-        self.fund_name = fund_name
-        self.fund_investment_amount = fund_investment_amount
-        self.fund_creation_date = fund_creation_date
-        
+    fund_creation_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
+   
 
     def json(self):
-        return {"fund_id": self.fund_id, "fund_name": self.fund_name, "fund_creation_date": self.fund_creation_date, "fund_investment_amount": self.fund_investment_amount}
+        return {"fund_id": self.fund_id, "fund_name": self.fund_name, "fund_investment_amount": self.fund_investment_amount, "fund_creation_date": self.fund_creation_date}
 
 #--Get all Funds--#
 @app.route("/funds")
