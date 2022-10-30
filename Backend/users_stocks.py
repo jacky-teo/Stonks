@@ -13,7 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
+db = SQLAlchemy(app, session_options={'autocommit': True})
 
 # tBank Functions
 # --- Get all stocks not owned 

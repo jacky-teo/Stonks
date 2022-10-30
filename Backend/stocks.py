@@ -22,7 +22,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, session_options={'autocommit': True})
 
 class Stocks(db.Model):
     __tablename__ = 'stocks'
@@ -87,11 +87,10 @@ def add_stock():
         }
     ), 201
     
-#get all stocks by user_id 
-@app.route("/stocks-with-price/<int:user_id>")
-def get_all_with_price(user_id):
+#get stocks with prices
+@app.route("/stocks-with-price")
+def get_all_with_price():
     stocksList = Stocks.query.all()
-    user_info = Users.query.filter_by(user_id=user_id).first()
     if len(stocksList):
         stocks = []
         for stock in stocksList:
@@ -99,7 +98,7 @@ def get_all_with_price(user_id):
                 "stock_id": stock.stock_id,
                 "stock_symbol": stock.stock_symbol,
                 "stock_name": stock.stock_name,
-                "stock_price": getStockPrice(userID = user_info.user_acc_id,PIN = user_info.user_pin,symbol=stock.stock_symbol)
+                "stock_price": getStockPrice(symbol=stock.stock_symbol)
             }
             stocks.append(p)
 

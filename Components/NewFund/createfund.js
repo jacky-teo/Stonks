@@ -4,12 +4,12 @@ createFund.component("createfunds", {
   data() {
     return {
         items: [],
+        user_id: 1,
         fundInfo: {
-            fundName: "",
-            fundIvestment: 0,
-            fundGoal: 0,
-            FundInterval: 0
+            fund_name: "",
+            fund_investment_amount: 0,
         },
+        fundInterval: 0,
         stocks: {},
         ourStockList: [],
         tbank_stocks: [],
@@ -20,41 +20,36 @@ createFund.component("createfunds", {
     };
   },
    async mounted() {
-    var customer_id = 1;
-    var loadTbankStocks = await this.getCustomerStocks(customer_id)
-    var loadOurStocks = await this.getOurStocks(customer_id)
+    var loadTbankStocks = await this.getCustomerStocks(this.user_id)
+    var loadOurStocks = await this.getOurStocks()
     loadTbankStocks && loadOurStocks ? this.tbankStock_loaded = true : console.log("Error loading stocks")
     this.tbank_stocks = loadTbankStocks
     this.ourStockList = loadOurStocks
   },
   methods: {
-    createFund() {
-      if(this.totalAllocations == 100) {
+    async createFund() {
 
+      
+
+      if(this.totalAllocations == 100 && this.fundInfo.fundName != "" && this.fundInfo.fund_investment_amount != 0 && this.fundInterval != 0) {
+        console.log("Passed through")
       // Create fund in funds table -> get fund_id
-      var fund_id = new Promise((resolve, reject) => {
-        axios.get("http://localhost:5000/funds/add", fundInfo).then((response) => {
-            resolve(response.data.data.fund_id)
-          }).catch(error => {
-            reject(error);
-        });
-      })
+        var fund_id = await this.addNewFund().then((response) => { return response })
 
       // Create new row in users_funds table with fund_id and user_id
       if (fund_id) {
-        var user_id = 1
-        var userFundInfo = {
-          user_id: user_id,
-          fund_id: fund_id
-        }
-        axios.get("http://localhost:5006/users_funds/add", userFundInfo).then((response) => {
-            console.log(response.data)
-          }).catch(error => {
-            console.log(error);
-        });
+        var userFundInfo = {user_id: this.user_id, fund_id: fund_id}
+        var userFund_id = await this.addUserFund(userFundInfo).then((response) => { return response })
+        console.log(userFund_id)
       }
 
       // Create stocks that does not exist in our database in stocks table
+      var stockDoesExistInOurDb = this.checkStockDoesntExistInOurDb()
+
+      if (stockDoesExistInOurDb.length > 0) {
+        var newStocks = await this.addNewStocks(stockDoesExistInOurDb).then((response) => { return response })
+        console.log(newStocks)
+      }
 
       // Retrieve the stock ID that the user selected -> can use getOurStocks()
 
@@ -68,6 +63,27 @@ createFund.component("createfunds", {
         Swal.fire({icon: 'error',title: 'Note',text: 'Stock allocation must equate to 100%'})
       }
     },
+    checkStockDoesntExistInOurDb() {
+      return this.items.filter(f => !this.ourStockList.some(d => d.stock_symbol == f.stock_symbol) );
+    },
+    addUserFund(userFundInfo) {
+      return new Promise((resolve, reject) => {
+        axios.post("http://localhost:5006/users_funds/add", userFundInfo).then((response) => {
+            resolve(response.data.data)
+          }).catch(error => {
+            reject(error);
+        });
+      })
+    },
+    addNewFund() {
+      return new Promise((resolve, reject) => {
+        axios.post("http://localhost:5000/funds/add", this.fundInfo).then((response) => {
+            resolve(response.data.data.fund_id)
+          }).catch(error => {
+            reject(error);
+        });
+      })
+    },
     getCustomerStocks(customer_id) {
       return new Promise((resolve, reject) => {
         axios.get("http://localhost:5002/users_stocks/tbank/" + customer_id).then((response) => {
@@ -77,9 +93,9 @@ createFund.component("createfunds", {
         });
       })
     },
-    getOurStocks(customer_id) {
+    getOurStocks() {
       return new Promise((resolve, reject) => {
-        axios.get("http://localhost:5003/stocks-with-price/" + customer_id).then((response) => {
+        axios.get("http://localhost:5003/stocks-with-price/").then((response) => {
             resolve(response.data.data.stocks)
           }).catch(error => {
             reject(error);
@@ -87,6 +103,7 @@ createFund.component("createfunds", {
       })
     },
     AddItem(symbol, company, price){
+      console.log(this.checkStockDoesntExistInOurDb())
         var itemExist = this.items.filter(item => item.stock_symbol === symbol)
         if (itemExist ==  0) {
           this.items.push({stock_symbol: symbol,company: company,current_price: price,stock_allocation: NaN}) 
@@ -140,25 +157,19 @@ createFund.component("createfunds", {
           <div class="mb-3 row">
               <label for="inputFundName" class="col-sm-2 col-form-label">Fund Name</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputFundName" v-model="fundInfo.fundName" placeholder="E.g. my best fund">
+                <input type="text" class="form-control" v-model="fundInfo.fund_name" placeholder="E.g. my best fund">
               </div>
             </div>
             <div class="mb-3 row">
               <label for="inputInitialValue" class="col-sm-2 col-form-label">Initial Investment Value</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputInterval" v-model="fundInfo.fundIvestment">
-              </div>
-            </div>
-            <div class="mb-3 row">
-              <label for="inputGoal" class="col-sm-2 col-form-label">Fund Goal</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputGoal" v-model="fundInfo.fundGoal">
+                <input type="text" class="form-control" v-model="fundInfo.fund_investment_amount">
               </div>
             </div>
             <div class="mt-3 mb-3 row">
               <label for="inputInterval" class="col-sm-2 col-form-label">Fund Interval (Days)</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputInterval" placeholder="30" max="1080" v-model="fundInfo.fundInterval">
+                <input type="text" class="form-control" placeholder="30" max="1080" v-model="fundInterval">
               </div>
             </div>
   
