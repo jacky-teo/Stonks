@@ -1,4 +1,5 @@
-from flask import Flask, request, session, redirect, url_for, render_template, flash, jsonify
+from sqlalchemy.exc import SQLAlchemyError
+from flask import Flask, request, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS  # enable CORS
@@ -23,14 +24,14 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return Users.query.get(int(user_id))
 
-class Users(db.Model):
+class Users(db.Model, UserMixin):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), nullable=False)
-    password = db.Column(db.String(64), nullable=False)
-    user_acc_id = db.Column(db.String(64), nullable=False)
+    username = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    user_acc_id = db.Column(db.String(50), nullable=False)
     user_pin = db.Column(db.Integer, nullable=False)
-    settlement_acc = db.Column(db.String(64), nullable=False)
+    settlement_acc = db.Column(db.Integer, nullable=False)
 
     def __init__(self, user_id, username, password, user_acc_id, user_pin, settlement_acc):
         self.user_id = user_id
@@ -94,11 +95,6 @@ def find_by_username(username):
         }
     ), 404
 
-# landing page
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 # login - check user exists and check if hashed password match
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -107,8 +103,16 @@ def login():
     password = data.get("password")
     user = Users.query.filter_by(username=username).first()
 
-    # should change to "check_password_hash(user.password, password)" when we hash the password in the future
-    if not user or not user.password == password:
+    # !!!! uncomment this when you want to test accounts that were hardcoded into the db !!!!
+    # if not user or not user.password == password:
+    #     return jsonify({
+    #         "result": 401,
+    #         "status": "failed",
+    #         "message": "Failed getting user"
+    #     }), 401
+
+    # "check_password_hash(user.password, password)" used for all the newly created accounts with hashed password
+    if not user or not check_password_hash(user.password, password):
         return jsonify({
             "result": 401,
             "status": "failed",
@@ -130,26 +134,29 @@ def login():
         }), 200
 
 # register - validate form, hash password and add+commit new user to db
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
     user_id = None
     username = data.get("username")
-    password = generate_password_hash(data.get("password"))
+    password = generate_password_hash(data.get("password"), method='sha256')
     user_acc_id = data.get('user_acc_id')
-    user_pin = data.get('user_pin')
-    settlement_acc = data.get('settlement_acc')
+    user_pin = int(data.get('user_pin'))
+    settlement_acc = int(data.get('settlement_acc'))
+    newUser = Users(user_id=user_id, username=username, password=password, user_acc_id=user_acc_id, user_pin=user_pin,settlement_acc=settlement_acc)
 
     try:
-        newUser = Users(user_id=user_id, username=username, password=generate_password_hash(password, method='sha256'), user_acc_id=user_acc_id, user_pin=user_pin,settlement_acc=settlement_acc)
+        # newUser = Users(user_id, username=username, password=password, user_acc_id=user_acc_id, user_pin=user_pin,settlement_acc=settlement_acc)
         db.session.add(newUser)
         db.session.commit()
 
-    except:
+    except SQLAlchemyError as e:
+        error = str(e.orig)
         return jsonify({
             "result": 404,
             "status": "error",
-            "message": "Could not add user"
+            "message": "Could not add user",
+            "errmsg": error
         }), 404
 
     # flask_login - session created
