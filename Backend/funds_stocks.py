@@ -56,6 +56,7 @@ def get_all():
 @app.route("/funds_stocks/add", methods=['POST'])
 def create_fund_settlement():
     data = request.get_json()
+    print(data)
     fundSettlement = FundsStocks(**data)
     try:
         db.session.add(fundSettlement)
