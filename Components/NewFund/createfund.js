@@ -17,6 +17,7 @@ createFund.component("createfunds", {
         total_allocations: 0,
         tbankStock_loaded: false,
         stockExistInFund: false,
+        isCreatedFund: false,
     };
   },
    async mounted() {
@@ -29,18 +30,17 @@ createFund.component("createfunds", {
   methods: {
     async createFund() {
 
-      
-
       if(this.totalAllocations == 100 && this.fundInfo.fundName != "" && this.fundInfo.fund_investment_amount != 0 && this.fundInterval != 0) {
-        console.log("Passed through")
+        // Set the spinner to turn on
+        this.isCreatedFund = true
       // Create fund in funds table -> get fund_id
         var fund_id = await this.addNewFund().then((response) => { return response })
+        
 
       // Create new row in users_funds table with fund_id and user_id
       if (fund_id) {
         var userFundInfo = {user_id: this.user_id, fund_id: fund_id}
         var userFund_id = await this.addUserFund(userFundInfo).then((response) => { return response })
-        console.log(userFund_id)
       }
 
       // Create stocks that does not exist in our database in stocks table & allow multiple stocks to be added in one go
@@ -51,20 +51,55 @@ createFund.component("createfunds", {
 
       // Retrieve the stock ID that the user selected -> can use getOurStocks()
       var reloadStocks = await this.getOurStocks()
-      console.log(reloadStocks)
+      if (reloadStocks) {
+        // Store the user_id, stock_id, stock_price, volume in users_stocks table
+        var stocksToBuythis = this.returnStocksWithStockID(reloadStocks)
+        var allocationsStocks = this.returnAllocationswithStockID(stocksToBuythis, this.items)
+       
+        // Store the fund_id, user_stock_id, allocations in funds_users_stocks table
+        if (allocationsStocks && fund_id) {
+          var allocateStocks = await this.addNewFundStocks(fund_id, allocationsStocks).then((response) => { return response })
 
-      // Use Vas helper function (get_ending_shares_no) to get the ending shares no
-      // Place Market Order to buy the stock that does not exist in the fund
-
-      // Store the user_id, stock_id, stock_price, volume in users_stocks table
-
-      // Store the fund_id, user_stock_id, allocations in funds_users_stocks table
+          if(allocateStocks) {
+            this.isCreatedFund = false
+            Swal.fire({icon: 'success',title: 'Success',text: 'Fund successfully created!'})
+            // this.$router.push({name: 'funds'})
+          }
+        }
+      }
+    
       } else if (this.totalAllocations < 100 || this.totalAllocations > 100) {
+        // this trigger if unmaped stock is selected is less than 100 after minus the mapped stock
         Swal.fire({icon: 'error',title: 'Note',text: 'Stock allocation must equate to 100%'})
       }
     },
     checkStockDoesntExistInOurDb() {
       return this.items.filter(f => !this.ourStockList.some(d => d.stock_symbol == f.stock_symbol) );
+    },
+    returnStocksWithStockID(arr1) {
+      return arr1.filter(f => this.items.some(d => d.stock_symbol == f.stock_symbol) );
+    },
+    returnAllocationswithStockID(arr1, arr2) {
+      return arr1.map(x => Object.assign(x, arr2.find(y => y.stock_symbol == x.stock_symbol)));
+    },
+    addNewFundStocks(fund_id,allocatedFunds) {
+      // Store the fund_id, user_stock_id, allocations in funds_users_stocks table
+      return new Promise((resolve, reject) => {
+        var returnList = []
+
+          for (var i = 0; i < allocatedFunds.length; i++) {
+            var stock = allocatedFunds[i]
+            var stockInfo = {fund_id: fund_id, stock_id: stock.stock_id, allocation: (stock.stock_allocation/100)}
+            axios.post('http://localhost:5001/funds_stocks/add', stockInfo).then((response) => {
+              returnList.push(response.data.data.stock_id)
+              if (returnList.length == allocatedFunds.length) {resolve(returnList)}
+            }).catch((error) => {
+              reject(error)
+            })
+          }
+
+          resolve(returnList)
+      })
     },
     addNewStocks(stockList) {
       return new Promise((resolve, reject) => {
@@ -122,7 +157,6 @@ createFund.component("createfunds", {
       })
     },
     AddItem(symbol, company, price){
-      console.log(this.checkStockDoesntExistInOurDb())
         var itemExist = this.items.filter(item => item.stock_symbol === symbol)
         if (itemExist ==  0) {
           this.items.push({stock_symbol: symbol,company: company,current_price: price,stock_allocation: NaN}) 
@@ -146,7 +180,15 @@ createFund.component("createfunds", {
   <div class="spinner-border text-dark" role="status" v-if="!tbankStock_loaded" style="position: absolute;top:50%; left: 50%;margin-left: -50px;margin-top: -50px;">
     <span class="visually-hidden">Loading...</span>
   </div>
+
   <div class="createFundMain" v-else>
+  <div  v-if="!isCreatedFund" style="position:absolute; top:0; width: 100%; height: 100%; z-index: 999; background-color: rgb(0,0,0,0.2);" >
+      <div class="text-center loading">
+          <div class="spinner-border text-warning" role="status" style="position: absolute;top:50%; left: 33%;margin-left: -50px;margin-top: -50px;">
+              <span class="visually-hidden">Loading...</span>
+          </div>
+      </div>
+    </div>
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
