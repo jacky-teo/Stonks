@@ -15,13 +15,15 @@ CREATE TABLE IF NOT EXISTS `users` (
    PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+ALTER TABLE `users`
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,`settlement_acc`) VALUES
 (1, 'admin', 'admin','Z312312','148986','0000009301'),
 (2, 'user2', 'user2','B930284','828676','0000009302');
--- Funds ownd by customer -- 
+-- Funds ownd by custoemr -- 
 DROP TABLE IF EXISTS `funds`;
-CREATE TABLE IF NOT EXISTS `funds` (
+CREATE TABLE IF NOT EXISTS `fund` (
   `fund_id` int(11) NOT NULL AUTO_INCREMENT,
   `fund_name` varchar(50) NOT NULL,
   `fund_investment_amount` float Not Null, 

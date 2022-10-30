@@ -22,7 +22,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app, session_options={'autocommit': True})
+db = SQLAlchemy(app)
 
 class Stocks(db.Model):
     __tablename__ = 'stocks'
@@ -31,10 +31,10 @@ class Stocks(db.Model):
     stock_name = db.Column(db.String(64), nullable=False)
 
 
-    def __init__(self, stock_id,stock_symbol, stock_name):
-        self.stock_id = stock_id
-        self.stock_symbol = stock_symbol
-        self.stock_name = stock_name
+    # def __init__(self, stock_id,stock_symbol, stock_name):
+    #     self.stock_id = stock_id
+    #     self.stock_symbol = stock_symbol
+    #     self.stock_name = stock_name
     
     def json(self):
         return {"stock_id": self.stock_id,"stock_symbol": self.stock_symbol, "stock_name": self.stock_name}
@@ -63,9 +63,7 @@ def get_all():
 @app.route("/stocks/add", methods=['POST'])
 def add_stock():
     data = request.get_json()
-    stock_symbol = data['stock_symbol']
-    stock_name = data['stock_name']
-    stock = Stocks(stock_symbol, stock_name)
+    stock = Stocks(**data)
     try:
         db.session.add(stock)
         db.session.commit()

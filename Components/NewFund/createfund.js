@@ -43,15 +43,15 @@ createFund.component("createfunds", {
         console.log(userFund_id)
       }
 
-      // Create stocks that does not exist in our database in stocks table
+      // Create stocks that does not exist in our database in stocks table & allow multiple stocks to be added in one go
       var stockDoesExistInOurDb = this.checkStockDoesntExistInOurDb()
-
       if (stockDoesExistInOurDb.length > 0) {
         var newStocks = await this.addNewStocks(stockDoesExistInOurDb).then((response) => { return response })
-        console.log(newStocks)
       }
 
       // Retrieve the stock ID that the user selected -> can use getOurStocks()
+      var reloadStocks = await this.getOurStocks()
+      console.log(reloadStocks)
 
       // Use Vas helper function (get_ending_shares_no) to get the ending shares no
       // Place Market Order to buy the stock that does not exist in the fund
@@ -65,6 +65,25 @@ createFund.component("createfunds", {
     },
     checkStockDoesntExistInOurDb() {
       return this.items.filter(f => !this.ourStockList.some(d => d.stock_symbol == f.stock_symbol) );
+    },
+    addNewStocks(stockList) {
+      return new Promise((resolve, reject) => {
+        var returnList = []
+
+          for (var i = 0; i < stockList.length; i++) {
+            var stock = stockList[i]
+            var stockInfo = {stock_symbol: stock.stock_symbol, stock_name: stock.company}
+
+            axios.post('http://localhost:5003/stocks/add', stockInfo).then((response) => {
+              returnList.push(response.data.data.stock_id)
+              if (returnList.length == stockList.length) {resolve(returnList)}
+            }).catch((error) => {
+              reject(error)
+            })
+          }
+
+          resolve(returnList)
+      })
     },
     addUserFund(userFundInfo) {
       return new Promise((resolve, reject) => {
@@ -95,7 +114,7 @@ createFund.component("createfunds", {
     },
     getOurStocks() {
       return new Promise((resolve, reject) => {
-        axios.get("http://localhost:5003/stocks-with-price/").then((response) => {
+        axios.get("http://localhost:5003/stocks-with-price").then((response) => {
             resolve(response.data.data.stocks)
           }).catch(error => {
             reject(error);
