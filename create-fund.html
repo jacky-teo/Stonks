@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create fund</title>
+      <!-- bootstrap 5 css -->
+    <link href="Dependencies/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="Dependencies/bootstrap-icons.css">
+    <!-- css -->
+    <link rel="stylesheet" href="Components/Navbar/style.css">
+    <!-- boxicon css -->
+    <link rel= "stylesheet" href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css">  
+    <script src="Dependencies/axios.min.js"></script>
+    <script src="Dependencies/sweetalert2@11.js"></script>
+</head>
+<body>
+    <div class="everything">
+    <div id = "sidenav">
+        <sidenav @closebar=""></sidenav>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-8 align-self-center">
+           <!-- Stocks Placeholder -->
+           <div id="createfunds">
+               <createfunds></createfunds>
+           </div>
+       </div>
+   </div>
+
+    </div>
+    <script src="Dependencies/bootstrap.bundle.min.js"></script>
+    <!-- vue.js -->
+    <script src="Dependencies/vue.global.prod.min.js"></script>
+    <!-- external js -->
+    <script src="Components/FundsList/fundslist.js"></script>
+    <script src="Components/StocksList/StocksList.js"></script>
+    <script src="Components/StocksList/UnownedStocks.js"></script>
+    <script src="Components/NewFund/createfund.js"></script>
+    <!-- sidenav.js -->
+    <script src="Components/Navbar/sidenav.js"></script>
+</body>
+</html>
