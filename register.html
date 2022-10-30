@@ -17,93 +17,95 @@
         <div id="register">
             <div>
                 <!-- success and failed alerts -->
-                <div v-if="alert.alertBool" class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{alert.alertMsg}}
+                <div v-if="alerts.alertBool" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>{{alerts.alertMsg}}</strong>
                 </div>
-                <div v-if="alert.successBool" class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{alert.successMsg}}
+                <div v-if="alerts.successBool" class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                    <strong>{{alerts.successMsg}}</strong>
                 </div>
+                <button v-if="alerts.successBool" type="button" class="btn btn-success my-3 w-100 p-3">
+                    <a href="login.html" class="link-dark">Go to Login</a>
+                </button>
 
                 <!-- user form START -->
-                <form>
-                    <div class="row">            
-                        <div class="col-md-6 mb-3">
-                            <label for="username-input" class="form-label">Stonks Username</label>
-                            <input type="text" class="form-control" id="username" v-model="form.username" maxlength="64">
-                            <small class="text-danger">
-                                {{message.username}}
-                            </small>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="password" class="form-label">Stonks Password</label>
-                            <input type="password" class="form-control" id="password" v-model="form.password" maxlength="64">
-                            <small class="text-danger">
-                                {{message.password}}
-                            </small>
-                        </div>
-
-                        <div class="col-6 mb-3">
-                            <label for="user_acc_id" class="form-label">tBank User ID</label>
-                            <input type="text" class="form-control" id="user_acc_id" v-model="form.user_acc_id" maxlength="64">
-                            <small class="text-danger">
-                                {{message.user_acc_id}}
-                            </small>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label for="user_pin" class="form-label">tBank User PIN</label>
-                            <input type="text" class="form-control" id="user_pin" v-model="form.user_pin">
-                            <small class="text-danger">
-                                {{message.user_pin}}
-                            </small>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <label for="settlement_acc" class="form-label">tBank Settlement Account</label>
-                            <input type="text" class="form-control" id="settlement_acc" v-model="form.settlement_acc" maxlength="64">
-                            <small class="text-danger">
-                                {{message.settlement_acc}}
-                            </small>
-                        </div>
-
-                    <!-- submit button; only able to submit when required inputs are valid -->
-                    <button type="button" class="btn btn-primary my-3 w-100 p-3" data-bs-toggle="modal"
-                    data-bs-target="#staticBackdrop" :disabled="isFormValid">
-                    Register
-                    </button>
-                    <div class="mb-3 text-center">
-                        <a>Already have an account? Login </a><a href="login.html">here</a><a>.</a>
-                    </div>
-                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
-                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">
-                                Confirmation
-                                </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                <div v-if="!alerts.successBool">
+                    <form>
+                        <div class="row">            
+                            <div class="col-md-6 mb-3">
+                                <label for="username-input" class="form-label">Stonks Username</label>
+                                <input type="text" class="form-control" id="username" v-model="form.username" maxlength="64">
+                                <small class="text-danger">
+                                    {{message.username}}
+                                </small>
                             </div>
-                            <div class="modal-body">
-                                I declare all registration details are corrected.
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Stonks Password</label>
+                                <input type="password" class="form-control" id="password" v-model="form.password" maxlength="64">
+                                <small class="text-danger">
+                                    {{message.password}}
+                                </small>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                Cancel
-                                </button>
-                                <button type="button" class="btn btn-primary my-3" @click="register"
-                                data-bs-dismiss="modal">
-                                Register
-                                </button>
+
+                            <div class="col-6 mb-3">
+                                <label for="user_acc_id" class="form-label">tBank User ID</label>
+                                <input type="text" class="form-control" id="user_acc_id" v-model="form.user_acc_id" maxlength="64">
+                                <small class="text-danger">
+                                    {{message.user_acc_id}}
+                                </small>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label for="user_pin" class="form-label">tBank User PIN</label>
+                                <input type="text" class="form-control" id="user_pin" v-model="form.user_pin">
+                                <small class="text-danger">
+                                    {{message.user_pin}}
+                                </small>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="settlement_acc" class="form-label">tBank Settlement Account</label>
+                                <input type="text" class="form-control" id="settlement_acc" v-model="form.settlement_acc" maxlength="64">
+                                <small class="text-danger">
+                                    {{message.settlement_acc}}
+                                </small>
+                            </div>
+
+                        <!-- submit button; only able to submit when required inputs are valid -->
+                        <button type="button" class="btn btn-primary my-3 w-100 p-3" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop" :disabled="isFormValid">
+                        Register
+                        </button>
+                        <div class="mb-3 text-center">
+                            <a>Already have an account? Login </a><a href="login.html">here</a><a>.</a>
+                        </div>
+                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">
+                                    Confirmation
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    I declare all registration details are corrected.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-primary my-3" @click="register"
+                                    data-bs-dismiss="modal">
+                                    Register
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    </div>
-
-                </form>
+                        </div>
+                    </form>
+                </div>
                 <!-- user form END -->
-
             </div>
-
         </div>
         </div>
     </div>

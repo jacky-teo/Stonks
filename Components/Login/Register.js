@@ -9,11 +9,11 @@ const register = Vue.createApp({
                 user_pin: "",
                 settlement_acc: "",
             },
-            alert: {
-                alertBool: false,
+            alerts: {
                 alertMsg: "",
-                successBool: false,
                 successMsg: "",
+                alertBool: false,
+                successBool: false,
             },
             message: {
                 username: "",
@@ -39,39 +39,48 @@ const register = Vue.createApp({
                 }
             }
             else {
-                this.message.username = "Username cannot be empty."
+                this.message.username = "Username cannot be empty.";
             }
         },
         "form.password"(value){
             if (value && value.trim().length>0){
-                this.message.password = ""
+                this.message.password = "";
             }
             else {
-                this.message.password = "Password cannot be empty."
+                this.message.password = "Password cannot be empty.";
             }
         },
         "form.user_acc_id"(value){
             if (value && value.trim().length>0){
-                this.message.user_acc_id = ""
+                this.message.user_acc_id = "";
+                if (value.length>50){
+                    this.message.user_acc_id = "tBank Account ID cannot be more than 50 characters.";
+                }
             }
             else {
-                this.message.user_acc_id = "tBank User ID cannot be empty."
+                this.message.user_acc_id = "tBank User ID cannot be empty.";
             }
         },
         "form.user_pin"(value){
             if (value && value.trim().length>0){
-                this.message.user_pin = ""
+                this.message.user_pin = "";
+                if (value.length>11){
+                    this.message.user_pin = "tBank User Pin number cannot be more than 11 integers.";
+                }
             }
             else {
-                this.message.user_pin = "tBank User Pin cannot be empty."
+                this.message.user_pin = "tBank User Pin cannot be empty.";
             }
         },
         "form.settlement_acc"(value){
             if (value && value.trim().length>0){
-                this.message.settlement_acc = ""
+                this.message.settlement_acc = "";
+                if (value.length>11){
+                    this.message.settlement_acc = "tBank Settlement Account number cannot be more than 11 integers.";
+                }
             }
             else {
-                this.message = "tBank Settlement Account cannot be empty."
+                this.message.settlement_acc = "tBank Settlement Account cannot be empty.";
             }
         },
     },
@@ -93,57 +102,49 @@ const register = Vue.createApp({
         //get all username
         async getAllUsers() {
             try {
-               const res = await axios({
-                  url: "http://127.0.0.1:5005/users",
-               });
-   
-               data = res.data.data;
-               console.log(data)
-               this.userList = data.users.map((user) => user.username.toLowerCase());
-               console.log(this.userList);
-   
+                const res = await axios({
+                url: "http://127.0.0.1:5005/users",
+                });
+                data = res.data.data;
+                this.userList = data.users.map((user) => user.username.toLowerCase());
+                // console.log(this.userList);
             } catch (err) {
-               // Handle Error Here
-               console.error(err);
+                // Handle Error Here
+                console.error(err);
             }
-         },
+        },
         register: function() {
             this.loading = true;
+            this.alerts.alertBool = false;
+            this.alerts.successBool = false;
             axios.post("http://127.0.0.1:5005/register", {
                 username: this.form.username.trim(),
                 password: this.form.password.trim(),
                 user_acc_id: this.form.user_acc_id.trim(),
                 user_pin: this.form.user_pin.trim(),
-                settlement_acc: this.form.settlement_acc.trim(),
+                settlement_acc: this.form.settlement_acc.trim()
             })
             .then(response => {
                 if (response.data.status == "success") {
+                    this.alerts.successBool = true;
+                    this.alerts.successMsg = "✔️ Registration Successful!";
                     this.processing = false;
                     this.$emit("authenticated", true, response.data.data);
-                    this.alert.successBool = true;
-                    this.alert.sucessMsg = "✔️ Registration Successful!"
-                    console.log(response.data)
-                    this.getAllSkillNames();
-                    //reset form
-                    this.form = {
-                        username: "",
-                        password: "",
-                        user_acc_id: "",
-                        user_pin: "",
-                        settlement_acc: "",
-                    };
+                    // console.log(response.data);
+                    this.getAllUsers();
                 } else {
-                    console.log(error)
-                    this.alert.alertBool = true;
-                    this.alert.alertMsg = "❌ Registration Failed, Please try again!";
+                    console.error(error)
+                    this.alerts.alertsBool = true;
+                    this.alerts.alertsMsg = "❌ Registration Failed, Please try again!";
                 }
             })
             .catch(error => {
-                console.log(error)
-                this.alert.alertMsg = "❌ Registration Failed, Please try again!";
+                console.error(error)
+                this.alerts.alertBool = true;
+                this.alerts.alertMsg = "❌ Registration Failed, Please try again!";
                 this.processing = false;
             });
-        }
+        },
     },
 });
  
