@@ -1,0 +1,943 @@
+openapi: 3.0.0
+servers:
+  - description: Funds Service
+    url: http://localhost:5000
+  - description: Funds Stocks Service
+    url: http://localhost:5001
+  - description: User Stocks Service
+    url: http://localhost:5002
+  - description: Stocks Service
+    url: http://localhost:5003
+  - description: Transaction Service
+    url: http://localhost:5004
+  - description: Users Service
+    url: http://localhost:5005
+  - description: User Fund Service
+    url: http://localhost:5006
+  - description: Marketplace Stocks Service
+    url: http://localhost:5008
+  - description: Marketplace Service
+    url: http://localhost:5009
+  - description: Place Market Order Service
+    url: http://localhost:5010
+info:
+  description: DBEA Service API
+  version: "1.0.0"
+  title: DBEA Service API
+tags:
+  - name: Funds Service
+    description: Fund information 
+  - name: Funds Stock Service
+    description: Fund Stock settlement information
+  - name: Stocks Service
+    description: Stocks that Stonks has
+  - name: User Stocks Service
+    description: Stocks owned by user in tBank or not in tBank
+  - name: Transaction Service
+    description: All transaction information
+  - name: User Service
+    description: User information
+  - name: User Funds Service
+    description: Funds that is related a user
+  - name: Marketplace Service
+    description: Marketplace information
+  - name: Marketplace Stocks Service
+    description: Stock that is related to a marketplace
+  - name: Place Market Order Service
+    description: Rebalance the account
+paths:
+  /funds:
+    get:
+      tags:
+        - Funds Service
+      summary: Get all funds
+      operationId: getAllFund
+      description: |
+        By passing in the appropriate options, you can get all the funds
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Funds'
+        '404':
+          description: Fund not found.
+  /funds/{fund_id}:
+    get:
+      tags:
+        - Funds Service
+      summary: Get a specific fund
+      operationId: FindSpecificFund
+      description: |
+        By passing in the appropriate options, you can search for a specific fund based on the fund id
+      parameters:
+        - in: path
+          name: fund_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The fund_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Funds'
+        '404':
+          description: Fund not found.
+  /funds/add:
+    post:
+      tags:
+        - Funds Service
+      summary: Adds a new fund
+      operationId: addFund
+      description: |
+        By passing in the appropriate options, you can create a new fund and return the fund json
+      responses:
+        '201':
+          description: 'Fund created'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Funds'
+        '500':
+          description: 'An error occurred while creating the fund.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Funds'
+        description: Fund
+  /funds_stocks:
+    get:
+      tags:
+        - Funds Stock Service
+      summary: Get all funds stocks
+      operationId: getAllFundStock
+      description: |
+        By passing in the appropriate options, you can get all the funds stocks
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Funds_Stocks'
+        '404':
+          description: Fund not found.
+  /funds_stocks/user/{fund_id}/{user_id}:
+    get:
+      tags:
+        - Funds Stock Service
+      summary: Get stocks by fund_id and user_id
+      operationId: FindSpecificFundStock
+      description: |
+        By passing in the appropriate options, you can search for a specific fund stock based on the fund id & user id
+      parameters:
+        - in: path
+          name: fund_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The fund_id
+        - in: path
+          name: user_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Funds_Stocks'
+        '404':
+          description: Fund not found.
+  /funds_stocks/add:
+    post:
+      tags:
+        - Funds Stock Service
+      summary: Adds a new fund stock
+      operationId: addNewFundStock
+      description: |
+        By passing in the appropriate options, you can create a new fund stock and return the fund json
+      responses:
+        '201':
+          description: 'Fund created'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fund_id:
+                    type: integer
+                  stock_id:
+                    type: integer
+        '500':
+          description: 'An error occurred while creating the fund.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Funds_Stocks'
+  /stocks:
+    get:
+      tags:
+        - Stocks Service
+      summary: Get all stocks
+      operationId: getAllStocks
+      description: |
+        By passing in the appropriate options, you can get all the stocks from Stonks
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Stocks'
+        '404':
+          description: Fund not found.
+  /stocks-with-price:
+    get:
+      tags:
+        - Stocks Service
+      summary: Get stocks with price
+      operationId: GetStockPrice
+      description: |
+        By passing in the appropriate options, you can search for a stocks with prices.
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Stocks'
+        '404':
+          description: Stocks not found.
+  /users_stocks/tbank/{user_id}:
+    get:
+      tags:
+        - User Stocks Service
+      summary: Get stocks with from tBank
+      operationId: GetUserStockFromTBank
+      description: |
+        By passing in the appropriate parameters, you will get the user stocks from tBank
+      parameters:
+        - in: path
+          name: user_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customerID:
+                    type: integer
+                  price:
+                    type: number
+                  quantity:
+                    type: integer
+                  symbol:
+                    type: string
+                  company:
+                    type: string
+                  tradingDate:
+                    type: string
+                    format: date-time
+        '404':
+          description: There are no stocks for this user.
+  /not_owned_stocks/tbank/{user_id}:
+    get:
+      tags:
+        - User Stocks Service
+      summary: Get all stocks not owned 
+      operationId: GetNotOwnedUserStocks
+      description: |
+        By passing in the appropriate parameters, you will get the user stocks from tBank that is not owned
+      parameters:
+        - in: path
+          name: user_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stock_id:
+                    type: integer
+                  stock_symbol:
+                    type: string
+                  stock_name:
+                    type: string
+        '404':
+          description: There are no stocks.
+  /transactions:
+    get:
+      tags:
+        - Transaction Service
+      summary: Get all transactions
+      operationId: getAllTransactions
+      description: |
+        By passing in the appropriate options, you can get all the transaction
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transactions'
+        '404':
+          description: Transaction not found.
+  /transactions/user/{user_id}:
+    get:
+      tags:
+        - Transaction Service
+      summary: Get a specific transaction based on user id
+      operationId: FindSpecificTransaction
+      description: |
+        By passing in the appropriate options, you can search for a specific transaction based on the user id
+      parameters:
+        - in: path
+          name: user_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transactions'
+        '404':
+          description: Transaction not found.
+  /transactions/add:
+    post:
+      tags:
+        - Transaction Service
+      summary: Adds a new transaction
+      operationId: addNewTransaction
+      description: |
+        By passing in the appropriate options, you can create a new transaction and return the transaction json
+      responses:
+        '201':
+          description: 'Transaction created'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transactions'
+        '500':
+          description: 'An error occurred while creating the transactions.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transactions'
+        description: Transaction
+  /users:
+    get:
+      tags:
+        - User Service
+      summary: Get all users
+      operationId: getAllUsers
+      description: |
+        By passing in the appropriate options, you can get all the Users
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
+        '404':
+          description: Users not found.
+  /users/{username}:
+    get:
+      tags:
+        - User Service
+      summary: Get a specific user based on username
+      operationId: FindSpecificUser
+      description: |
+        By passing in the appropriate options, you can search for a specific user based on the username
+      parameters:
+        - in: path
+          name: username   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+            minimum: 1
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
+        '404':
+          description: User not found.
+  /login:
+    post:
+      tags:
+        - User Service
+      summary: Login to stonks
+      operationId: loginToStonks
+      description: |
+       Login to stonks system
+      responses:
+        '200':
+          description: 'Login successful'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+        '401':
+          description: 'Failed getting user.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Users'
+        description: Transaction
+  /register:
+    post:
+      tags:
+        - User Service
+      summary: Register to stonks
+      operationId: registerToStonks
+      description: |
+       Register to stonks system
+      responses:
+        '200':
+          description: 'User added successfully'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
+        '404':
+          description: 'Could not add user.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Users'
+  /logout:
+    post:
+      tags:
+        - User Service
+      summary: Logout stonks
+      operationId: logoutToStonks
+      description: |
+       Logout stonks system
+      responses:
+        '200':
+          description: 'User logout successfully'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Users'
+  /users_funds:
+    get:
+      tags:
+        - User Funds Service
+      summary: Get all user funds stocks
+      operationId: getAllUserFunds
+      description: |
+        By passing in the appropriate options, you can get all the user funds stocks
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users_Funds'
+        '404':
+          description: There are no users funds.
+  /funds/user_funds/{user_id}:
+    get:
+      tags:
+        - User Funds Service
+      summary: Get funds based on user id
+      operationId: FindSpecificUserFundStock
+      description: |
+        By passing in the appropriate options, you can search for fund based on the user id
+      parameters:
+        - in: path
+          name: user_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fund_id:
+                    type: integer
+                  fund_name:
+                    type: string
+                  fund_investment_amount:
+                    type: number
+        '404':
+          description: Fund not found.
+  /users_funds/user/{user_id}:
+    get:
+      tags:
+        - User Funds Service
+      summary: Get all Users Funds by user_id
+      operationId: FindAllUserFundStock
+      description: |
+        By passing in the appropriate options, you can search for fund based on the user id
+      parameters:
+        - in: path
+          name: user_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users_Funds'
+        '404':
+          description: Fund not found.
+  /user_funds/add:
+    post:
+      tags:
+        - User Funds Service
+      summary: Adds a new fund stock
+      operationId: addNewUserFund
+      description: |
+        By passing in the appropriate options, you can create a new fund stock and return the fund json
+      responses:
+        '201':
+          description: 'Fund created'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fund_id:
+                    type: integer
+                  stock_id:
+                    type: integer
+        '400':
+          description: 'User fund already exists.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fund_id:
+                    type: integer
+                  stock_id:
+                    type: integer
+        '500':
+          description: 'An error occurred while creating the fund.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fund_id:
+                    type: integer
+                  stock_id:
+                    type: integer
+  /marketplace:
+    get:
+      tags:
+        - Marketplace Service
+      summary: Get all funds
+      operationId: getAllMarketplace
+      description: |
+        By passing in the appropriate options, you can get all the marketplace.
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Marketplace'
+        '404':
+          description: Marketplace not found.
+  /marketplace/{marketplace_id}:
+    get:
+      tags:
+        - Marketplace Service
+      summary: Get a specific fund
+      operationId: FindSpecificMarketplace
+      description: |
+        By passing in the appropriate options, you can search for a specific fund based on the fund id
+      parameters:
+        - in: path
+          name: marketplace_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The marketplace_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Marketplace'
+        '404':
+          description: Marketplace not found.
+  /marketplace_stocks:
+    post:
+      tags:
+        - Marketplace Stocks Service
+      summary: Adds new marketplace stocks
+      operationId: addNewMarketplaceStocks
+      description: |
+        By passing in the appropriate options, you can create a new marketplace stocks 
+      responses:
+        '201':
+          description: 'Marketplace stocks created'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fund_id:
+                    type: integer
+                  stock_id:
+                    type: integer
+        '500':
+          description: 'An error occurred while adding the marketplace_stocks.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fund_id:
+                    type: integer
+                  stock_id:
+                    type: integer
+    get:
+      tags:
+        - Marketplace Stocks Service
+      summary: Get all marketplace stocks
+      operationId: GetAllMarketplaceStocks
+      description: |
+        By passing in the appropriate options, you can get all marketplace stocks
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Marketplace_Stocks'
+        '404':
+          description: There are no marketplace stocks.
+  /marketplace_stocks/{stock_id}/{marketplace_id}:
+    get:
+      tags:
+        - Marketplace Stocks Service
+      summary: Get Marketplce Stocks by Symbol and Marketplace ID
+      operationId: FindMarketplaceStocksBySymbolAndMarketplaceID
+      description: |
+        By passing in the appropriate options, you can get marketplace stocks based on the stocks id and marketplace id
+      parameters:
+        - in: path
+          name: stock_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The stock_id
+        - in: path
+          name: marketplace_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The marketplace_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Marketplace_Stocks'
+        '404':
+          description: Marketplace Stocks
+  /marketplace_stocks/transaction/{stock_id}/{marketplace_id}:
+    get:
+      tags:
+        - Marketplace Stocks Service
+      summary: Get volume in marketplace and stock ID
+      operationId: FindVolumeInMarketplaceBySymbolAndMarketplaceID
+      description: |
+        By passing in the appropriate options, you can get marketplace stocks based on the stocks id and marketplace id
+      parameters:
+        - in: path
+          name: stock_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The stock_id
+        - in: path
+          name: marketplace_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The marketplace_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Marketplace_Stocks'
+        '500':
+          description: An error occurred while updating the marketplace stocks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Marketplace_Stocks'
+        '404':
+          description: Marketplace Stocks not found.
+  /rebalance:
+    post:
+      tags:
+        - Place Market Order Service
+      summary: Rebalance the stock
+      operationId: rebalanceStock
+      description: |
+        By passing in the appropriate options, you can rebalance the stocks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                additionalInvest:  
+                  type: number
+                allocation:   
+                  type: number
+              required:
+                - additionalInvest
+                - email
+            encoding:
+              payload:
+                contentType: application/json
+      responses:
+        '201':
+          description: 'Account rebalanced'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: 'An error occurred while rebalancing.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+    schemas:
+      Funds:
+        type: object
+        properties:
+          fund_id:
+            type: integer
+            format: int64
+          fund_name:
+            type: string
+          fund_investment_amount:
+            type: number
+          fund_creation_date:
+            type: string
+            format: date-time
+      Funds_Stocks:
+        type: object
+        properties:
+          fund_id:
+            type: integer
+            format: int64
+          stock_id:
+            type: integer
+            format: int64
+          allocation:
+            type: number
+      Stocks:
+        type: object
+        properties:
+          stock_id:
+            type: integer
+            format: int64
+          stock_symbol:
+            type: string
+          stock_name:
+            type: string
+      Transactions:
+        type: object
+        properties:
+          transaction_id:
+            type: integer
+            format: int64
+          user_id:
+            type: integer
+            format: int64
+          marketplace_id:
+            type: integer
+            format: int64
+          stock_id:
+            type: integer
+            format: int64
+          stock_price:
+            type: number
+          volume:
+            type: integer
+            format: int64
+          date:
+            type: string
+            format: date-time
+      Users:
+        type: object
+        properties:
+          user_id:
+            type: integer
+            format: int64
+          username:
+            type: string
+            maxLength: 50
+          password:
+            type: string
+            maxLength: 255
+          user_acc_id:
+            type: string
+            maxLength: 50
+          user_pin:
+            type: string
+            maxLength: 255
+          settlement_acc:
+            type: integer
+            format: int64
+      Users_Funds:
+        type: object
+        properties:
+          user_id:
+            type: integer
+            format: int64
+          fund_id:
+            type: integer
+            format: int64
+      Marketplace:
+        type: object
+        properties:
+          marketplace_id:
+            type: integer
+            format: int64
+          marketplace_name:
+            type: string
+            maxLength: 50
+      Marketplace_Stocks:
+        type: object
+        properties:
+          marketplace_id:
+            type: integer
+            format: int64
+          stock_id:
+            type: integer
+            format: int64
+          volume_in_market:
+            type: integer
+            format: int64
