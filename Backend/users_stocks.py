@@ -124,14 +124,23 @@ def get_stocks_by_not_mapped_customer_id(user_id):
         if s.stock_id not in mappedStocks:
             unmappedStocks.append(s)
     print(unmappedStocks)
-    return jsonify(
-        {
-            "code": 200,
-            "data": {
-                "stocks": [stocks.json() for stocks in unmappedStocks]
+    if len(unmappedStocks) > 0:
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "stocks": [stocks for stocks in unmappedStocks]
+                }
             }
-        }
-    ),200
+        ),200
+    else:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "There are no stocks."
+            }
+        ), 404
+    
 
 
 if __name__ == '__main__':
