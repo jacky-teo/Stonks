@@ -177,8 +177,23 @@ def logout():
     return jsonify({
         "result": 200,
         "status": "success",
-        "message": "User logout successfully"
+        "message": "logout successfully"
     }), 200
+
+# get info of logged in user
+@app.route('/user_info', methods=['GET', 'POST'])
+@login_required
+def user_info():
+    if current_user.is_authenticated:
+        return jsonify({
+            "result": 200,
+            "data": current_user.json()
+        }), 200
+    else:
+        return jsonify({
+            "result": 401,
+            "message": "No user info, user not logged in"
+        }), 401
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5005, debug=True)

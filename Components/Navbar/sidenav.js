@@ -3,33 +3,41 @@ const sidenav = Vue.createApp({});
 //navbar vue component
 sidenav.component("sidenav", {
     data() {
-      return {
-        appName: "stonks",
-        toggleClick: false,
-        modeClick: false,
-      };
+        return {
+            appName: "stonks",
+            toggleClick: false,
+            modeClick: false,
+            authenticated: []
+        };
     },
-    methods: { 
-        toggleColor() {
-            this.modeClick = !modeClick;
-            this.$emit('colorchange', this.modeClick);
-        }
+    methods: {
+        logout: function() {
+            axios({
+                method: "post",
+                url: "http://127.0.0.1:5005/logout",
+                // data: getUser.json()
+            })
+            .then(response => {
+                console.log(response);
+                // window.location.href = 'http://127.0.1:5500/index.html';
+            })
+            .catch(error => {
+                console.error(error);
+                this.message = "Login Failed, Please try again!";
+                this.processing = false;
+            });
+        },
     },
     computed: {
         links(){
             return{
             dashboardLink: "../dashboard",
-            aggregationLink: "../aggregation",
             fundsLink: "../funds",
-            notificationsLink: "../notifications",
-            logOut: "../login/",
             }
         },
-
         toggleClass() {
             return this.toggleClick ? 'close' : '';
         },
-
         modeClass() {
             return this.modeClick ? 'dark' : '';
         },
@@ -50,26 +58,14 @@ sidenav.component("sidenav", {
                 <ul class="menu-links">
                     <li class="nav-link">
                         <a :href=links.dashboardLink>
-                            <i class='bx bx-home-alt icon' ></i>
+                            <i class='bx bx-home-alt icon'></i>
                             <span class="text nav-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-link">
-                        <a :href=links.aggregationLink>
-                            <i class='bx bx-pie-chart-alt icon' ></i>
-                            <span class="text nav-text">Aggregation</span>
-                        </a>
-                    </li>
-                    <li class="nav-link">
                         <a :href=links.fundsLink>
-                            <i class='bx bx-bar-chart-alt-2 icon' ></i>
-                            <span class="text nav-text">Funds</span>
-                        </a>
-                    </li>
-                    <li class="nav-link">
-                        <a :href=links.notificationsLink>
-                            <i class='bx bx-bell icon'></i>
-                            <span class="text nav-text">Notifications</span>
+                            <i class='bx bx-bar-chart-alt-2 icon'></i>
+                            <span class="text nav-text">Create Fund</span>
                         </a>
                     </li>
                 </ul>
@@ -77,9 +73,9 @@ sidenav.component("sidenav", {
 
             <div class="bottom-content">
                 <hr>
-                <li class="nav-link">
-                    <a :href=links.logOut>
-                        <i class='bx bx-log-out icon' ></i>
+                <li class="nav-link" @click=logout>
+                    <a>
+                        <i class='bx bx-log-out icon'></i>
                         <span class="text nav-text">Logout</span>
                     </a>
                 </li>
@@ -91,7 +87,7 @@ sidenav.component("sidenav", {
                     </div>
                     <span class="mode-text text">Mode</span>
 
-                    <div class="toggle-switch" @click="toggleColor">
+                    <div class="toggle-switch" @click="this.modeClick = !modeClick;">
                         <span class="switch"></span>
                     </div>
                 </li>
