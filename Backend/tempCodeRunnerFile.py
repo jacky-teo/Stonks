@@ -1,1 +1,0 @@
-fund_stocks/user
