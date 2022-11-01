@@ -106,7 +106,6 @@ def get_stocks_by_fund_id(fund_id,user_id):
                         "allocation": fundStock.allocation,
                         "volume": us['quantity']
                     })
-    print(results)
     return jsonify(
         {
             "code": 200,
