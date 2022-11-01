@@ -55,14 +55,23 @@ createFund.component("createfunds", {
         // Store the user_id, stock_id, stock_price, volume in users_stocks table
         var stocksToBuythis = this.returnStocksWithStockID(reloadStocks)
         var allocationsStocks = this.returnAllocationswithStockID(stocksToBuythis, this.items)
-       
+   
+        console.log(stocksToBuythis)
+
+
+
         // Store the fund_id, user_stock_id, allocations in funds_users_stocks table
         if (allocationsStocks && fund_id) {
           var allocateStocks = await this.addNewFundStocks(fund_id, allocationsStocks).then((response) => { return response })
+          var placeMarketOrder = await this.placeMarketOrder().then((response) => { return response })
 
-          if(allocateStocks) {
+
+          if(allocateStocks && placeMarketOrder) {
             this.isCreatedFund = false
             Swal.fire({icon: 'success',title: 'Success',text: 'Fund successfully created!'})
+            this.items = []
+            this.fundInfo = []
+            this.fundInterval = 0
             // this.$router.push({name: 'funds'})
           }
         }
@@ -72,6 +81,29 @@ createFund.component("createfunds", {
         // this trigger if unmaped stock is selected is less than 100 after minus the mapped stock
         Swal.fire({icon: 'error',title: 'Note',text: 'Stock allocation must equate to 100%'})
       }
+    },
+    placeMarketOrder() {
+      var data = {
+        "AdditionalInvest": this.fundInfo.fund_investment_amount,
+        "allocations": this.returnAllocationsBasedOnPlaceMarketOrderFormat(),
+      }
+
+      return new Promise((resolve, reject) => {
+        axios.post("http://localhost:5010/rebalance/" + customer_id, data).then((response) => {
+            resolve(response.data.data)
+          }).catch(error => {
+            reject(error);
+        });
+      })
+
+
+    },
+    returnAllocationsBasedOnPlaceMarketOrderFormat() {
+      var allocations = {}
+      this.items.forEach((item) => {
+        allocations[item.stock_symbol] = item.stock_allocation
+      })
+      return allocations
     },
     checkStockDoesntExistInOurDb() {
       return this.items.filter(f => !this.ourStockList.some(d => d.stock_symbol == f.stock_symbol) );
@@ -182,13 +214,6 @@ createFund.component("createfunds", {
   </div>
 
   <div class="createFundMain" v-else>
-  <div  v-if="!isCreatedFund" style="position:absolute; top:0; width: 100%; height: 100%; z-index: 999; background-color: rgb(0,0,0,0.2);" >
-      <div class="text-center loading">
-          <div class="spinner-border text-warning" role="status" style="position: absolute;top:50%; left: 33%;margin-left: -50px;margin-top: -50px;">
-              <span class="visually-hidden">Loading...</span>
-          </div>
-      </div>
-    </div>
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
