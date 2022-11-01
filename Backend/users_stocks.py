@@ -4,6 +4,8 @@ from os import environ
 from flask_cors import CORS  # enable CORS
 from users import Users
 from stocks import Stocks
+from funds_stocks import FundsStocks
+from users_funds   import UsersFunds
 from getCustomerStocks import getCustomerStocks
 from getStockPrice import getStockPrice
 from getStockSymbols import getStockSymbols
@@ -95,6 +97,42 @@ def find_by_user_id_tbank(user_id):
                 "message": "There are no stocks for this user."
             }
         ), 404
+
+## Stocks not mapped to funds_stocks
+@app.route("/not_mapped_stocks/<int:user_id>")
+def get_stocks_by_not_mapped_customer_id(user_id):
+    
+    user_info = Users.query.filter_by(user_id=user_id).first()
+    usersFundsList = UsersFunds.query.filter_by(user_id=user_id).all()
+    fundIDList = [fund.fund_id for fund in usersFundsList]
+    stockIDList = []
+    for id in fundIDList:
+        stockInFund = FundsStocks.query.filter_by(fund_id=id).all()
+        for sID in stockInFund:
+            if sID.stock_id not in stockIDList:
+                stockIDList.append(sID.stock_id)
+    stocksList = Stocks.query.all()
+
+    mappedStocks = []
+    for s in stocksList:
+        for id in stockIDList:
+            if s.stock_id == id:
+                mappedStocks.append(s.stock_id)
+
+    unmappedStocks = []
+    for s in stocksList:
+        if s.stock_id not in mappedStocks:
+            unmappedStocks.append(s)
+    print(unmappedStocks)
+    return jsonify(
+        {
+            "code": 200,
+            "data": {
+                "stocks": [stocks.json() for stocks in unmappedStocks]
+            }
+        }
+    ),200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002, debug=True)
