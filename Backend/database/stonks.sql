@@ -23,7 +23,7 @@ INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,
 (2, 'user2', 'user2','B930284','828676','0000009302');
 -- Funds ownd by custoemr -- 
 DROP TABLE IF EXISTS `funds`;
-CREATE TABLE IF NOT EXISTS `fund` (
+CREATE TABLE IF NOT EXISTS `funds` (
   `fund_id` int(11) NOT NULL AUTO_INCREMENT,
   `fund_name` varchar(50) NOT NULL,
   `fund_investment_amount` float Not Null, 
