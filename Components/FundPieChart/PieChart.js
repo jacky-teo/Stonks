@@ -1,48 +1,65 @@
 var stocksLabel = []
 var stocksData = []
 var backgroundColorList = []
+var userId = 1
+var fundId = 1 
 
-async function dummyChart() {
-   await getDummyData()
+async function donutChart() {
+	await getFundStocksData()
 
 new Chart("piechart", {
-  type: "doughnut",
-  data: {
-    labels: this.stocksLabel,
-    datasets: [{
-      backgroundColor: this.backgroundColorList,
-      data: this.stocksData,
-    }]
-  },
-  options: {
-    title: {
-      display: true,
-      text: "Fund 1 Stocks"
-    },
-    legend:{
-      position: 'right',
-    }
-  }
+	type: "doughnut",
+	data: {
+		labels: this.stocksLabel,
+		datasets: [{
+			backgroundColor: this.backgroundColorList,
+			data: this.stocksData
+		}]
+	},
+	options: {
+		title: {
+			display: false,
+		},
+		legend:{
+			position: 'right',
+		},
+		plugins: {
+			datalabels: {
+				formatter: (value, ctx) => {
+					let sum = 0;
+					let dataArr = ctx.chart.data.datasets[0].data;
+					dataArr.map(data => {
+						sum += data;
+					});
+					let percentage = (value*100 / sum).toFixed(2)+"%";
+					return percentage;
+			},
+				color: '#fff',
+		}
+		}
+  	}
 })}
 
-dummyChart()
+donutChart()
 
 function dynamicColors() {
-  var r = Math.floor(Math.random() * 255);
-  var g = Math.floor(Math.random() * 255);
-  var b = Math.floor(Math.random() * 255);
-  return "rgb(" + r + "," + g + "," + b + ")";
+	var r = Math.floor(Math.random() * 255);
+	var g = Math.floor(Math.random() * 255);
+	var b = Math.floor(Math.random() * 255);
+	return "rgb(" + r + "," + g + "," + b + ")";
 };
 
-async function getDummyData() {
-  let response = await axios
-    .get("http://localhost:5003/fund_stocks/1")
-    .then((response) => {
-      var tempdata = response.data.data
-      for (stock in tempdata){
-        stocksData.push(tempdata[stock]["volume"]);
-        stocksLabel.push(tempdata[stock]["stock_name"]);
-        backgroundColorList.push(dynamicColors());
-      }
-    });
+async function getFundStocksData() {
+	// this.userId = sessionStorage.getItem("userId");
+	// this.fundId = sessionStorage.getItem("fundId");
+  	let response = await axios
+	.get('http://localhost:5001/fund_stocks/user/' + this.fundId + '/' + this.userId)
+	.then((response) => {
+		var tempdata = response.data.data.fundsSettlement;
+		for (stock in tempdata){
+			stocksData.push(tempdata[stock]["allocation"]);
+			stocksLabel.push(tempdata[stock]["stock_name"]);
+			backgroundColorList.push(dynamicColors());
+		}
+	});
 }

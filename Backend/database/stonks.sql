@@ -23,7 +23,7 @@ INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,
 (2, 'user2', 'user2','B930284','828676','0000009302');
 -- Funds ownd by custoemr -- 
 DROP TABLE IF EXISTS `funds`;
-CREATE TABLE IF NOT EXISTS `fund` (
+CREATE TABLE IF NOT EXISTS `funds` (
   `fund_id` int(11) NOT NULL AUTO_INCREMENT,
   `fund_name` varchar(50) NOT NULL,
   `fund_investment_amount` float Not Null, 
@@ -123,13 +123,13 @@ INSERT INTO `marketplace_stocks` (`marketplace_id`, `stock_id`,`volume_in_market
 -- Store all transaction data --
 DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE IF NOT EXISTS `transactions`(
-    `transaction_id` int not Null,
+    `transaction_id` int not null auto_increment,
 	`user_id` int NOT NULL,
     `marketplace_id` int NOT NULL,
     `stock_id` int NOT NULL,
     `stock_price` float not Null,
     `volume` int not Null,
-    `date` datetime not null,
+    `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`transaction_id`),
     FOREIGN KEY (`user_id`) REFERENCES users(`user_id`),
 	FOREIGN KEY (`stock_id`) REFERENCES stocks(`stock_id`),
