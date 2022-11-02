@@ -35,7 +35,7 @@ def updateStonksDB(user_id):
                 stock_details = {
                     'stock_symbol':us['symbol'],
                 }
-                stock_information = getStockPrice(stock_details['stock_symbol'],userID = user_info.user_acc_id,PIN = user_info.user_pin)
+                stock_information = getStockPrice(stock_details['stock_symbol'])
                 print(stock_information)
                 stock_details['stock_name'] = stock_information['company']
                 stock = Stocks(stock_symbol=stock_details['stock_symbol'],stock_name=stock_details['stock_name'])
@@ -53,6 +53,12 @@ def updateStonksDB(user_id):
                     "message": "An error occurred while creating the stock."
                 }
             ), 500
+    return jsonify(
+        {
+            "code": 200,
+            "message": "There are no stocks."
+        }
+    ), 200
         
 
 # tBank Functions
@@ -74,6 +80,7 @@ def get_stocks_by_not_owned_customer_id(user_id):
                     'stock_id':stock.stock_id,
                     'stock_symbol':stock.stock_symbol,
                     'stock_name':stock.stock_name,
+                    "stock_price": getStockPrice(symbol=stock.stock_symbol)
                 }
                 result.append(stock_details)
         return jsonify(
@@ -96,23 +103,57 @@ def get_stocks_by_not_owned_customer_id(user_id):
 @app.route("/users_stocks/tbank/<int:user_id>")
 def find_by_user_id_tbank(user_id):
     user_info = Users.query.filter_by(user_id=user_id).first()
+    usersFundsList = UsersFunds.query.filter_by(user_id=user_id).all()
+    fundIDList = [fund.fund_id for fund in usersFundsList]
+    stockIDList = []
     stocksList = Stocks.query.all()
+
+    # Get customer stocks from tBank
     if user_info:
         user_stocks = getCustomerStocks(userID = user_info.user_acc_id,PIN = user_info.user_pin)
+
+
+        for id in fundIDList:
+            stockInFund = FundsStocks.query.filter_by(fund_id=id).all()
+
+        for sID in stockInFund:
+            if sID.stock_id not in stockIDList:
+                stockIDList.append(sID.stock_id)
+        
+
+        mappedStocks = []
+        for s in stocksList:
+            for id in stockIDList:
+                if s.stock_id == id:
+                    mappedStocks.append(s.stock_symbol)
+
+
         if user_stocks:
 
             stocks = []
-            stockListSymbols = []
             for x in user_stocks['Depository']:
-                p = {
-                    "customerID": x['customerID'],
-                    "price": x['price'],
-                    "quantity": x['quantity'],
-                    "symbol": x['symbol'],
-                    "company": getStockSymbols(x['symbol']),
-                    "tradingDate": x['tradingDate']
-                } 
-                stocks.append(p)
+                if x['symbol'] in mappedStocks:
+                    p = {
+                        "customerID": x['customerID'],
+                        "price": x['price'],
+                        "quantity": x['quantity'],
+                        "symbol": x['symbol'],
+                        "mapped": True,
+                        "company": getStockSymbols(x['symbol']),
+                        "tradingDate": x['tradingDate']
+                    } 
+                    stocks.append(p)
+                else:
+                    p = {
+                        "customerID": x['customerID'],
+                        "price": x['price'],
+                        "quantity": x['quantity'],
+                        "symbol": x['symbol'],
+                        "mapped": False,
+                        "company": getStockSymbols(x['symbol']),
+                        "tradingDate": x['tradingDate']
+                    } 
+                    stocks.append(p)
 
 
             return jsonify(
@@ -181,7 +222,6 @@ def get_stocks_by_not_mapped_customer_id(user_id):
                 "message": "There are no stocks."
             }
         ), 404
-    
 
 
 if __name__ == '__main__':
