@@ -12,6 +12,7 @@ createFund.component("createfunds", {
         fundInterval: 0,
         stocks: {},
         ourStockList: [],
+        mainStockList: [],
         tbank_stocks: [],
         stockSelected: [],
         total_allocations: 0,
@@ -22,10 +23,13 @@ createFund.component("createfunds", {
   },
    async mounted() {
     var loadTbankStocks = await this.getCustomerStocks(this.user_id)
-    var loadOurStocks = await this.getOurStocks()
-    loadTbankStocks && loadOurStocks ? this.tbankStock_loaded = true : console.log("Error loading stocks")
+    var loadStocksThatIsNotInCustomerStocks = await this.getListStocks(this.user_id)
+    var loadMainStockList = await this.getOurStocks()
+    // var loadCustomerStocksInStonks = await this.updateStonksDb(this.user_id)
+    loadTbankStocks && loadStocksThatIsNotInCustomerStocks && loadMainStockList ? this.tbankStock_loaded = true : console.log("Error loading stocks")
     this.tbank_stocks = loadTbankStocks
-    this.ourStockList = loadOurStocks
+    this.ourStockList = loadStocksThatIsNotInCustomerStocks
+    this.mainStockList = loadMainStockList
   },
   methods: {
     async createFund() {
@@ -63,8 +67,8 @@ createFund.component("createfunds", {
         // Store the fund_id, user_stock_id, allocations in funds_users_stocks table
         if (allocationsStocks && fund_id) {
           var allocateStocks = await this.addNewFundStocks(fund_id, allocationsStocks).then((response) => { return response })
-          var placeMarketOrder = await this.placeMarketOrder().then((response) => { return response })
-
+          var placeMarketOrder = await this.placeMarketOrder(this.user_id).then((response) => { return response })
+          var createTransaction = await this.createTransaction().then((response) => { return response })
 
           if(allocateStocks && placeMarketOrder) {
             this.isCreatedFund = false
@@ -80,9 +84,15 @@ createFund.component("createfunds", {
       } else if (this.totalAllocations < 100 || this.totalAllocations > 100) {
         // this trigger if unmaped stock is selected is less than 100 after minus the mapped stock
         Swal.fire({icon: 'error',title: 'Note',text: 'Stock allocation must equate to 100%'})
-      }
+      } else if (this.fundInfo.fundName == "") {
+        Swal.fire({icon: 'error',title: 'Note',text: 'Fund name is required'})
+      } else if (this.fundInfo.fund_investment_amount == 0) {
+        Swal.fire({icon: 'error',title: 'Note',text: 'Fund investment amount is required'})
+      } else if (this.fundInterval == 0) {
+        Swal.fire({icon: 'error',title: 'Note',text: 'Fund interval is required'})
+      } 
     },
-    placeMarketOrder() {
+    placeMarketOrder(customer_id) {
       var data = {
         "AdditionalInvest": this.fundInfo.fund_investment_amount,
         "allocations": this.returnAllocationsBasedOnPlaceMarketOrderFormat(),
@@ -106,7 +116,7 @@ createFund.component("createfunds", {
       return allocations
     },
     checkStockDoesntExistInOurDb() {
-      return this.items.filter(f => !this.ourStockList.some(d => d.stock_symbol == f.stock_symbol) );
+      return this.items.filter(f => !this.mainStockList.some(d => d.stock_symbol == f.stock_symbol) );
     },
     returnStocksWithStockID(arr1) {
       return arr1.filter(f => this.items.some(d => d.stock_symbol == f.stock_symbol) );
@@ -179,6 +189,15 @@ createFund.component("createfunds", {
         });
       })
     },
+    getListStocks(customer_id) {
+      return new Promise((resolve, reject) => {
+        axios.get("http://localhost:5002/not_owned_stocks/tbank/" + customer_id).then((response) => {
+            resolve(response.data.data.stocks)
+          }).catch(error => {
+            reject(error);
+        });
+      })
+    },
     getOurStocks() {
       return new Promise((resolve, reject) => {
         axios.get("http://localhost:5003/stocks-with-price").then((response) => {
@@ -188,8 +207,18 @@ createFund.component("createfunds", {
         });
       })
     },
+    // updateStonksDb(customer_id) {
+    //   return new Promise((resolve, reject) => {
+    //     axios.get("http://localhost:5002/updateStonksDB/"+ customer_id).then((response) => {
+    //         resolve(response)
+    //       }).catch(error => {
+    //         reject(error);
+    //     });
+    //   })
+    // },
     AddItem(symbol, company, price){
         var itemExist = this.items.filter(item => item.stock_symbol === symbol)
+        console.log(this.items)
         if (itemExist ==  0) {
           this.items.push({stock_symbol: symbol,company: company,current_price: price,stock_allocation: NaN}) 
         } else {
@@ -199,6 +228,12 @@ createFund.component("createfunds", {
       removeItem(symbol){
         this.items = this.items.filter((item) => item.stock_symbol != symbol);
       },
+      mappedStocks(mapp) {
+        return mapp ? ' btn-secondary' : ' btn-primary';
+      },
+      mappedStockName(mapp) {
+        return mapp ? 'Mapped' : 'Map';
+      }
   },
   computed: {
     totalAllocations() {
@@ -206,6 +241,7 @@ createFund.component("createfunds", {
         return a + Number(c.stock_allocation);
       }, 0)
     },
+  
   },
   template: `
   <!-- Modal -->
@@ -214,6 +250,11 @@ createFund.component("createfunds", {
   </div>
 
   <div class="createFundMain" v-else>
+  
+  <div id="loader">
+    <loader></loader>
+  </div>
+
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -276,7 +317,7 @@ createFund.component("createfunds", {
                           <td>{{stock.symbol}}</td>
                           <td>{{stock.company}}</td>
                           <td>$ {{stock.price}}</td>
-                          <td><button class="btn btn-primary" @click="AddItem(stock.symbol, stock.company, stock.price)">Map</button></td>
+                          <td><button class="btn" v-bind:class="mappedStocks(stock.mapped)" @click="AddItem(stock.symbol, stock.company, stock.price)" :disabled="stock.mapped == 1">{{ mappedStockName(stock.mapped) }}</button></td>
                       </tr>
                       
                       </tbody>
