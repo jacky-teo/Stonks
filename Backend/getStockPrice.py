@@ -1,12 +1,12 @@
 import requests, json
 from functions import url
 
-def getStockPrice(symbol,userID,PIN,OTP=999999):
+def getStockPrice(symbol):
     #Header
     serviceName = 'getStockPrice'
-    # userID = ''
-    # PIN = ''
-    # OTP = ''
+    userID = ''
+    PIN = ''
+    OTP = ''
     
     headerObj = {
         'Header': {
