@@ -48,12 +48,13 @@ const login = Vue.createApp({
                 if (response.data.status == "success") {
                     this.processing = false;
                     this.$emit("authenticated", true, response.data.data);
-                    window.location.href = 'http://127.0.1:5500/index.html'; // to update this link to dynamic.
+                    //window.location.href = 'http://127.0.1:5500/index.html'; // to update this link to dynamic.
                 } else {
                     this.message = "Login Failed, Please try again!";
                 }
             })
             .catch(error => {
+                console.error(error)
                 this.message = "Login Failed, Please try again!";
                 this.processing = false;
             });
