@@ -4,6 +4,7 @@ import ast
 
 from placeMarketOrder import placeMarketOrder
 from getStockPrice import getStockPrice
+from users import Users
 
 # importing utilities
 from get_ending_shares_no import get_ending_shares_no
@@ -35,6 +36,42 @@ def rebalance():
         userID = json_details["userID"]
         PIN = json_details["PIN"]
         settlementAccount = json_details["settlement_account"]
+        OTP = json_details["OTP"] if "OTP" in json_details else 999999
+
+        message = process_rebalance(additional_invest, allocation, price, userID, PIN, settlementAccount, OTP)
+
+        return jsonify(
+        {
+            "code": 200,
+            "message": message
+        }
+    ), 200
+
+
+@app.route("/rebalance/<int:user_id>", methods=['POST'])
+def rebalance_with_id(user_id):
+    # tBank APIs used
+        # getStockPrice
+        # getCustomerStocks
+        # placeMarketOrder
+
+    user_info = Users.query.filter_by(user_id=user_id).first()
+
+    if request.is_json and user_info:
+        json_details = request.get_json()
+
+        additional_invest = float(json_details["additionalInvest"])         # Additional investments
+        allocation = ast.literal_eval(json_details["allocation"])           # Fund stocks allocations
+
+        # Get all price for fund_stocks
+        fund_stocks = list(allocation.keys())
+        price = {}
+        for ticker in fund_stocks:
+            price[ticker] = float(getStockPrice(ticker)["Price"])
+        
+        userID = user_info.user_acc_id
+        PIN = user_info.user_pin
+        settlementAccount = user_info.settlement_acc
         OTP = json_details["OTP"] if "OTP" in json_details else 999999
 
         message = process_rebalance(additional_invest, allocation, price, userID, PIN, settlementAccount, OTP)
