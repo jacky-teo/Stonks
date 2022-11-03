@@ -11,6 +11,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 cors =CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/stonks'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/stonks'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'insertsecretkeypassword'
 

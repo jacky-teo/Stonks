@@ -11,6 +11,7 @@ UnownedStocks.component('unownedstocks', {
     },
     async created() {
         await this.getUnownedStocks();
+        this.user_id = sessionStorage.getItem("user_id");
     },
     computed: {
     },
