@@ -739,6 +739,9 @@
     "symbol" : {
       "type" : "string"
     },
+    "mapped" : {
+      "type" : "boolean"
+    },
     "company" : {
       "type" : "string"
     },
@@ -765,6 +768,20 @@
             defs["inline_response_200_2"] = {
   "type" : "object",
   "properties" : {
+    "user_acc_id" : {
+      "type" : "string"
+    },
+    "user_pin" : {
+      "type" : "string"
+    },
+    "settlement_acc" : {
+      "type" : "string"
+    }
+  }
+};
+            defs["inline_response_200_3"] = {
+  "type" : "object",
+  "properties" : {
     "id" : {
       "type" : "integer"
     },
@@ -773,7 +790,7 @@
     }
   }
 };
-            defs["inline_response_200_3"] = {
+            defs["inline_response_200_4"] = {
   "type" : "object",
   "properties" : {
     "fund_id" : {
@@ -1034,6 +1051,9 @@
                     <li data-group="UserService" data-name="getAllUsers" class="">
                       <a href="#api-UserService-getAllUsers">getAllUsers</a>
                     </li>
+                    <li data-group="UserService" data-name="getUserInfo" class="">
+                      <a href="#api-UserService-getUserInfo">getUserInfo</a>
+                    </li>
                     <li data-group="UserService" data-name="loginToStonks" class="">
                       <a href="#api-UserService-loginToStonks">loginToStonks</a>
                     </li>
@@ -1044,6 +1064,9 @@
                       <a href="#api-UserService-registerToStonks">registerToStonks</a>
                     </li>
                   <li class="nav-header" data-group="UserStocksService"><a href="#api-UserStocksService">API Methods - UserStocksService</a></li>
+                    <li data-group="UserStocksService" data-name="getNotMappedUserStocks" class="">
+                      <a href="#api-UserStocksService-getNotMappedUserStocks">getNotMappedUserStocks</a>
+                    </li>
                     <li data-group="UserStocksService" data-name="getNotOwnedUserStocks" class="">
                       <a href="#api-UserStocksService-getNotOwnedUserStocks">getNotOwnedUserStocks</a>
                     </li>
@@ -1107,7 +1130,7 @@
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/funds/add"</code></pre>
+"http://localhost:5000/funds/add"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-FundsService-addFund-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -1418,7 +1441,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-FundsService-findSpecificFund-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/funds/{fund_id}"</code></pre>
+"http://localhost:5000/funds/{fund_id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-FundsService-findSpecificFund-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -1714,7 +1737,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-FundsService-getAllFund-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/funds"</code></pre>
+"http://localhost:5000/funds"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-FundsService-getAllFund-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -1976,7 +1999,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/funds_stocks/add"</code></pre>
+"http://localhost:5000/funds_stocks/add"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-FundsStockService-addNewFundStock-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -2286,7 +2309,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-FundsStockService-findSpecificFundStock-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/funds_stocks/user/{fund_id}/{user_id}"</code></pre>
+"http://localhost:5000/funds_stocks/user/{fund_id}/{user_id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-FundsStockService-findSpecificFundStock-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -2613,7 +2636,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-FundsStockService-getAllFundStock-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/funds_stocks"</code></pre>
+"http://localhost:5000/funds_stocks"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-FundsStockService-getAllFundStock-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -2874,7 +2897,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-MarketplaceService-findSpecificMarketplace-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/marketplace/{marketplace_id}"</code></pre>
+"http://localhost:5000/marketplace/{marketplace_id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-MarketplaceService-findSpecificMarketplace-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -3170,7 +3193,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-MarketplaceService-getAllMarketplace-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/marketplace"</code></pre>
+"http://localhost:5000/marketplace"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-MarketplaceService-getAllMarketplace-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -3431,7 +3454,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-MarketplaceStocksService-addNewMarketplaceStocks-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/marketplace_stocks"</code></pre>
+"http://localhost:5000/marketplace_stocks"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-MarketplaceStocksService-addNewMarketplaceStocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -3720,7 +3743,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-MarketplaceStocksService-findMarketplaceStocksBySymbolAndMarketplaceID-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/marketplace_stocks/{stock_id}/{marketplace_id}"</code></pre>
+"http://localhost:5000/marketplace_stocks/{stock_id}/{marketplace_id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-MarketplaceStocksService-findMarketplaceStocksBySymbolAndMarketplaceID-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -4047,7 +4070,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-MarketplaceStocksService-findVolumeInMarketplaceBySymbolAndMarketplaceID-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/marketplace_stocks/transaction/{stock_id}/{marketplace_id}"</code></pre>
+"http://localhost:5000/marketplace_stocks/transaction/{stock_id}/{marketplace_id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-MarketplaceStocksService-findVolumeInMarketplaceBySymbolAndMarketplaceID-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -4413,7 +4436,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-MarketplaceStocksService-getAllMarketplaceStocks-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/marketplace_stocks"</code></pre>
+"http://localhost:5000/marketplace_stocks"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-MarketplaceStocksService-getAllMarketplaceStocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -4675,7 +4698,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/rebalance"</code></pre>
+"http://localhost:5000/rebalance"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-PlaceMarketOrderService-rebalanceStock-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -5025,7 +5048,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-StocksService-getAllStocks-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/stocks"</code></pre>
+"http://localhost:5000/stocks"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-StocksService-getAllStocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -5283,7 +5306,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-StocksService-getStockPrice-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/stocks-with-price"</code></pre>
+"http://localhost:5000/stocks-with-price"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-StocksService-getStockPrice-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -5545,7 +5568,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/transactions/add"</code></pre>
+"http://localhost:5000/transactions/add"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-TransactionService-addNewTransaction-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -5856,7 +5879,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-TransactionService-findSpecificTransaction-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/transactions/user/{user_id}"</code></pre>
+"http://localhost:5000/transactions/user/{user_id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-TransactionService-findSpecificTransaction-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -6152,7 +6175,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-TransactionService-getAllTransactions-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/transactions"</code></pre>
+"http://localhost:5000/transactions"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-TransactionService-getAllTransactions-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -6413,7 +6436,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-UserFundsService-addNewUserFund-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/user_funds/add"</code></pre>
+"http://localhost:5000/user_funds/add"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserFundsService-addNewUserFund-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -6741,7 +6764,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-UserFundsService-findAllUserFundStock-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/users_funds/user/{user_id}"</code></pre>
+"http://localhost:5000/users_funds/user/{user_id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserFundsService-findAllUserFundStock-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -7037,7 +7060,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-UserFundsService-findSpecificUserFundStock-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/funds/user_funds/{user_id}"</code></pre>
+"http://localhost:5000/funds/user_funds/{user_id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserFundsService-findSpecificUserFundStock-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -7055,7 +7078,7 @@ public class UserFundsServiceApiExample {
         UserFundsServiceApi apiInstance = new UserFundsServiceApi();
         Integer userId = 56; // Integer | The user_id
         try {
-            inline_response_200_3 result = apiInstance.findSpecificUserFundStock(userId);
+            inline_response_200_4 result = apiInstance.findSpecificUserFundStock(userId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UserFundsServiceApi#findSpecificUserFundStock");
@@ -7074,7 +7097,7 @@ public class UserFundsServiceApiExample {
         UserFundsServiceApi apiInstance = new UserFundsServiceApi();
         Integer userId = 56; // Integer | The user_id
         try {
-            inline_response_200_3 result = apiInstance.findSpecificUserFundStock(userId);
+            inline_response_200_4 result = apiInstance.findSpecificUserFundStock(userId);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UserFundsServiceApi#findSpecificUserFundStock");
@@ -7094,7 +7117,7 @@ UserFundsServiceApi *apiInstance = [[UserFundsServiceApi alloc] init];
 
 // Get funds based on user id
 [apiInstance findSpecificUserFundStockWith:userId
-              completionHandler: ^(inline_response_200_3 output, NSError* error) {
+              completionHandler: ^(inline_response_200_4 output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -7145,7 +7168,7 @@ namespace Example
             try
             {
                 // Get funds based on user id
-                inline_response_200_3 result = apiInstance.findSpecificUserFundStock(userId);
+                inline_response_200_4 result = apiInstance.findSpecificUserFundStock(userId);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -7333,7 +7356,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-UserFundsService-getAllUserFunds-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/users_funds"</code></pre>
+"http://localhost:5000/users_funds"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserFundsService-getAllUserFunds-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -7594,7 +7617,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-UserService-findSpecificUser-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/users/{username}"</code></pre>
+"http://localhost:5000/users/{username}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserService-findSpecificUser-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -7887,7 +7910,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-UserService-getAllUsers-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/users"</code></pre>
+"http://localhost:5000/users"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserService-getAllUsers-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -8110,6 +8133,302 @@ except ApiException as e:
                         </article>
                       </div>
                       <hr>
+                    <div id="api-UserService-getUserInfo">
+                      <article id="api-UserService-getUserInfo-0" data-group="User" data-name="getUserInfo" data-version="0">
+                        <div class="pull-left">
+                          <h1>getUserInfo</h1>
+                          <p>Get user with user id</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">By passing in the appropriate options, you can get user info e.g. tbank uid, pin and settlement acc
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/user_info/user/{user_id}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-UserService-getUserInfo-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-UserService-getUserInfo-0-java">Java</a></li>
+                          <li class=""><a href="#examples-UserService-getUserInfo-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-UserService-getUserInfo-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-UserService-getUserInfo-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-UserService-getUserInfo-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-UserService-getUserInfo-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-UserService-getUserInfo-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-UserService-getUserInfo-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-UserService-getUserInfo-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-UserService-getUserInfo-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-UserService-getUserInfo-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:5000/user_info/user/{user_id}"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-UserService-getUserInfo-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.UserServiceApi;
+
+import java.io.File;
+import java.util.*;
+
+public class UserServiceApiExample {
+
+    public static void main(String[] args) {
+        
+        UserServiceApi apiInstance = new UserServiceApi();
+        Integer userId = 56; // Integer | The user_id
+        try {
+            inline_response_200_2 result = apiInstance.getUserInfo(userId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserServiceApi#getUserInfo");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-UserService-getUserInfo-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.UserServiceApi;
+
+public class UserServiceApiExample {
+
+    public static void main(String[] args) {
+        UserServiceApi apiInstance = new UserServiceApi();
+        Integer userId = 56; // Integer | The user_id
+        try {
+            inline_response_200_2 result = apiInstance.getUserInfo(userId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserServiceApi#getUserInfo");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-UserService-getUserInfo-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-UserService-getUserInfo-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Integer *userId = 56; // The user_id
+
+UserServiceApi *apiInstance = [[UserServiceApi alloc] init];
+
+// Get user with user id
+[apiInstance getUserInfoWith:userId
+              completionHandler: ^(inline_response_200_2 output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserService-getUserInfo-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DbeaServiceApi = require('dbea_service_api');
+
+var api = new DbeaServiceApi.UserServiceApi()
+var userId = 56; // {{Integer}} The user_id
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getUserInfo(userId, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-UserService-getUserInfo-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-UserService-getUserInfo-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class getUserInfoExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new UserServiceApi();
+            var userId = 56;  // Integer | The user_id
+
+            try
+            {
+                // Get user with user id
+                inline_response_200_2 result = apiInstance.getUserInfo(userId);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling UserServiceApi.getUserInfo: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserService-getUserInfo-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiUserServiceApi();
+$userId = 56; // Integer | The user_id
+
+try {
+    $result = $api_instance->getUserInfo($userId);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserServiceApi->getUserInfo: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserService-getUserInfo-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::UserServiceApi;
+
+my $api_instance = WWW::SwaggerClient::UserServiceApi->new();
+my $userId = 56; # Integer | The user_id
+
+eval { 
+    my $result = $api_instance->getUserInfo(userId => $userId);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling UserServiceApi->getUserInfo: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserService-getUserInfo-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.UserServiceApi()
+userId = 56 # Integer | The user_id
+
+try: 
+    # Get user with user id
+    api_response = api_instance.get_user_info(userId)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserServiceApi->getUserInfo: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">user_id*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_getUserInfo_userId">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          The user_id
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - search results matching criteria </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getUserInfo-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getUserInfo-200-schema">
+                                  <div id='responses-getUserInfo-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = ;
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getUserInfo-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getUserInfo-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getUserInfo-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 404 - Users not found. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-UserService-loginToStonks">
                       <article id="api-UserService-loginToStonks-0" data-group="User" data-name="loginToStonks" data-version="0">
                         <div class="pull-left">
@@ -8146,7 +8465,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/login"</code></pre>
+"http://localhost:5000/login"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserService-loginToStonks-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -8164,7 +8483,7 @@ public class UserServiceApiExample {
         UserServiceApi apiInstance = new UserServiceApi();
         Users body = ; // Users | Transaction
         try {
-            inline_response_200_2 result = apiInstance.loginToStonks(body);
+            inline_response_200_3 result = apiInstance.loginToStonks(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UserServiceApi#loginToStonks");
@@ -8183,7 +8502,7 @@ public class UserServiceApiExample {
         UserServiceApi apiInstance = new UserServiceApi();
         Users body = ; // Users | Transaction
         try {
-            inline_response_200_2 result = apiInstance.loginToStonks(body);
+            inline_response_200_3 result = apiInstance.loginToStonks(body);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UserServiceApi#loginToStonks");
@@ -8203,7 +8522,7 @@ UserServiceApi *apiInstance = [[UserServiceApi alloc] init];
 
 // Login to stonks
 [apiInstance loginToStonksWith:body
-              completionHandler: ^(inline_response_200_2 output, NSError* error) {
+              completionHandler: ^(inline_response_200_3 output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -8255,7 +8574,7 @@ namespace Example
             try
             {
                 // Login to stonks
-                inline_response_200_2 result = apiInstance.loginToStonks(body);
+                inline_response_200_3 result = apiInstance.loginToStonks(body);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -8458,7 +8777,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/logout"</code></pre>
+"http://localhost:5000/logout"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserService-logoutToStonks-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -8761,7 +9080,7 @@ except ApiException as e:
                            <pre class="prettyprint"><code class="language-bsh">curl -X POST\
 -H "Accept: application/json"\
 -H "Content-Type: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/register"</code></pre>
+"http://localhost:5000/register"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserService-registerToStonks-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -9039,6 +9358,302 @@ except ApiException as e:
                   </section>
                 <section id="api-UserStocksService">
                   <h1>UserStocksService</h1>
+                    <div id="api-UserStocksService-getNotMappedUserStocks">
+                      <article id="api-UserStocksService-getNotMappedUserStocks-0" data-group="User" data-name="getNotMappedUserStocks" data-version="0">
+                        <div class="pull-left">
+                          <h1>getNotMappedUserStocks</h1>
+                          <p>Get all stocks not mapped</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">By passing in the appropriate parameters, you will get the user stocks from tBank that is not mapped
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/not_mapped_stocks/{user_id}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-UserStocksService-getNotMappedUserStocks-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-UserStocksService-getNotMappedUserStocks-0-java">Java</a></li>
+                          <li class=""><a href="#examples-UserStocksService-getNotMappedUserStocks-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-UserStocksService-getNotMappedUserStocks-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-UserStocksService-getNotMappedUserStocks-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-UserStocksService-getNotMappedUserStocks-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-UserStocksService-getNotMappedUserStocks-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-UserStocksService-getNotMappedUserStocks-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-UserStocksService-getNotMappedUserStocks-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-UserStocksService-getNotMappedUserStocks-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-UserStocksService-getNotMappedUserStocks-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-UserStocksService-getNotMappedUserStocks-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"http://localhost:5000/not_mapped_stocks/{user_id}"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-UserStocksService-getNotMappedUserStocks-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.UserStocksServiceApi;
+
+import java.io.File;
+import java.util.*;
+
+public class UserStocksServiceApiExample {
+
+    public static void main(String[] args) {
+        
+        UserStocksServiceApi apiInstance = new UserStocksServiceApi();
+        Integer userId = 56; // Integer | The user_id
+        try {
+            array[Stocks] result = apiInstance.getNotMappedUserStocks(userId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserStocksServiceApi#getNotMappedUserStocks");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-UserStocksService-getNotMappedUserStocks-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.UserStocksServiceApi;
+
+public class UserStocksServiceApiExample {
+
+    public static void main(String[] args) {
+        UserStocksServiceApi apiInstance = new UserStocksServiceApi();
+        Integer userId = 56; // Integer | The user_id
+        try {
+            array[Stocks] result = apiInstance.getNotMappedUserStocks(userId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling UserStocksServiceApi#getNotMappedUserStocks");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-UserStocksService-getNotMappedUserStocks-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-UserStocksService-getNotMappedUserStocks-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Integer *userId = 56; // The user_id
+
+UserStocksServiceApi *apiInstance = [[UserStocksServiceApi alloc] init];
+
+// Get all stocks not mapped
+[apiInstance getNotMappedUserStocksWith:userId
+              completionHandler: ^(array[Stocks] output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserStocksService-getNotMappedUserStocks-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var DbeaServiceApi = require('dbea_service_api');
+
+var api = new DbeaServiceApi.UserStocksServiceApi()
+var userId = 56; // {{Integer}} The user_id
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getNotMappedUserStocks(userId, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-UserStocksService-getNotMappedUserStocks-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-UserStocksService-getNotMappedUserStocks-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class getNotMappedUserStocksExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new UserStocksServiceApi();
+            var userId = 56;  // Integer | The user_id
+
+            try
+            {
+                // Get all stocks not mapped
+                array[Stocks] result = apiInstance.getNotMappedUserStocks(userId);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling UserStocksServiceApi.getNotMappedUserStocks: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserStocksService-getNotMappedUserStocks-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiUserStocksServiceApi();
+$userId = 56; // Integer | The user_id
+
+try {
+    $result = $api_instance->getNotMappedUserStocks($userId);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserStocksServiceApi->getNotMappedUserStocks: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserStocksService-getNotMappedUserStocks-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::UserStocksServiceApi;
+
+my $api_instance = WWW::SwaggerClient::UserStocksServiceApi->new();
+my $userId = 56; # Integer | The user_id
+
+eval { 
+    my $result = $api_instance->getNotMappedUserStocks(userId => $userId);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling UserStocksServiceApi->getNotMappedUserStocks: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-UserStocksService-getNotMappedUserStocks-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.UserStocksServiceApi()
+userId = 56 # Integer | The user_id
+
+try: 
+    # Get all stocks not mapped
+    api_response = api_instance.get_not_mapped_user_stocks(userId)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserStocksServiceApi->getNotMappedUserStocks: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">user_id*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_getNotMappedUserStocks_userId">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      Integer
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          The user_id
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - search results matching criteria </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getNotMappedUserStocks-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getNotMappedUserStocks-200-schema">
+                                  <div id='responses-getNotMappedUserStocks-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = ;
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getNotMappedUserStocks-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getNotMappedUserStocks-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getNotMappedUserStocks-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 404 - There are no stocks. </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-UserStocksService-getNotOwnedUserStocks">
                       <article id="api-UserStocksService-getNotOwnedUserStocks-0" data-group="User" data-name="getNotOwnedUserStocks" data-version="0">
                         <div class="pull-left">
@@ -9074,7 +9689,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-UserStocksService-getNotOwnedUserStocks-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/not_owned_stocks/tbank/{user_id}"</code></pre>
+"http://localhost:5000/not_owned_stocks/tbank/{user_id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserStocksService-getNotOwnedUserStocks-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -9370,7 +9985,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-UserStocksService-getUserStockFromTBank-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"https://virtserver.swaggerhub.com/daerol/dbea-api/1.0.0/users_stocks/tbank/{user_id}"</code></pre>
+"http://localhost:5000/users_stocks/tbank/{user_id}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-UserStocksService-getUserStockFromTBank-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;

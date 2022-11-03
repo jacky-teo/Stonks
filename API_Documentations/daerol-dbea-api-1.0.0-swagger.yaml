@@ -267,6 +267,8 @@ paths:
                     type: integer
                   symbol:
                     type: string
+                  mapped:
+                    type: boolean
                   company:
                     type: string
                   tradingDate:
@@ -304,6 +306,33 @@ paths:
                     type: string
                   stock_name:
                     type: string
+        '404':
+          description: There are no stocks.
+  /not_mapped_stocks/{user_id}:
+    get:
+      tags:
+        - User Stocks Service
+      summary: Get all stocks not mapped 
+      operationId: GetNotMappedUserStocks
+      description: |
+        By passing in the appropriate parameters, you will get the user stocks from tBank that is not mapped
+      parameters:
+        - in: path
+          name: user_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Stocks'
         '404':
           description: There are no stocks.
   /transactions:
@@ -377,6 +406,38 @@ paths:
             schema:
               $ref: '#/components/schemas/Transactions'
         description: Transaction
+  /user_info/user/{user_id}:
+    get:
+      tags:
+        - User Service
+      summary: Get user with user id
+      operationId: getUserInfo
+      description: |
+        By passing in the appropriate options, you can get user info e.g. tbank uid, pin and settlement acc
+      parameters:
+        - in: path
+          name: user_id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: The user_id
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_acc_id:
+                    type: string
+                  user_pin:
+                    type: string
+                  settlement_acc:
+                    type: string
+        '404':
+          description: Users not found.
   /users:
     get:
       tags:
