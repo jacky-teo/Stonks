@@ -76,11 +76,19 @@ def get_stocks_by_not_owned_customer_id(user_id):
             usList.append(us['symbol'])
         for stock in stocksList:
             if stock.stock_symbol not in usList:
+            
+                stock_price = getStockPrice(symbol=stock.stock_symbol)
+                
+                if stock_price:
+                    stock_price = stock_price['Price']
+                else:
+                    stock_price="No data"
+
                 stock_details = {
                     'stock_id':stock.stock_id,
                     'stock_symbol':stock.stock_symbol,
                     'stock_name':stock.stock_name,
-                    "stock_price": getStockPrice(symbol=stock.stock_symbol)
+                    "stock_price": stock_price
                 }
                 result.append(stock_details)
         return jsonify(

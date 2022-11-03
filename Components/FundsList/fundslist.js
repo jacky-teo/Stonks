@@ -41,7 +41,6 @@ fund.component('fundslist', {
                     <div class="card-body">
                         <p class="card-text"><b>Name:</b> {{fund.fund_name}}</p>
                         <p class="card-text"><b>Fund ID: </b> {{fund.fund_id}}</p>
-                        <p class="card-text"><b>Goals: </b>\$ {{fund.fund_goals}}</p>
                         <p class="card-text"><b>Initial Investment: </b>\$ {{fund.fund_investment_amount}}</p>
                         <div class="d-flex justify-content-between align-items-center"> 
                             <div class="btn-group">

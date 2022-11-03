@@ -38,6 +38,8 @@ UnownedStocks.component('unownedstocks', {
                     <tr>
                         <th scope="col">Stock Name</th> 
                         <th scope="col">Stock Symbol</th>
+                        <th scope="col">Stock Price</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
