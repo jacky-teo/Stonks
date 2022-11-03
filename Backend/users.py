@@ -57,6 +57,26 @@ class Users(db.Model, UserMixin):
     def get_id(self):
         return str(self.user_id)
 
+@app.route('/user_info/user/<int:user_id>', methods=['GET', 'POST'])
+def get_user_id_user_pin(user_id):
+    user = Users.query.filter_by(user_id=user_id).first()
+    if user:
+        print(user.json())
+
+        return jsonify({
+            "result": 200,
+            "data": {
+                'user_acc_id': user.user_acc_id,
+                'user_pin': user.user_pin,
+                'settlement_acc': user.settlement_acc
+            }
+        }), 200
+    else:
+        return jsonify({
+            "result": 401,
+            "message": "No user info"
+        }), 401
+
 #--Get all Users--#
 @app.route("/users")
 def get_all():
@@ -195,6 +215,9 @@ def user_info():
             "result": 401,
             "message": "No user info, user not logged in"
         }), 401
+
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5005, debug=True)
