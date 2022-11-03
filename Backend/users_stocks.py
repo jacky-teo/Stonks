@@ -116,9 +116,9 @@ def find_by_user_id_tbank(user_id):
         for id in fundIDList:
             stockInFund = FundsStocks.query.filter_by(fund_id=id).all()
 
-        for sID in stockInFund:
-            if sID.stock_id not in stockIDList:
-                stockIDList.append(sID.stock_id)
+            for sID in stockInFund:
+                if sID.stock_id not in stockIDList:
+                    stockIDList.append(sID.stock_id)
         
 
         mappedStocks = []
@@ -127,7 +127,7 @@ def find_by_user_id_tbank(user_id):
                 if s.stock_id == id:
                     mappedStocks.append(s.stock_symbol)
 
-
+        print(mappedStocks)
         if user_stocks:
 
             stocks = []

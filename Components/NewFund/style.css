@@ -21,14 +21,14 @@
 #popup {
     color: #0071AC;
     background: #fff;
-    height: 200px;
-    left: 38%;
+    height: 30vh;
+    left: 42%;
     padding: 0;
     position: fixed;
     top: 40%;
     text-align: center;
     display: block;
-    width: 150px;
+    width: 30vh;
     z-index: 9999;
     overflow: hidden;
     border-radius: 10px;
