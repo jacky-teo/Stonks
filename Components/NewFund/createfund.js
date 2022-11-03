@@ -115,7 +115,7 @@ createFund.component("createfunds", {
     };
   },
    async mounted() {
-    this.user_id = sessionStorage.getItem("user_id");
+    // this.user_id = sessionStorage.getItem("user_id");
     var loadTbankStocks = await this.getCustomerStocks(this.user_id)
     var loadStocksThatIsNotInCustomerStocks = await this.getListStocks(this.user_id)
     var loadMainStockList = await this.getOurStocks()
@@ -158,21 +158,27 @@ createFund.component("createfunds", {
         var stocksToBuythis = this.returnStocksWithStockID(reloadStocks)
         var allocationsStocks = this.returnAllocationswithStockID(stocksToBuythis, this.items)
         this.progressMessage = "Get allocations of stocks to purchase..."
-        console.log(stocksToBuythis)
+        // console.log(stocksToBuythis)
 
-
+        var userInfo = await this.returnUserInfo().then((response) => { return response })
+  
 
         // Store the fund_id, user_stock_id, allocations in funds_users_stocks table
-        if (allocationsStocks && fund_id) {
+        if (allocationsStocks && fund_id && userInfo) {
           var allocateStocks = await this.addNewFundStocks(fund_id, allocationsStocks).then((response) => { return response })
-          var placeMarketOrder = await this.placeMarketOrder(this.user_id).then((response) => { return response })
-          var createTransaction = await this.createTransaction().then((response) => { return response })
+          var placeMarketOrder = await this.placeMarketOrder(userInfo.user_acc_id, userInfo.user_pin, userInfo.settlement_acc).then((response) => { return response })
+          // var createTransaction = await this.createTransaction().then((response) => { return response })
+          // console.log(placeMarketOrder) 
           this.progressMessage = "Placing market order..."
           this.isInProgress = false
 
           if(allocateStocks && placeMarketOrder) {
             this.isCreatedFund = false
-            Swal.fire({icon: 'success',title: 'Success',text: 'Fund successfully created!'})
+            Swal.fire({icon: 'success',title: 'Success',text: 'Fund successfully created!'}).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = "create-fund.html"
+              }
+            })
             this.items = []
             this.fundInfo = []
             this.fundInterval = 0
@@ -192,17 +198,17 @@ createFund.component("createfunds", {
         Swal.fire({icon: 'error',title: 'Note',text: 'Fund interval is required'})
       } 
     },
-    placeMarketOrder() {
-      var data = {
-        "user_id": this.user_id,
-        "additionalInvest": this.fundInfo.fund_investment_amount,
-        "allocation": this.returnAllocationsBasedOnPlaceMarketOrderFormat(),
-      }
-
-      console.log(data)
-
+    placeMarketOrder(tBankUID, tBankPin, tBankSettlementAccount) {
       return new Promise((resolve, reject) => {
-        axios.post("http://localhost:5010/place-market-order", data).then((response) => {
+        var data = {
+          "userID": tBankUID,
+          "PIN": tBankPin, 
+          "additionalInvest": this.fundInfo.fund_investment_amount,
+          "allocation": JSON.stringify(this.returnAllocationsBasedOnPlaceMarketOrderFormat()).replace(/\\"/g, '"'),
+          "settlement_account": tBankSettlementAccount,
+        }
+        // console.log(data)
+        axios.post("http://localhost:5010/rebalance", data).then((response) => {
             resolve(response)
           }).catch(error => {
             reject(error);
@@ -210,6 +216,15 @@ createFund.component("createfunds", {
       })
 
 
+    },
+    returnUserInfo() {
+      return new Promise((resolve, reject) => {
+        axios.post("http://localhost:5005/user_info/user/" + this.user_id).then((response) => {
+            resolve(response.data.data)
+          }).catch(error => {
+            reject(error);
+        });
+      })
     },
     returnAllocationsBasedOnPlaceMarketOrderFormat() {
       var allocations = {}
@@ -321,7 +336,7 @@ createFund.component("createfunds", {
     // },
       AddItem(symbol, company, price){
         var itemExist = this.items.filter(item => item.stock_symbol === symbol)
-        console.log(this.items)
+        // console.log(this.items)
         if (itemExist ==  0) {
           this.items.push({stock_symbol: symbol,company: company,current_price: price,stock_allocation: NaN}) 
         } else {
