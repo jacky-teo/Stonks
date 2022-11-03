@@ -56,44 +56,6 @@ def rebalance():
     ), 200
 
 
-@app.route("/place-market-order", methods=['POST'])
-def rebalance_with_id():
-    # tBank APIs used
-        # getStockPrice
-        # getCustomerStocks
-        # placeMarketOrder
-
-    print(request.get_json)
-
-
-    if request.is_json:
-        json_details = request.get_json()
-        user_info = Users.query.filter_by(user_id=json_details["user_id"]).first()
-        print(user_info)
-        if user_info:
-            additional_invest = float(json_details["additionalInvest"])         # Additional investments
-            allocation = ast.literal_eval(json_details["allocation"])           # Fund stocks allocations
-
-            # Get all price for fund_stocks
-            fund_stocks = list(allocation.keys())
-            price = {}
-            for ticker in fund_stocks:
-                price[ticker] = float(getStockPrice(ticker)["Price"])
-            
-            userID = user_info.user_acc_id
-            PIN = user_info.user_pin
-            settlementAccount = user_info.settlement_acc
-            OTP = json_details["OTP"] if "OTP" in json_details else 999999
-
-            message = process_rebalance(additional_invest, allocation, price, userID, PIN, settlementAccount, OTP)
-
-            return jsonify(
-            {
-                "code": 200,
-                "message": message
-            }
-        ), 200
-
 def process_rebalance(additional_invest, allocation, price, userID, PIN, settlementAccount, OTP='999999'):
     # get_ending_shares_no + get_current_shares > get_no_of_shares_to_purchase > 
     #   if positive number (buy) > placemarketorder (buy)
