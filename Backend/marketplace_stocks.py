@@ -15,17 +15,18 @@ class MarketplaceStocks(db.Model):
     __tablename__ = 'marketplace_stocks'
     marketplace_id = db.Column(db.Integer, primary_key=True)
     stock_id=db.Column(db.Integer,primary_key=True)
-    volume_in_market=db.Column(db.Integer, nullable=False)
+    market_vol=db.Column(db.Integer, nullable=False)
 
-    def __init__(self, marketplace_id, stock_id, volume_in_market):
+    def __init__(self, marketplace_id, stock_id, market_vol):
         self.marketplace_id = marketplace_id
         self.stock_id = stock_id
-        self.volume_in_market = volume_in_market
+        self.market_vol = market_vol
     
     def json(self):
-        return {"marketplace_id": self.marketplace_id, "stock_symbol": self.stock_id, "volume_in_marketplace": self.volume_in_market}
+        return {"marketplace_id": self.marketplace_id, "stock_symbol": self.stock_id, "market_vol": self.market_vol}
 
 #-- Add marplace_stocks --##
+## When a new stock is added to the stonks, add it to the marketplace_stocks table
 @app.route("/marketplace_stocks", methods=['POST'])
 def add_marketplace_stocks():
     data = request.get_json()
@@ -43,7 +44,7 @@ def add_marketplace_stocks():
                 "data": {
                     "marketplace_id": marketplace_id,
                     "stock_id": stock_id,
-                    "volume_in_market": volume_in_market
+                    "market_vol": volume_in_market
                 },
                 "message": "An error occurred while adding the marketplace_stocks."
             }
