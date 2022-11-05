@@ -107,16 +107,23 @@ DROP TABLE IF EXISTS `marketplace_stocks`;
 CREATE TABLE IF NOT EXISTS `marketplace_stocks`(
 	`marketplace_id` int not Null,
     `stock_id` int NOT NULL,
-	`volume_in_market` int Not Null,
+	`market_vol` int Not Null,
     PRIMARY KEY (`marketplace_id`,`stock_id`),
     FOREIGN KEY (`marketplace_id`) REFERENCES marketplace(`marketplace_id`),
 	FOREIGN KEY (`stock_id`) REFERENCES stocks(`stock_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `marketplace_stocks` (`marketplace_id`, `stock_id`,`volume_in_market`) VALUES
+INSERT INTO `marketplace_stocks` (`marketplace_id`, `stock_id`,`market_vol`) VALUES
 (1,1,1000000),
 (1,2,1000000),
-(1,3,1000000);
+(1,3,1000000),
+(1,4,1000000),
+(1,5,1000000),
+(1,6,1000000),
+(1,7,1000000),
+(1,8,1000000),
+(1,9,1000000),
+(1,10,1000000);
 
 
 -- This will be an insert only table -- 
