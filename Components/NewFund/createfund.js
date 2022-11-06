@@ -115,7 +115,7 @@ createFund.component("createfunds", {
     };
   },
    async mounted() {
-    // this.user_id = sessionStorage.getItem("user_id");
+    this.user_id = sessionStorage.getItem("user_id");
     var loadTbankStocks = await this.getCustomerStocks(this.user_id)
     var loadStocksThatIsNotInCustomerStocks = await this.getListStocks(this.user_id)
     var loadMainStockList = await this.getOurStocks()
