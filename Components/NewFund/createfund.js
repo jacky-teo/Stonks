@@ -95,7 +95,7 @@ createFund.component("createfunds", {
   data() {
     return {
         items: [],
-        user_id: 1,
+        user_id: 2,
         fundInfo: {
             fund_name: "",
             fund_investment_amount: 0,
@@ -167,6 +167,7 @@ createFund.component("createfunds", {
         if (allocationsStocks && fund_id && userInfo) {
           var allocateStocks = await this.addNewFundStocks(fund_id, allocationsStocks).then((response) => { return response })
           var placeMarketOrder = await this.placeMarketOrder(userInfo.user_acc_id, userInfo.user_pin, userInfo.settlement_acc).then((response) => { return response })
+          console.log(placeMarketOrder) 
           // var createTransaction = await this.createTransaction().then((response) => { return response })
           // console.log(placeMarketOrder) 
           this.progressMessage = "Placing market order..."
@@ -174,6 +175,7 @@ createFund.component("createfunds", {
 
           if(allocateStocks && placeMarketOrder) {
             this.isCreatedFund = false
+            var sendSMS = await this.sendConfirmationSMS(userInfo.user_acc_id, userInfo.user_pin)
             Swal.fire({icon: 'success',title: 'Success',text: 'Fund successfully created!'}).then((result) => {
               if (result.isConfirmed) {
                 window.location.href = "create-fund.html"
@@ -334,6 +336,31 @@ createFund.component("createfunds", {
     //     });
     //   })
     // },
+    sendConfirmationSMS(userID, PIN) {
+      return new Promise((resolve, reject) => {
+        data = {
+          "message" : 'You made a Fund creation at Stonks at ' + this.getNow() + ' SG Time. If unauthorised, call 24/7 Fraud Hotline.',
+          "userID": userID,
+          "PIN": PIN.toString(),
+        }
+        console.log(data)
+        axios.post("http://localhost:5004/common/sendSMS", data).then((response) => {
+            resolve(response)
+          }).catch(error => {
+            reject(error);
+        });
+      })
+    },
+    getNow() {
+      const today = new Date();
+      var suffix = today.getHours() >= 12 ? "PM":"AM";
+      const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      const date = today.getDate()+'-'+(month[today.getMonth()])+'-'+today.getFullYear();
+      var hours = ((today.getHours() + 11) % 12 + 1)
+      const time = hours + ":" + today.getMinutes() + suffix;
+      const dateTime = time +', '+ date;
+      return dateTime;
+    },
       AddItem(symbol, company, price){
         var itemExist = this.items.filter(item => item.stock_symbol === symbol)
         // console.log(this.items)

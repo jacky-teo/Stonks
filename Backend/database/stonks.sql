@@ -19,7 +19,7 @@ ALTER TABLE `users`
   MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 INSERT INTO `users` (`user_id`, `username`, `password`,`user_acc_id`,`user_pin`,`settlement_acc`) VALUES
-(1, 'admin', 'admin','Z312312','148986','0000009301'),
+(1, 'admin', 'pbkdf2:sha256:260000$YmcRjTJKnw60hJj5$552494157a92cd62a441913e762bae889c466145f616b1ba5346f5b7ef49945b','Z312312','148986','0000009301'),
 (2, 'user2', 'user2','B930284','828676','0000009302');
 -- Funds ownd by custoemr -- 
 DROP TABLE IF EXISTS `funds`;

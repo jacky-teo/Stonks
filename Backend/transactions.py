@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS  # enable CORS
+from sendSMS import sendSMS
 
 app = Flask(__name__)
 cors =CORS(app)
@@ -98,6 +99,23 @@ def create_transaction():
             "data": transaction.json()
         }
     ), 201
+
+#--Send SMS--#
+@app.route("/common/sendSMS", methods=['POST'])
+def sendNotifications():
+    data = request.get_json()
+    print(data)
+    if data:
+        message = data['message']
+        userID = data['userID']
+        PIN = data['PIN']
+        sendSMS(userID= userID, PIN= PIN, message= message)
+        return jsonify(
+            {
+                "code": 201,
+                "data": "SMS sent"
+            }
+        ), 201
 
 
 if __name__ == '__main__':

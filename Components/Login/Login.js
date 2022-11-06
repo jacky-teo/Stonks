@@ -8,6 +8,14 @@ const login = Vue.createApp({
           message: ""
         };
     },
+    mounted() {
+        let user_id = sessionStorage.getItem('user_id')
+        
+        if (user_id !== null) {
+            window.location.replace("index.html");
+        }
+        
+    },
     watch: {
         "username"(value){
             if (value && value.trim().length>0){
@@ -38,9 +46,9 @@ const login = Vue.createApp({
         },
      },
     methods: {
-        login: function() {
+        login() {
             this.loading = true;
-            axios.post("http://127.0.0.1:5005/login", {
+            axios.post("http://localhost:5005/login", {
                 username: this.username,
                 password: this.password
             })
@@ -49,7 +57,7 @@ const login = Vue.createApp({
                     this.processing = false;
                     this.$emit("authenticated", true, response.data.data);
                     sessionStorage.setItem("user_id", response.data.data.id );
-                    window.location.href = 'http://127.0.1:5500/index.html'; // to update this link to dynamic.
+                    window.location.href = 'index.html'; // to update this link to dynamic.
                     // window.location.href = 'http://localhost:80/stonks/index.html'; // to update this link to dynamic
                     
                 } else {
