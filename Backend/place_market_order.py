@@ -11,7 +11,8 @@ from get_ending_shares_no import get_ending_shares_no
 from get_no_of_shares_to_purchase import get_no_of_shares_to_purchase
 from get_total_value_of_fund_portfolio import get_total_value_of_fund_portfolio
 from get_all_fund_portfolio import get_all_fund_portfolio
-from create_transaction import process_transaction, update_marketplace
+from create_transaction import process_transaction
+from processMarketPlace import update_marketplace
 
 # flask
 from os import environ
@@ -90,7 +91,7 @@ def process_rebalance(additional_invest, allocation, price, userID, PIN, settlem
                 ## Create Transaction updates stonks transaction table 
                 process_transaction(userID,symbol,quantity,price)
                 ## Update Marketplace updates stonks marketplace table
-                # update_marketplace(symbol,quantity)
+                update_marketplace(symbol,quantity)
                 
 
             elif quantity < 0:
@@ -100,7 +101,7 @@ def process_rebalance(additional_invest, allocation, price, userID, PIN, settlem
 
                 ## Create Transaction updates stonks transaction table & marketplace_stocks table
                 process_transaction(userID,symbol,quantity,price)
-                # update_marketplace(symbol,quantity)
+                update_marketplace(symbol,quantity)
             else:
                 continue
 

@@ -9,7 +9,7 @@ from users_funds   import UsersFunds
 from getCustomerStocks import getCustomerStocks
 from getStockPrice import getStockPrice
 from getStockSymbols import getStockSymbols
-# from marketplace_stocks import MarketplaceStocks
+from marketplace_stocks import MarketplaceStocks
 app = Flask(__name__)
 cors =CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/stonks'
@@ -55,7 +55,7 @@ def updateStonksDB(user_id):
                 }
             ), 500
     return jsonify(
-        {
+        {   
             "code": 200,
             "message": "There are no stocks."
         }
@@ -90,11 +90,11 @@ def get_stocks_by_not_owned_customer_id(user_id):
                 new_stock = Stocks(stock_id = stock_id,stock_symbol = us['symbol'],stock_name = stock_details['company'])
                 db.session.add(new_stock)
                 db.session.commit()
-                
-                # marketplace_stocks = MarketplaceStocks(1,stock_id,1000000)
-                # db.session.add(marketplace_stocks)
 
-                # db.session.commit()
+                
+                marketplace_stocks = MarketplaceStocks(1,stock_id,1000000)
+                db.session.add(marketplace_stocks)
+                db.session.commit()
 
         for us in user_stocks['Depository']:
             usList.append(us['symbol'])

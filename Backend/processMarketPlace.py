@@ -27,30 +27,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-
-def process_transaction(userID,stock_symbol,volume,price):
-    # Get stock_id from stock_symbol
-    stock_id = Stocks.query.filter_by(stock_symbol=stock_symbol).first().stock_id
-    # Get volume of stocks in marketplace_stocks
-    # Get User_id from users
-    user_id = Users.query.filter_by(user_acc_id=userID).first().user_id
-    date = datetime.now()
-    # Create a transaction
-    transaction = Transactions(None,user_id, 1,stock_id, price[stock_symbol],volume,date)
-    print(transaction.json())
-    db.session.add(transaction)
-    db.session.commit()
-
     
 def update_marketplace(stock_symbol,volume):
     stock_id = Stocks.query.filter_by(stock_symbol=stock_symbol).first().stock_id
     stock_details = getStockPrice(stock_symbol)
+    print('details: ',stock_details)
     stock_vol = stock_details['Volume']
-    marketplaceStocks = MarketplaceStocks.query.filter_by(stock_id=stock_id).first()
-    print(marketplaceStocks)
-    marketplaceStocks.vol = stock_vol
+    marketplaceVolume = MarketplaceStocks.query.filter_by(stock_id=stock_id).first().vol
+    print('marketplaceVolume: ',marketplaceVolume)
+    newVol = marketplaceVolume - volume
+    marketplaceStocks = db.session.query(MarketplaceStocks).filter(MarketplaceStocks.stock_id == stock_id)\
+    .update({'vol':newVol})
+    print('After Update:', marketplaceStocks)
     db.session.commit()
-    print(marketplaceStocks)
 
 
     
