@@ -92,6 +92,38 @@ def create_fund():
         }
     ), 201
 
+@app.route("/funds/update", methods=['PUT'])
+def update_fund():
+    data = request.get_json()
+    fund_id = data["fund_id"]
+    fund_name = data["fund_name"]
+    fund = Funds.query.filter_by(fund_id=fund_id).first() #find fund from fund_id
+    if fund:
+        if fund.fund_name == fund_name:
+            return jsonify({
+                "code": 400,
+                "message": "No changes from current funds."
+            }), 400
+        else:
+            fund.fund_name = fund_name
+
+        try:
+            db.session.commit()
+            return jsonify({
+                "code": 200,
+                "data": fund.json(),
+                "message": "Fund Updated."
+            }), 200
+        except:
+            return jsonify({
+                "code": 500,
+                "message": "An error occurred while trying to update the fund."
+            }), 500
+    else:
+        return jsonify({
+            "code": 404,
+            "message": "Fund does not exist in database."
+        }), 404
 
 
 if __name__ == '__main__':
