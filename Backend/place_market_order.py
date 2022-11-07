@@ -12,7 +12,7 @@ from get_no_of_shares_to_purchase import get_no_of_shares_to_purchase
 from get_total_value_of_fund_portfolio import get_total_value_of_fund_portfolio
 from get_all_fund_portfolio import get_all_fund_portfolio
 from create_transaction import process_transaction
-from processMarketPlace import update_marketplace
+from processmarketplaceorder import update_marketplace
 
 # flask
 from os import environ
