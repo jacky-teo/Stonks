@@ -3,8 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from flask_cors import CORS  # enable CORS
 from stocks import Stocks
-from getCustomerStocks import   getCustomerStocks
+from getCustomerStocks import getCustomerStocks
 from getStockPrice import getStockPrice
+from getStockHistory import getStockHistory
 from users import Users
 from funds import Funds
 
@@ -168,6 +169,35 @@ def update_stocks_allocation():
             }
         }
     ), 201
+@app.route("/fund_stocks/stock_history/<fund_id>/<user_id>/<pin>")
+def get_stock_history(fund_id,user_id, pin):
+
+    fundStocks = db.session.query(FundsStocks.fund_id)\
+        .filter(FundsStocks.fund_id == fund_id)\
+        .join(Stocks, FundsStocks.stock_id == Stocks.stock_id)\
+        .add_columns(Stocks.stock_symbol)
+    fund_stocks = {}
+    for stock in fundStocks:
+        fund_stocks.update(getStockHistory(userID = user_id,PIN = pin, symbol=stock.stock_symbol, numDays='30'))
+
+    if len(fund_stocks):
+
+        return jsonify(
+            {
+                "code": 200,
+                "data": fund_stocks
+            }
+        ),200
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no such stocks."
+        }
+    ), 404
+
+@app.errorhandler(404) 
+def invalid_route(e): 
+    return "Invalid route."
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

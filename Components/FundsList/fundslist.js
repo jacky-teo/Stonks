@@ -35,6 +35,7 @@ fund.component('fundslist', {
         }
     },
     template: `
+    
     <div>
         <h1 class="text-center">All Funds</h1>
         <div class="row">

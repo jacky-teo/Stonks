@@ -11,7 +11,9 @@ sidenav.component("sidenav", {
         };
     },
     methods: {
-        logout: function() {
+        logout() {
+            sessionStorage.clear();
+            window.location.replace("login.html");
             axios({
                 method: "post",
                 url: "http://127.0.0.1:5005/logout",
@@ -31,8 +33,9 @@ sidenav.component("sidenav", {
     computed: {
         links(){
             return{
-            dashboardLink: "../dashboard",
-            fundsLink: "../funds",
+            dashboardLink: "index.html",
+            fundsLink: "create-fund.html",
+            myStocksLink: "mystocks.html",
             }
         },
         toggleClass() {
@@ -41,6 +44,14 @@ sidenav.component("sidenav", {
         modeClass() {
             return this.modeClick ? 'dark' : '';
         },
+    },
+    mounted() {
+        let user_id = sessionStorage.getItem('user_id')
+        
+        if (user_id == "" || user_id == null) {
+            window.location.replace("login.html");
+        }
+
     },
     template: `
     <nav class="sidebar" :class="[toggleClass, modeClass]">
@@ -63,6 +74,12 @@ sidenav.component("sidenav", {
                         </a>
                     </li>
                     <li class="nav-link">
+                        <a :href=links.myStocksLink>
+                            <i class='bx bx-wallet icon'></i>
+                            <span class="text nav-text">My Stocks</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
                         <a :href=links.fundsLink>
                             <i class='bx bx-bar-chart-alt-2 icon'></i>
                             <span class="text nav-text">Create Fund</span>
@@ -73,8 +90,8 @@ sidenav.component("sidenav", {
 
             <div class="bottom-content">
                 <hr>
-                <li class="nav-link" @click=logout>
-                    <a>
+                <li class="nav-link">
+                    <a href="#" @click=logout>
                         <i class='bx bx-log-out icon'></i>
                         <span class="text nav-text">Logout</span>
                     </a>

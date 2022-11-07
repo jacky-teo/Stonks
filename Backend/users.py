@@ -120,9 +120,10 @@ def find_by_username(username):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     data = request.get_json()
-    username = data.get("username")
-    password = data.get("password")
-    user = Users.query.filter_by(username=username).first()
+    if data:
+        username = data['username']
+        password = data['password']
+        user = Users.query.filter_by(username=username).first()
 
     # !!!! uncomment this when you want to test accounts that were hardcoded into the db !!!!
     # if not user or not user.password == password:
@@ -133,26 +134,29 @@ def login():
     #     }), 401
 
     # "check_password_hash(user.password, password)" used for all the newly created accounts with hashed password
-    if not user or not check_password_hash(user.password, password):
-        return jsonify({
-            "result": 401,
-            "status": "failed",
-            "message": "Failed getting user"
-        }), 401
+        print(user.password)
+        print(generate_password_hash(password))
+        print(check_password_hash(user.password, password))
+        if not user or not check_password_hash(user.password, password):
+            return jsonify({
+                "result": 401,
+                "status": "failed",
+                "message": "Failed getting user"
+            }), 401
 
-    else:
-        # flask_login - session created
-        login_user(user, remember=True)
-        return jsonify({
-            "result": 200,
-            "status": "success",
-            "message": "Login successful",
-            
-            "data": {
-                "id": user.user_id,
-                "username": user.username
-            }
-        }), 200
+        else:
+            # flask_login - session created
+            login_user(user, remember=True)
+            return jsonify({
+                "result": 200,
+                "status": "success",
+                "message": "Login successful",
+                
+                "data": {
+                    "id": user.user_id,
+                    "username": user.username
+                }
+            }), 200
 
 # register - validate form, hash password and add+commit new user to db
 @app.route('/register', methods=['POST'])
