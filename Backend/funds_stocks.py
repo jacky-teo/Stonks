@@ -51,6 +51,25 @@ def get_all():
         }
     ), 404
 
+#--Get all Funds settlement id--#
+@app.route("/a_fund_stocks/<int:fund_id>")
+def get_fund_stocks(fund_id):
+    fundStocks = FundsStocks.query.filter_by(fund_id=fund_id).all()
+    if len(fundStocks):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "allocation": [fundStock.json() for fundStock in fundStocks]
+                }
+            }
+        ),200
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no stocks in fund."
+        }
+    ), 404
 
 ## add a new fund settlement id
 @app.route("/funds_stocks/add", methods=['POST'])
@@ -115,7 +134,40 @@ def get_stocks_by_fund_id(fund_id,user_id):
         }
     ),200   
 
+# Drop all current allocations and update with new allocations
+@app.route("/funds_stocks/update_allocation", methods=['POST'])
+def update_stocks_allocation():
+    data = request.get_json()
+    allocations = data["allocations"]
+    fund_id = data["fund_id"]
+    new_funds_stocks = [FundsStocks(fund_id, allocation["stock_id"], allocation["allocation"]) for allocation in allocations]
 
+    # Drops all fund_stock records
+    FundsStocks.query.filter_by(fund_id=fund_id).delete()
+
+    # Commits all new fund_stock records
+    try:
+        db.session.add_all(new_funds_stocks)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "funds_stocks": [fund_stock.json() for fund_stock in new_funds_stocks]
+                },
+                "message": "An error occurred while creating the skills_courses."
+            }
+        ), 500
+
+    return jsonify(
+        {
+            "code": 201,
+            "data": {
+                "funds_stocks": [fund_stock.json() for fund_stock in new_funds_stocks]
+            }
+        }
+    ), 201
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
