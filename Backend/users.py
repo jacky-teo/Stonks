@@ -134,9 +134,9 @@ def login():
     #     }), 401
 
     # "check_password_hash(user.password, password)" used for all the newly created accounts with hashed password
-        print(user.password)
-        print(generate_password_hash(password))
-        print(check_password_hash(user.password, password))
+        print("password: " + user.password)
+        print("generated hash password: " , generate_password_hash(password))
+        print("check if password match: " , check_password_hash(user.password, password))
         if not user or not check_password_hash(user.password, password):
             return jsonify({
                 "result": 401,
@@ -195,7 +195,6 @@ def register():
 
 # logout - route back to login
 @app.route('/logout', methods=['POST'])
-@login_required
 def logout():
     # flask_login - session cleared
     logout_user()
