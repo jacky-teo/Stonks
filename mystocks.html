@@ -29,9 +29,9 @@
     </div>
     <div id="app">
         <div class="container-fluid">
-            <div class="row mt-3">
+            <div class="row justify-content-center mt-3">
                 <div class="col-md-8 align-self-center">
-                    <h1 id="header">Fund Overview</h1>
+                    <h1 class="text-center">Fund Overview</h1>
                 </div>
             </div>
             
@@ -45,14 +45,7 @@
                     
                 </div>
 
-        <div class="row my-3">
-            <div class="col-5 m-1">
-               <!-- Stocks Placeholder -->
-               <div id="fundpiechart">
-                    <fundpiechart></fundpiechart>
-                </div>
-           </div>
-           <div class="col-6">
+                <div class="col-5">
             <!-- Stocks Placeholder -->
                     <div id="fundpiechart">
                         <fundpiechart></fundpiechart>
@@ -67,7 +60,7 @@
                  </div>
                 
             </div>
-       </div>
+        </div>
     </div>
 
     <script src="Dependencies/bootstrap.bundle.min.js"></script>
@@ -84,6 +77,7 @@
     <script src="Components/CurrentPieChart/CurrentFundPieChart.js"></script>
     <script src="Components/CurrentPieChart/CurrentPieChart.js"></script>
 
+    <!-- i used vanilla but we can comment it out if dw to use at all. -->
     <script>
         document.getElementById( "sidenav" ).onmouseover = function(){
         fireEvent();
@@ -94,11 +88,9 @@
         let m = document.getElementById('sidenav').firstElementChild.className;
             if (m.includes('dark')){
                 document.body.className = "dark";
-                document.getElementbyId("header").className = 'bg-dark';
             }
             else{
                 document.body.className = "";
-                document.getElementbyId("header").className = 'bg-light';
             }
         }
         </script>

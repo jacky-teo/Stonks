@@ -30,7 +30,7 @@ const currentfundpiechart = Vue.createApp({
 	template: `
 	<div class="shadow-lg p-3 mb-5 bg-white rounded">
 
-		<h1 class="text-center mb-4">Current Fund {{userId}} Investment Value</h1>
+		<h1 class="text-center mb-4" style="color:black;">Current Fund {{userId}} Investment Value</h1>
 
 		<div class="row d-flex justify-content-center align-content-center">
 			<canvas id="currentpiechart" style="width:100%;max-width:700px"></canvas>
