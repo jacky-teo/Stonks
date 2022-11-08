@@ -142,7 +142,8 @@ updateFund.component("updatefunds", {
                 datasets: [{
                 label: 'Before changes',
                 backgroundColor: [
-                    '#F09AAE',  // color for data at index 0
+                    '#F2E4BB',
+                    '#BAB3BA',  // color for data at index 0
                     '#C1D5E0',  // color for data at index 1
                     '#FFF8B1',  // color for data at index 2
                     '#A5CC93',  // color for data at index 3
@@ -150,8 +151,7 @@ updateFund.component("updatefunds", {
                     '#BC798A',  // color for data at index 5
                     '#C8B6C6',  // color for data at index 6
                     '#ECCECE',
-                    '#F2E4BB',
-                    '#BAB3BA'
+                    '#F09AAE'
                     //...
                 ],
                 // borderColor: 'rgb(255, 99, 132)',
@@ -160,7 +160,7 @@ updateFund.component("updatefunds", {
             };
     
             const beforeConfig = {
-                type: 'pie',
+                type: 'doughnut',
                 data: beforeData,
                 options: {
                     plugins: {
@@ -208,7 +208,7 @@ updateFund.component("updatefunds", {
             };
     
             const afterConfig = {
-                type: 'pie',
+                type: 'doughnut',
                 data: afterData,
                 options: {
                     plugins: {
