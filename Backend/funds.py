@@ -98,15 +98,17 @@ def update_fund():
     data = request.get_json()
     fund_id = data["fund_id"]
     fund_name = data["fund_name"]
+    fund_interval = data["fund_interval"]
     fund = Funds.query.filter_by(fund_id=fund_id).first() #find fund from fund_id
     if fund:
-        if fund.fund_name == fund_name:
+        if fund.fund_name == fund_name and fund.fund_interval == fund_interval:
             return jsonify({
                 "code": 400,
                 "message": "No changes from current funds."
             }), 400
         else:
             fund.fund_name = fund_name
+            fund.fund_interval = fund_interval
 
         try:
             db.session.commit()
