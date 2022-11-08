@@ -1,19 +1,19 @@
-var stocksLabel = []
-var stocksData = []
+var currentStocksLabel = []
+var currentStocksData = []
 var backgroundColorList = []
 var userId = 1
 var fundId = 1 
 
-async function donutChart() {
+async function currentDonutChart() {
 	await getFundStocksData()
 
 new Chart("currentpiechart", {
 	type: "doughnut",
 	data: {
-		labels: this.stocksLabel,
+        labels: this.currentStocksLabel,
 		datasets: [{
 			backgroundColor: this.backgroundColorList,
-			data: this.stocksData
+            data: this.currentStocksData
 		}]
 	},
 	options: {
@@ -27,8 +27,9 @@ new Chart("currentpiechart", {
 			datalabels: {
 				formatter: (value, ctx) => {
 					let sum = 0;
-					let dataArr = ctx.chart.data.datasets[0].data;
-					dataArr.map(data => {
+					let currentArr = ctx.chart.data.datasets[0].data;
+                    console.log(currentArr)
+                    currentArr.map(data => {
 						sum += data;
 					});
 					let percentage = (value*100 / sum).toFixed(2)+"%";
@@ -40,7 +41,7 @@ new Chart("currentpiechart", {
   	}
 })}
 
-donutChart()
+currentDonutChart()
 
 function dynamicColors() {
 	var r = Math.floor(Math.random() * 255);
@@ -56,11 +57,11 @@ async function getFundStocksData() {
         .get('http://localhost:5001/current_funds_stocks/' + this.fundId + '/' + this.userId)
 	.then((response) => {
         console.log(response)
-		var tempdata = response.data.data;
+		var currentData = response.data.data;
         
-		for (stock in tempdata){
-			stocksData.push(tempdata[stock]["allocation"]);
-			stocksLabel.push(tempdata[stock]["stock_name"]);
+        for (stock in currentData){
+            currentStocksData.push(currentData[stock]["allocation"]);
+            currentStocksLabel.push(currentData[stock]["stock_name"]);
 			backgroundColorList.push(dynamicColors());
 		}
 	});

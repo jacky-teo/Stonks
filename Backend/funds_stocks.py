@@ -32,6 +32,57 @@ class FundsStocks(db.Model):
         return {"fund_id": self.fund_id, "stock_id": self.stock_id, "allocation": self.allocation}
 
 
+## Get current allocation of stocks in a fund ##
+@app.route("/current_funds_stocks/<int:fund_id>/<int:user_id>")
+def get_current_funds_stocks(fund_id,user_id):
+    fundsStocksList = db.session.query(FundsStocks.stock_id, FundsStocks.allocation)\
+        .filter(FundsStocks.fund_id == fund_id)\
+        .join(Stocks, FundsStocks.stock_id == Stocks.stock_id)\
+        .join(Funds, FundsStocks.fund_id == Funds.fund_id)\
+        .add_columns(Stocks.stock_symbol,Funds.fund_investment_amount)\
+        .all()
+
+    user_info = Users.query.filter_by(user_id=user_id).first()
+    user_stocks = getCustomerStocks(userID = user_info.user_acc_id,PIN = user_info.user_pin)['Depository']
+    print(user_stocks)
+    currentFundList = []
+    total_investment=0
+    for us in user_stocks:
+        currentFund = {}
+        for stock in fundsStocksList:
+            if stock[2] == us['symbol']:
+                total_investment += int(us['quantity'])*float(getStockPrice(us['symbol'])['Price'])
+
+    for us in user_stocks:
+        currentFund = {}
+        for stock in fundsStocksList:
+            if stock[2] == us['symbol']:
+                currentFund['symbol'] = us['symbol']
+                currentFund['volume'] = us['quantity']
+
+                currentFund['price'] = getStockPrice(us['symbol'])['Price']
+                currentFund['stock_name'] = getStockPrice(us['symbol'])['company']
+                allocation = int(us['quantity'])*float(getStockPrice(us['symbol'])['Price'])/total_investment
+                currentFund['allocation_value'] =  int(us['quantity'])*float(getStockPrice(us['symbol'])['Price'])
+                currentFund['allocation'] = round(allocation,2)
+                currentFundList.append(currentFund)
+    
+    
+
+    if len(fundsStocksList):
+        return jsonify(
+            {
+                "code": 200,
+                "data":currentFundList
+            }
+        ), 200
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no funds in the database."
+        }
+    ), 404
+
 #--Get all Funds settlement id--#
 @app.route("/funds_stocks")
 def get_all():

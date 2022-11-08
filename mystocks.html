@@ -34,6 +34,16 @@
                     <h1 id="header">Fund Overview</h1>
                 </div>
             </div>
+            
+            <div class="row my-3">
+                <div class="col-md-1"></div>
+                <div class="col-5 m-1">
+                <!-- Stocks Placeholder -->
+                    <div id="currentfundpiechart">
+                        <currentfundpiechart></currentfundpiechart>
+                    </div>
+                    
+                </div>
 
         <div class="row my-3">
             <div class="col-5 m-1">
@@ -44,9 +54,18 @@
            </div>
            <div class="col-6">
             <!-- Stocks Placeholder -->
-                <div id="fundstockhistory">
-                    <fundstockhistory></fundstockhistory>
+                    <div id="fundpiechart">
+                        <fundpiechart></fundpiechart>
+                    </div>
                 </div>
+            </div>
+            <div class="row my-3 ">
+                 <div class="col-6 m-1 mx-auto">    
+                    <div id="fundstockhistory">
+                        <fundstockhistory></fundstockhistory>
+                    </div>
+                 </div>
+                
             </div>
        </div>
     </div>
@@ -61,6 +80,9 @@
     <script src="Components/FundStockHistory/FundStockHistory.js"></script>
     <script src="Components/FundStockHistory/LineChart.js"></script>
     <script src="Components/Navbar/sidenav.js"></script>
+    <!-- Current Funds -->
+    <script src="Components/CurrentPieChart/CurrentFundPieChart.js"></script>
+    <script src="Components/CurrentPieChart/CurrentPieChart.js"></script>
 
     <script>
         document.getElementById( "sidenav" ).onmouseover = function(){
