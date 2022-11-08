@@ -18,10 +18,16 @@ fund.component('fundslist', {
         this.user_id = sessionStorage.getItem("user_id");
         console.log(this.user_id);
         
+        
     },
     computed: {
     },
     methods: {
+        // add to Session
+        addToSession(fund_id){
+            sessionStorage.setItem("fund_id",fund_id);
+            window.window.location.href = 'mystocks.html';
+        },
         getUsersFunds() {
             axios.get('http://localhost:5006/funds/user_funds/' + this.user_id)
                 .then(response => {
@@ -45,9 +51,10 @@ fund.component('fundslist', {
                         <p class="card-text"><b>Name:</b> {{fund.fund_name}}</p>
                         <p class="card-text"><b>Fund ID: </b> {{fund.fund_id}}</p>
                         <p class="card-text"><b>Initial Investment: </b>\$ {{fund.fund_investment_amount}}</p>
+                        <p class="card-text"><b>Fund Interval: </b> {{fund.fund_interval}}</p>
                         <div class="d-flex justify-content-between align-items-center"> 
                             <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary" :id="fund.fund_id" >View</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" @click="addToSession(fund.fund_id)" >View</button>
                             </div>
                         </div>
                     </div>

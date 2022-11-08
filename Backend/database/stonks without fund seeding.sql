@@ -27,13 +27,15 @@ CREATE TABLE IF NOT EXISTS `funds` (
   `fund_id` int(11) NOT NULL AUTO_INCREMENT,
   `fund_name` varchar(50) NOT NULL,
   `fund_investment_amount` float Not Null, 
+  `fund_interval` int Not Null,
   `fund_creation_date`	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`fund_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_investment_amount`,`fund_creation_date`) VALUES
--- (1, 'My First Fund', 3589,'2020-10-27 00:00:00'),
--- (2, 'My Second Fund', 3589,'2020-10-27 00:00:00');
+-- INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_investment_amount`,`fund_interval`,`fund_creation_date`) VALUES
+-- (1, 'My First Fund', 3589,30,'2020-10-27 00:00:00'),
+-- (2, 'My Second Fund', 3589,30,'2020-10-27 00:00:00'),
+-- (3, 'My First Fund',3333,30,'2020-10-27');
 
 
 -- Stocks available for trade with Stonks -- 
@@ -87,7 +89,8 @@ CREATE TABLE IF NOT EXISTS `users_funds` (
 
 -- INSERT INTO `users_funds` (`user_id`, `fund_id`) VALUES
 -- (1, 1),
--- (1, 2);
+-- (1, 2),
+-- (2,3);
 
 -- Stocks available in the marketplace this will act as the CDP -- 
 DROP TABLE IF EXISTS `marketplace`;
@@ -107,16 +110,23 @@ DROP TABLE IF EXISTS `marketplace_stocks`;
 CREATE TABLE IF NOT EXISTS `marketplace_stocks`(
 	`marketplace_id` int not Null,
     `stock_id` int NOT NULL,
-	`volume_in_market` int Not Null,
+	`vol` int Not Null,
     PRIMARY KEY (`marketplace_id`,`stock_id`),
     FOREIGN KEY (`marketplace_id`) REFERENCES marketplace(`marketplace_id`),
 	FOREIGN KEY (`stock_id`) REFERENCES stocks(`stock_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `marketplace_stocks` (`marketplace_id`, `stock_id`,`volume_in_market`) VALUES
+INSERT INTO `marketplace_stocks` (`marketplace_id`, `stock_id`,`vol`) VALUES
 (1,1,1000000),
 (1,2,1000000),
-(1,3,1000000);
+(1,3,1000000),
+(1,4,1000000),
+(1,5,1000000),
+(1,6,1000000),
+(1,7,1000000),
+(1,8,1000000),
+(1,9,1000000),
+(1,10,1000000);
 
 
 -- This will be an insert only table -- 

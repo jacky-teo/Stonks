@@ -20,12 +20,13 @@ class Funds(db.Model):
 
     fund_id = db.Column(db.Integer, primary_key=True)
     fund_name = db.Column(db.String(64), nullable=False)
-    fund_investment_amount = db.Column(db.Float(precision=2),nullable=False)
+    fund_investment_amount = db.Column(db.Float(precision=2), nullable=False)
+    fund_interval = db.Column(db.Integer, nullable=False)
     fund_creation_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
    
 
     def json(self):
-        return {"fund_id": self.fund_id, "fund_name": self.fund_name, "fund_investment_amount": self.fund_investment_amount, "fund_creation_date": self.fund_creation_date}
+        return {"fund_id": self.fund_id, "fund_name": self.fund_name, "fund_investment_amount": self.fund_investment_amount, "fund_interval":self.fund_interval, "fund_creation_date": self.fund_creation_date}
 
 #--Get all Funds--#
 @app.route("/funds")

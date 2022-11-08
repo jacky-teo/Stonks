@@ -27,14 +27,15 @@ CREATE TABLE IF NOT EXISTS `funds` (
   `fund_id` int(11) NOT NULL AUTO_INCREMENT,
   `fund_name` varchar(50) NOT NULL,
   `fund_investment_amount` float Not Null, 
+  `fund_interval` int Not Null,
   `fund_creation_date`	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`fund_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_investment_amount`,`fund_creation_date`) VALUES
-(1, 'My First Fund', 3589,'2020-10-27 00:00:00'),
-(2, 'My Second Fund', 3589,'2020-10-27 00:00:00'),
-(3, 'My First Fund',3333,'2020-10-27');
+INSERT INTO `funds` (`fund_id`, `fund_name`, `fund_investment_amount`,`fund_interval`,`fund_creation_date`) VALUES
+(1, 'My First Fund', 3589,30,'2020-10-27 00:00:00'),
+(2, 'My Second Fund', 3589,30,'2020-10-27 00:00:00'),
+(3, 'My First Fund',3333,30,'2020-10-27');
 
 
 -- Stocks available for trade with Stonks -- 
