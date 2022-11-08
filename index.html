@@ -28,14 +28,14 @@
     <div id ="sidenav">
         <sidenav></sidenav>
     </div>
-    <div class="container-fluid">
+    <div class="container-fluid" id="header">
         <div class="row justify-content-center mt-3">
             <div class="col-md-8 align-self-center">
-                <h1 class="text-center" id="header">Portfolio Overview</h1>
+                <h1 class="text-center header">Portfolio Overview</h1>
             </div>
         </div>
         <!-- Funds Placeholder -->
-        <div class="row justify-content-center mt-3">
+        <div class="row justify-content-center mt-3 header">
             <div class="col-md-8 align-self-center">
                 <div id="fundslist">
                     <fundslist></fundslist>
@@ -44,7 +44,7 @@
         </div>
         
         <!-- Unowned Stocks Placeholder -->
-        <div class="row justify-content-center mt-3">
+        <div class="row justify-content-center mt-3 header">
             <div class="col-md-8 align-self-center">
                 <div id="unownedstocks">
                     <unownedstocks></unownedstocks>
@@ -86,11 +86,11 @@
     let m = document.getElementById('sidenav').firstElementChild.className;
         if (m.includes('dark')){
             document.body.className = "dark";
-            document.getElementbyId("header").className = 'bg-dark';
+            document.getElementById("header").classList.add("dark");
         }
         else{
             document.body.className = "";
-            document.getElementbyId("header").className = 'bg-light';
+            document.getElementById("header").classList.remove("dark");
         }
     }
     </script>
