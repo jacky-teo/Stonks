@@ -12,6 +12,8 @@ updateFund.component("updatefunds", {
             showAllocationAlert: false,
             msgNameAlert: "❌ Fund name cannot be empty! ❌",
             showNameAlert: false,
+            msgIntervalAlert: "❌ Fund interval cannot be empty & must be a whole number! ❌",
+            showIntervalAlert: false,
             msgUpdateAlert: "",
             showUpdateAlert: false,
             beforeLabel: [],
@@ -40,6 +42,7 @@ updateFund.component("updatefunds", {
             "fund_name": fundDetails.fund_name,
             "fund_investment_amount": fundDetails.fund_investment_amount,
             "fund_creation_date": fundDetails.fund_creation_date,
+            "fund_interval": fundDetails.fund_interval,
             "allocations": fundStocks
         }
         this.after_fund = JSON.parse(JSON.stringify(this.before_fund))
@@ -52,7 +55,7 @@ updateFund.component("updatefunds", {
                 axios.get('http://localhost:5000/funds/' + this.fund_id)
                 .then((response) => {
                     var data = response.data.data
-                    // console.log("getFundDetails", data)
+                    console.log("getFundDetails", data)
                     resolve(data)
                 }).catch((error) => {
                     reject(error)
@@ -114,6 +117,9 @@ updateFund.component("updatefunds", {
         },
         validateName() {
             this.showNameAlert = this.after_fund.fund_name === ""
+        },
+        validateInterval() {
+            this.showIntervalAlert = this.after_fund.fund_interval === "" || !Number.isInteger(this.after_fund.fund_interval)
         },
         updateChart() {
             this.msgUpdateAlert = ""
@@ -224,10 +230,11 @@ updateFund.component("updatefunds", {
         async processUpdateFund() {
             var isUpdated = false
 
-            if (this.before_fund.fund_name !== this.after_fund.fund_name) {
+            if (this.before_fund.fund_name !== this.after_fund.fund_name || this.before_fund.fund_interval !== this.after_fund.fund_interval) {
                 var updatedFund = {
                     "fund_id": this.after_fund.fund_id,
-                    "fund_name": this.after_fund.fund_name
+                    "fund_name": this.after_fund.fund_name,
+                    "fund_interval": this.after_fund.fund_interval
                 }
                 var fundPromise = await this.callUpdateFund(updatedFund)
 
@@ -294,6 +301,9 @@ updateFund.component("updatefunds", {
         <div v-if="showNameAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>{{ msgNameAlert }}</strong>
         </div>
+        <div v-if="showIntervalAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{ msgIntervalAlert }}</strong>
+        </div>
         <div v-if="showAllocationAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>{{ msgAllocationAlert }}</strong>
         </div>
@@ -302,11 +312,11 @@ updateFund.component("updatefunds", {
                 Edit fund details / allocation
             </h4>
             <div class="form-floating mb-3 mt-3 ml-auto gx-1">
-                <input type="text" class="form-control" id="floatingName" placeholder="Enter New Fund Name Here" v-model="after_fund.fund_name" @keyup="validateName">
+                <input type="text" class="form-control" id="floatingName" placeholder="Enter New Fund Name Here" v-model="after_fund.fund_name" @change="validateName">
                 <label for="floatingName">Fund Name</label>
             </div>
             <div class="form-floating mb-3 mt-3 ml-auto gx-1">
-                <input type="number" class="form-control" id="floatingInterval" placeholder="7" v-model="after_fund.fund_interval">
+                <input type="number" step="1" class="form-control" id="floatingInterval" placeholder="Enter Fund Interval Here" v-model="after_fund.fund_interval" @change="validateInterval">
                 <label for="floatingInterval">Fund Interval (Days)</label>
             </div>
         </div>
@@ -340,7 +350,7 @@ updateFund.component("updatefunds", {
         </div>
         <div class="row">
             <div class="d-grid gap-2">
-                <button class="btn btn-success" type="button" :disabled="showNameAlert || showAllocationAlert || same" data-bs-toggle="modal" data-bs-target="#comfimationModal" @click="updateChart">Update Fund</button>
+                <button class="btn btn-success" type="button" :disabled="showNameAlert || showAllocationAlert || showIntervalAlert || same" data-bs-toggle="modal" data-bs-target="#comfimationModal" @click="updateChart">Update Fund</button>
             </div>
         </div>
 
@@ -348,7 +358,7 @@ updateFund.component("updatefunds", {
             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-4" id="confirmationModalLabel">Confirm changes?</h1>
+                        <h1 class="modal-title fs-4" id="confirmationModalLabel">Review & confirm changes?</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -368,7 +378,7 @@ updateFund.component("updatefunds", {
                                     <div class="card border-danger w-75 mx-auto">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ before_fund.fund_name }}</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">Inserts interval here</h6>
+                                            <h6 class="card-subtitle mb-2 text-muted">Rebalances every {{ before_fund.fund_interval }} day(s)</h6>
                                             <canvas id="beforeChart"></canvas>
                                         </div>
                                         <ul class="list-group list-group-flush">
@@ -394,7 +404,7 @@ updateFund.component("updatefunds", {
                                     <div class="card border-success w-75 mx-auto">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ after_fund.fund_name }}</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">Inserts interval here</h6>
+                                            <h6 class="card-subtitle mb-2 text-muted">Rebalances every {{ after_fund.fund_interval }} day(s)</h6>
                                             <canvas id="afterChart"></canvas>
                                         </div>
                                         <ul class="list-group list-group-flush">
