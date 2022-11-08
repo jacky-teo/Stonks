@@ -36,8 +36,7 @@ def get_funds_by_user_id(user_id):
     fundsList = db.session.query(UsersFunds.fund_id)\
         .filter(UsersFunds.user_id == user_id)\
         .join(Funds, UsersFunds.fund_id == Funds.fund_id)\
-        .add_columns(Funds.fund_name)\
-        .add_columns(Funds.fund_investment_amount)\
+        .add_columns(Funds.fund_name,Funds.fund_investment_amount,Funds.fund_interval)\
         .all()
     print(fundsList)
     if len(fundsList):
@@ -49,7 +48,7 @@ def get_funds_by_user_id(user_id):
                         "fund_id":fund[0], 
                         "fund_name":fund[1],
                         "fund_investment_amount":fund[2],
-                        
+                        "fund_interval":fund[3]
                     } for fund in fundsList
                 ]
             }

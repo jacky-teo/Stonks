@@ -32,7 +32,7 @@ def update_marketplace(stock_symbol,volume):
     stock_id = Stocks.query.filter_by(stock_symbol=stock_symbol).first().stock_id
     stock_details = getStockPrice(stock_symbol)
     print('details: ',stock_details)
-    stock_vol = stock_details['Volume']
+    # stock_vol = stock_details['Volume']
     marketplaceVolume = MarketplaceStocks.query.filter_by(stock_id=stock_id).first().vol
     print('marketplaceVolume: ',marketplaceVolume)
     newVol = marketplaceVolume - volume
