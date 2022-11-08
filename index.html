@@ -31,7 +31,7 @@
     <div class="container-fluid">
         <div class="row justify-content-center mt-3">
             <div class="col-md-8 align-self-center">
-                <h1 class="text-center">Portfolio Overview</h1>
+                <h1 class="text-center" id="header">Portfolio Overview</h1>
             </div>
         </div>
         <!-- Funds Placeholder -->
@@ -75,6 +75,25 @@
     <script src="Components/StocksList/UnownedStocks.js"></script>
     <script src="Components/NewFund/createfund.js"></script>
     <script src="Components/Navbar/sidenav.js"></script>
+
+    <script>
+    document.getElementById( "sidenav" ).onmouseover = function(){
+    fireEvent();
+    };
+
+    // This function will be called whenever mousedown event occurs
+    function fireEvent() {
+    let m = document.getElementById('sidenav').firstElementChild.className;
+        if (m.includes('dark')){
+            document.body.className = "dark";
+            document.getElementbyId("header").className = 'bg-dark';
+        }
+        else{
+            document.body.className = "";
+            document.getElementbyId("header").className = 'bg-light';
+        }
+    }
+    </script>
     
 </body>
 </body>
