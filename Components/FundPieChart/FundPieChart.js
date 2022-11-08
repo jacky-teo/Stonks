@@ -2,7 +2,7 @@ const fundpiechart = Vue.createApp({
 	data() {
 		return {
 			stockList: [],
-			stockTitle: ["Name", "Allocation", "Volume", "Price (SGD)", "Value (SGD)"],
+			stockTitle: ["Name", "Targetted Allocation"],
 			userId: 1,
 			fundId: 1,
 		};
@@ -28,7 +28,7 @@ const fundpiechart = Vue.createApp({
 	template: `
 	<div class="shadow-lg p-3 mb-5 bg-white rounded">
 
-		<h1 class="text-center mb-4">Fund {{userId}} Stocks</h1>
+		<h1 class="text-center mb-4">Targetted Fund {{userId}} Investment Value</h1>
 
 		<div class="row d-flex justify-content-center align-content-center">
 			<canvas id="piechart" style="width:100%;max-width:700px"></canvas>
@@ -46,9 +46,6 @@ const fundpiechart = Vue.createApp({
 				<tr v-for="(value, key) in stockList" v-bind:key="key">
 					<td>{{value.stock_name}}</td>
 					<td>{{value.allocation}}</td>
-					<td>{{value.volume}}</td>
-					<td>{{value.stock_price}}</td>
-					<td>{{(value.volume * value.stock_price).toFixed(2)}}</td>
 				</tr>
 				</tbody>
 			</table>
