@@ -57,8 +57,7 @@ const login = Vue.createApp({
                     this.processing = false;
                     this.$emit("authenticated", true, response.data.data);
                     sessionStorage.setItem("user_id", response.data.data.id );
-                    window.location.href = 'index.html'; // to update this link to dynamic.
-                    // window.location.href = 'http://localhost:80/stonks/index.html'; // to update this link to dynamic
+                    window.location.href = 'index.html';
                     
                 } else {
                     this.message = "Login Failed, Please try again!";
