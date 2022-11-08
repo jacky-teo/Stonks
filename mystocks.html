@@ -29,26 +29,29 @@
     </div>
     <div id="app">
         <div class="container-fluid">
-            <div class="row mt-3">
+            <div class="row justify-content-center mt-3">
                 <div class="col-md-8 align-self-center">
-                    <h1>Fund Overview</h1>
+                    <h1 class="text-center">Fund Overview</h1>
                 </div>
             </div>
+            
+            <div class="row my-3">
+                <div class="col-md-1"></div>
+                <div class="col-5 m-1">
+                <!-- Stocks Placeholder -->
+                    <div id="fundpiechart">
+                        <fundpiechart></fundpiechart>
+                    </div>
+                </div>
 
-        <div class="row my-3">
-            <div class="col-5 m-1">
-               <!-- Stocks Placeholder -->
-               <div id="fundpiechart">
-                    <fundpiechart></fundpiechart>
-                </div>
-           </div>
-           <div class="col-6">
+                <div class="col-5">
             <!-- Stocks Placeholder -->
-                <div id="fundstockhistory">
-                    <fundstockhistory></fundstockhistory>
+                    <div id="fundstockhistory">
+                        <fundstockhistory></fundstockhistory>
+                    </div>
                 </div>
             </div>
-       </div>
+        </div>
     </div>
 
     <script src="Dependencies/bootstrap.bundle.min.js"></script>

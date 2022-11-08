@@ -114,7 +114,7 @@ def get_stocks_by_fund_id(fund_id,user_id):
             stock = Stocks.query.filter_by(stock_id=fundStock.stock_id).first()
             fund = Funds.query.filter_by(fund_id=fund_id).first()
             for us in user_stocks:
-                price = getStockPrice(userID = user_info.user_acc_id,PIN = user_info.user_pin,symbol=us['symbol'] )['Price']
+                price = getStockPrice(symbol=us['symbol'] )['Price']
                 if us['symbol'] == stock.stock_symbol:
                     results.append({
                         "fund_id": fund.fund_id,

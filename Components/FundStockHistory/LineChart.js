@@ -1,11 +1,11 @@
-var stocksLabel = []
+var stocksLabels = []
 var stocksHistory = []
 
 var ctx = document.getElementById("linechart").getContext("2d");
 var myChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: stocksLabel,
+    labels: stocksLabels,
     datasets: stocksHistory
   },
   options: {
@@ -47,7 +47,7 @@ function getStockHistoryData() {
             let myDate = new Date(parseInt(stock_data.prices[i].date) * 1000);
             let dateStr = myDate.getFullYear() + "/" + (myDate.getMonth() + 1) + "/" + myDate.getDate()
             
-            stocksLabel.push(dateStr);
+            stocksLabels.push(dateStr);
             dates++;
           }
         }
