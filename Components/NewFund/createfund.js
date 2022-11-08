@@ -99,8 +99,8 @@ createFund.component("createfunds", {
         fundInfo: {
             fund_name: "",
             fund_investment_amount: 0,
+            fund_interval: 0
         },
-        fundInterval: 0,
         stocks: {},
         ourStockList: [],
         mainStockList: [],
@@ -128,7 +128,7 @@ createFund.component("createfunds", {
   methods: {
     async createFund() {
 
-      if(this.totalAllocations == 100 && this.fundInfo.fundName != "" && this.fundInfo.fund_investment_amount != 0 && this.fundInterval != 0) {
+      if(this.totalAllocations == 100 && this.fundInfo.fundName != "" && this.fundInfo.fund_investment_amount != 0 && this.fundInfo.fund_interval != 0) {
         // Set the spinner to turn on
         this.isCreatedFund = true
         this.isInProgress = true
@@ -183,7 +183,6 @@ createFund.component("createfunds", {
             })
             this.items = []
             this.fundInfo = []
-            this.fundInterval = 0
             // this.$router.push({name: 'funds'})
           }
         }
@@ -196,7 +195,7 @@ createFund.component("createfunds", {
         Swal.fire({icon: 'error',title: 'Note',text: 'Fund name is required'})
       } else if (this.fundInfo.fund_investment_amount == 0) {
         Swal.fire({icon: 'error',title: 'Note',text: 'Fund investment amount is required'})
-      } else if (this.fundInterval == 0) {
+      } else if (this.fundInfo.fund_interval == 0) {
         Swal.fire({icon: 'error',title: 'Note',text: 'Fund interval is required'})
       } 
     },
@@ -441,7 +440,7 @@ createFund.component("createfunds", {
             <div class="mt-3 mb-3 row">
               <label for="inputInterval" class="col-sm-2 col-form-label">Fund Interval (Days)</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" placeholder="30" max="1080" v-model="fundInterval">
+                <input type="text" class="form-control" placeholder="30" max="1080" v-model="fundInfo.fund_interval">
               </div>
             </div>
   
