@@ -1,0 +1,109 @@
+* {
+    color: white;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+#earth {
+    z-index: -10;
+    position: absolute;
+    top: 15vw;
+    left: -8vw;
+    width: 30vw;
+    height: auto;
+}
+
+.header {
+    font-weight: 700;
+    font-size: 55px;
+    line-height: 70px;
+    margin-top: 6vw;
+}
+
+.subtitle {
+    font-weight: 400;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.ddicon {
+    width: 150px;
+    margin: auto 10px;
+}
+
+.feature {
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    width: 500px;
+    height: 120px;
+}
+
+.feature img {
+    position: relative;
+    width: 20%;
+    height: auto;
+    top: -50%;
+}
+
+.feature p {
+    position: absolute;
+    align-self: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 400;
+    max-width: 90%;
+    line-height: 25px;
+    margin: auto;
+}
+
+#howItWorks {
+    background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.26) 10%, #000000 50%, #000000 80%, rgba(0, 0, 0, 0.26) 95%, rgba(0, 0, 0, 0.02) 100%);
+}
+
+#howItWorks img {
+    max-width: 20rem;
+    height: auto;
+}
+
+#howItWorks h3 {
+    font-size: 26px;
+}
+
+#howItWorks p {
+    font-size: 16px;
+}
+
+#and {
+    font-weight: 100;
+    font-size: 10vw;
+    font-style: italic;
+    color:rgba(255, 255, 255, 0.2)
+}
+
+.glowBtn {
+    text-decoration: none;
+    color: #ded3e6;
+    border: none;
+    font-weight: 500;
+    background: #CE90FF;
+    padding: 15px 40px;
+    border-radius: 4px;
+    font-weight: normal;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+}
+
+.glowBtn:hover {
+    color: white;
+    background: #9661bf;
+    box-shadow: 0 10px 30px rgba(145, 92, 182, .4);
+}
+
+
+.payment-modes {
+    width: 40%;
+}

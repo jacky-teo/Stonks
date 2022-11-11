@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stonks - Optimise your portfolio with a click!</title>
+
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <!--Fontawesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!--CSS styles-->
+    <link rel="stylesheet" href="Components/Misc/css/main.css">
+    <link rel="stylesheet" href="Components/Misc/css/home.css">
+
+
+    <!-- Typewriter JS -->
+    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        <div class="container-fluid px-0">
+            <nav class="navbar navbar-expand-lg pt-3 mx-3 sticky-top navbar-dark">
+                <a class="navbar-brand" href="home.html">Stonks</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#autotureToggler"
+                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="autotureToggler">
+                    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                        <li class="nav-item">
+                            <a type="button" class="btn btn-outline-light nav-button" href="login.html">Login</a>
+                        </li>
+                        <li class="nav-item ml-3">
+                            <a type="button" class="btn btn-outline-light nav-button" href="register.html">Sign up</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- home page starts here -->
+            <img id="earth" src="Components/Misc/img/planet_earth.png" class="img-fluid d-flex">
+            
+            <div id="title" class="container-md">
+                <!-- <div class="row"></div> -->
+                <div class="row d-flex mt-3 text-center justify-content-center">
+                    <h1 class="header w-75">
+                        Revolutionize investments by <br>
+                        <span id="typed"></span>
+                    </h1>
+                    <h2 class="midyellow subtitle">
+                        Fuss-free transactions to put your mind at ease.
+                    </h2>
+                </div>
+
+                <div class="row py-3 justify-content-center">
+                    <a href="">
+                        <img class="ddicon" src="Components/Misc/img/app_store.svg">
+                    </a>
+                    <a href="">
+                        <img class="ddicon" src="Components/Misc/img/gg_play.svg">
+                    </a>
+                </div>
+            </div>
+            
+            <div class="container-lg justify-content-center d-flex mt-5 px-0">
+                <div class="row feature justify-content-center text-center mx-4">
+                    <p class="subtitle">Fast & Secure</p>
+                    <img src="Components/Misc/img/gradient_star.svg">
+                </div>
+
+                <div class="row feature justify-content-center text-center mx-4">
+                    <p class="subtitle">Transparent & Efficient</p>
+                    <img src="Components/Misc/img/gradient_star.svg">
+                </div>
+
+                <div class="row feature justify-content-center text-center mx-4">
+                    <p class="subtitle">Low Commission Fees</p>
+                    <img src="Components/Misc/img/gradient_star.svg">
+                </div>
+            </div>
+
+            <div class="container-fluid my-5 mx-0" id="howItWorks">
+                <div class="container-md my-5">
+                    <div class="row w-50 pt-5">
+                        <h2 class="font-weight-bold pt-5">How it works</h2>
+                    </div>
+                    <div class="row d-flex pb-5">
+                        <div class="col-5">
+                            <img src="Components/Misc/img/girl_chatting.svg">
+                        </div>
+                        <div class="col">
+                            <div class="row py-3 my-3">
+                                <h3 class="col-2 midyellow">
+                                    1
+                                </h3>
+                                <div class="col">
+                                    <div class="row">
+                                        <h3>Sign up with us</h3>
+                                    </div>
+                                    <div class="row">
+                                        <p>With a few simple steps and easy on-boarding with tBanks account.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row py-3 my-3">
+                                <h3 class="col-2 midyellow">
+                                    2
+                                </h3>
+                                <div class="col">
+                                    <div class="row">
+                                        <h3>Create a fund</h3>
+                                    </div>
+                                    <div class="row">
+                                        <p>Start by planning your stock allocation by mapping with your desire goal and rebalance interval.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row py-3 my-3">
+                                <h3 class="col-2 midyellow">
+                                    3
+                                </h3>
+                                <div class="col">
+                                    <div class="row">
+                                        <h3>Receive smart alerts!</h3>
+                                    </div>
+                                    <div class="row">
+                                        <p>A smart alert will be sent when the rebalance occurs.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid my-5" id="match">
+                <div class="row d-flex my-3 text-center justify-content-center">
+                    <h2 class="font-weight-bold pt-5 pb-3">Who is it for?</h2>
+                </div>
+                <div class="row d-flex text-center justify-content-center">
+                    <div class="col-3">
+                        <img src="Components/Misc/img/client.svg" class="img-fluid">
+                        <h4 class="subtitle text-center py-4">Students/Working Adults</h4>
+                    </div>
+                    <div class="col-1 align-self-center text-center px-1">
+                        <p id="and">&</p>
+                    </div>
+                    <div class="col-3">
+                        <img src="Components/Misc/img/freelancer.svg" class="img-fluid">
+                        <h4 class="subtitle text-center py-4">Investors</h4>
+                    </div>
+                </div>
+                <div class="row d-flex text-center justify-content-center">
+                    <h2 class="font-weight-bold pt-3 pb-5">...anytime, anywhere</h2>
+                </div>
+                <div class="row d-flex my-3 text-center justify-content-center">
+                    <a type="button" class="glowBtn py-3" href="login.html">Get Started</a>
+                </div>
+            </div>
+
+            <div class="container-fluid my-5" id="payMthd">
+                <div class="row d-flex my-3 text-center justify-content-center">
+                    <h5 class="pt-5 pb-3">Only available at</h5>
+                    <!-- <h5 class=" py-5">Accepted payment modes</h5> -->
+                </div>
+                <!-- insert accepted payment modes here -->
+                <div class="row d-flex my-3 text-center justify-content-center">
+                    <div class="row justify-content-center text-center">
+                        <img class="payment-modes" src="Components/Misc/img/tbank.png">
+                    </div>
+                </div>
+            </div>
+            <!-- home page ends here -->
+
+            <hr>
+            <!--Footer-->
+            <div class="row mt-3 mb-5 mx-3">
+                <div class="col-md-8 my-4">
+                    <p class="logo-footer">Stonks</p>
+                    <p class="text-white">Get the latest updates</p>
+                    <div class="input-group mt-3 newsletter" style="width: 65%;">
+                        <input type="text" class="form-control" placeholder="Your Email" aria-label="Email"
+                            aria-describedby="button-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-warning font-weight-bold" type="button" id="button-addon2">Get
+                                notified</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2 my-4 py-1 justify-content-center footer-3">
+                    <p class="font-weight-bold text-white">Stonks</p>
+                    <p><a href="#">Explore</a></p>
+                    <p><a href="#">How It Works</a></p>
+                    <p><a href="#">Contact Us</a></p>
+                </div>
+
+                <div class="col-md-2 my-4 py-1 justify-content-center footer-2">
+                    <p class="font-weight-bold text-white">Support</p>
+                    <p><a href="#">Help Center</a></p>
+                    <p><a href="#">Terms of Service</a></p>
+                    <p><a href="#">Legal</a></p>
+                    <p><a href="#">Privacy Policy</a></p>
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div class="row my-5 mx-3">
+                <div class="col-md-4 justify-content-center">
+                    <p class="text-white">Stonks 2022 ©. All Rights Reserved</p>
+                </div>
+                <div class="col-md-4 d-flex justify-content-end text-white offset-md-4">
+                    <i class="fa-brands fa-instagram pr-3"></i>
+                    <i class="fa-brands fa-twitter pr-3"></i>
+                    <i class="fa-solid fa-paper-plane pr-3"></i>
+                    <i class="fa-brands fa-discord"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+        crossorigin="anonymous"></script>
+
+    
+    <script>
+        // Typewriter JS
+        var typed = document.getElementById('typed');
+
+        var typewriter = new Typewriter(typed, {
+            loop: true,
+            autoStart: true,
+            skipAddStyles: true,
+        });
+
+        typewriter.typeString('<span style="color:#CE90FF">Automating!</style>')
+            .changeDeleteSpeed(500)
+            .changeDelay(100)
+            .pauseFor(1000)
+            .deleteAll()
+            .typeString('<span style="color:#CE90FF">Customizing!</style>')
+            .pauseFor(1000)
+            .deleteAll()
+            .typeString('<span style="color:#CE90FF">Goal optimizing!</style')
+            .pauseFor(1000)
+            .start();
+    </script>
+</body>
+</html>
