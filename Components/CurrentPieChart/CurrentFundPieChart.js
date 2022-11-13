@@ -5,6 +5,7 @@ const currentfundpiechart = Vue.createApp({
 			stockTitle: ["Name", "Allocation", "Volume", "Price (SGD)", "Value (SGD)"],
 			userId: null,
 			fundId: null,
+			depositAmt: 0,
 		};
 	},
 	methods: {
@@ -31,11 +32,11 @@ const currentfundpiechart = Vue.createApp({
 					console.log(error);
 				});
 		},
-        placeMarketOrder(tBankUID, tBankPin, tBankSettlementAccount, allocation){
+        placeMarketOrder(tBankUID, tBankPin, tBankSettlementAccount, allocation, additionalInvest){
             var data = {
 				"userID": tBankUID,
 				"PIN": tBankPin, 
-				"additionalInvest": 0,
+				"additionalInvest": additionalInvest,
 				"allocation": JSON.stringify(allocation),
 				"settlement_account": tBankSettlementAccount,
 			}
@@ -105,7 +106,7 @@ const currentfundpiechart = Vue.createApp({
         },
         async rebalance(){
 			var user = await this.getUser();
-			var response = await this.placeMarketOrder(user.user_acc_id, user.user_pin, user.settlement_acc, this.allocations);
+			var response = await this.placeMarketOrder(user.user_acc_id, user.user_pin, user.settlement_acc, this.allocations, 0);
 			
 			if (response.data.code == 200) {
                 Swal.fire({icon: 'success',title: 'Success',text: 'Fund successfully rebalanced!'}).then((result) => {
@@ -116,7 +117,22 @@ const currentfundpiechart = Vue.createApp({
             } else {
                 Swal.fire({icon: 'error',title: 'Note',text: 'Something went wrong while rebalancing, please try again later.'})
             }
-        }
+        },
+		async deposit(){
+			console.log(this.depositAmt)
+			var user = await this.getUser();
+			var response = await this.placeMarketOrder(user.user_acc_id, user.user_pin, user.settlement_acc, this.allocations, this.depositAmt);
+			
+			if (response.data.code == 200) {
+                Swal.fire({icon: 'success',title: 'Success',text: 'Fund deposit & rebalance successful!'}).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "mystocks.html"
+                    }
+                })
+            } else {
+                Swal.fire({icon: 'error',title: 'Note',text: 'Something went wrong while depositing & rebalancing, please try again later.'})
+            }
+        },
   	},
     async created() {
         await this.getUsersFunds();
@@ -160,7 +176,8 @@ const currentfundpiechart = Vue.createApp({
 				</tr>
 				</tbody>
 			</table>
-            <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#comfimationModal">Rebalance Fund</button>
+            <button type="button" class="btn btn-success float-end mb-2" data-bs-toggle="modal" data-bs-target="#comfimationModal">Rebalance Fund</button>
+			<button type="button" class="btn btn-info float-end" data-bs-toggle="modal" data-bs-target="#depositModal">Deposit Money in Fund</button>
 		</div>
 
 		<div class="modal fade" id="comfimationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
@@ -183,6 +200,31 @@ const currentfundpiechart = Vue.createApp({
                 </div>
             </div>
         </div>
+
+		<div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4" id="confirmationModalLabel">Deposit via Linked Bank</h1>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row align-items-center">
+							<h5>Amount to deposit:</h5>
+							<div class="input-group mb-3">
+								<span class="input-group-text">$</span>
+								<input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" v-model="depositAmt">
+								<span class="input-group-text">.00</span>
+							</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" @click="deposit()">Deposit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 	</div>`
 })
