@@ -154,37 +154,34 @@ def create_fund_settlement():
 #get stocks by fund_id 
 @app.route("/fund_stocks/user/<int:fund_id>/<int:user_id>")
 def get_stocks_by_fund_id(fund_id,user_id):
-    fundStocks = FundsStocks.query.filter_by(fund_id=fund_id)
-    user_info = Users.query.filter_by(user_id=user_id).first()
-    user_stocks = getCustomerStocks(userID = user_info.user_acc_id,PIN = user_info.user_pin)['Depository']
-    print(user_stocks)
-    results =[]
+    fundStocks = db.session.query(FundsStocks.fund_id, FundsStocks.allocation)\
+        .filter(FundsStocks.fund_id == fund_id)\
+        .join(Stocks, FundsStocks.stock_id == Stocks.stock_id)\
+        .add_columns(Stocks.stock_symbol, Stocks.stock_name)
 
-    if fundStocks:
-        for fundStock in fundStocks:
-            stock = Stocks.query.filter_by(stock_id=fundStock.stock_id).first()
-            fund = Funds.query.filter_by(fund_id=fund_id).first()
-            for us in user_stocks:
-                price = getStockPrice(symbol=us['symbol'] )['Price']
-                if us['symbol'] == stock.stock_symbol:
-                    results.append({
-                        "fund_id": fund.fund_id,
-                        "fund_name": fund.fund_name,
-                        "stock_id": stock.stock_id,
-                        "stock_symbol": us['symbol'],
-                        "stock_name": stock.stock_name,
-                        "stock_price": price,
-                        "allocation": fundStock.allocation,
-                        "volume": us['quantity']
-                    })
+    results = []
+    for fundStock in fundStocks:
+        results.append({
+            "fund_id": fundStock[0],
+            "stock_symbol": fundStock[2],
+            "stock_name": fundStock[3],
+            "allocation": fundStock[1],
+    })
+    if (fundStocks):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "fundsSettlement": [result for result in results]
+                }
+            }
+    ),200 
     return jsonify(
         {
-            "code": 200,
-            "data": {
-                "fundsSettlement": [fundStock for fundStock in results]
-            }
+            "code": 404,
+            "message": "There are no stocks in fund."
         }
-    ),200   
+    ), 404
 
 # Drop all current allocations and update with new allocations
 @app.route("/funds_stocks/update_allocation", methods=['POST'])
@@ -220,6 +217,7 @@ def update_stocks_allocation():
             }
         }
     ), 201
+
 @app.route("/fund_stocks/stock_history/<fund_id>/<user_id>/<pin>")
 def get_stock_history(fund_id,user_id, pin):
 
@@ -245,7 +243,6 @@ def get_stock_history(fund_id,user_id, pin):
             "message": "There are no such stocks."
         }
     ), 404
-
 @app.errorhandler(404) 
 def invalid_route(e): 
     return "Invalid route."

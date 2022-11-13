@@ -249,3 +249,7 @@ body{
 body.dark{
     color:white;
 }
+
+.dark .card-body{
+    background-color: #3a3b3c;
+}
