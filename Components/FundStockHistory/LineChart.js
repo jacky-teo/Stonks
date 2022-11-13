@@ -31,7 +31,7 @@ function getStockHistoryData() {
   
     var userID = "Z312312";
     var PIN = "148986";
-    var fund_id = 1;
+    var fund_id = sessionStorage.getItem("fund_id");
     var numDays = 30;
   
     axios.get(`http://localhost:5001/fund_stocks/stock_history/${fund_id}/${userID}/${PIN}`).then(response => {
