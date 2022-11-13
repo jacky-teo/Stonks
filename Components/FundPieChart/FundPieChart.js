@@ -3,13 +3,17 @@ const fundpiechart = Vue.createApp({
 		return {
 			stockList: [],
 			stockTitle: ["Name", "Targetted Allocation"],
-			userId: 1,
-			fundId: 1,
+			userId: null,
+			fundId: null,
 		};
 	},
 	async created() {
 		await this.getUsersFunds();
 		console.log(this.stockList);
+        this.userId = sessionStorage.getItem("user_id");
+        this.fundId = sessionStorage.getItem("fund_id");
+        console.log(this.userId)
+        console.log(this.fundId)
 	},
 	methods: {
 		getUsersFunds() {
@@ -23,12 +27,15 @@ const fundpiechart = Vue.createApp({
 				.catch(error => {
 					console.log(error);
 				});
-		}
+		},
+        updateFund(){
+            window.location.href = "update-fund.html?fund_id=" + this.fundId;
+        }
   	},
 	template: `
 	<div class="shadow-lg p-3 mb-5 bg-white rounded">
 
-		<h1 class="text-center mb-4" style="color:black;">Targetted Fund {{userId}} Investment Value</h1>
+		<h1 class="text-center mb-4" style="color:black;">Targetted Fund {{fundId}} Investment Value</h1>
 
 		<div class="row d-flex justify-content-center align-content-center">
 			<canvas id="piechart" style="width:100%;max-width:700px"></canvas>
@@ -49,6 +56,7 @@ const fundpiechart = Vue.createApp({
 				</tr>
 				</tbody>
 			</table>
+            <button type="button" class="btn btn-primary float-end" @click="updateFund()">Update Fund Target Allocations</button>
 		</div>
 
 	</div>`

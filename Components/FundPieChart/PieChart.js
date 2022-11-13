@@ -1,10 +1,13 @@
 var stocksLabel = []
 var stocksData = []
 var backgroundColorList = []
-var userId = 1
-var fundId = 1 
+var userId = null
+var fundId = null
+
 
 async function donutChart() {
+    userId = sessionStorage.getItem("user_id");
+    fundId = sessionStorage.getItem("fund_id");
 	await getFundStocksData()
 
 new Chart("piechart", {
@@ -53,6 +56,8 @@ function dynamicColors() {
 async function getFundStocksData() {
 	// this.userId = sessionStorage.getItem("userId");
 	// this.fundId = sessionStorage.getItem("fundId");
+    userId = sessionStorage.getItem("user_id");
+    fundId = sessionStorage.getItem("fund_id");
   	let response = await axios
 	.get('http://localhost:5001/fund_stocks/user/' + this.fundId + '/' + this.userId)
 	.then((response) => {

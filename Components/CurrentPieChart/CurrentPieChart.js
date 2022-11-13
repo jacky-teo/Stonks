@@ -1,11 +1,14 @@
 var currentStocksLabel = []
 var currentStocksData = []
 var backgroundColorList = []
-var userId = 1
-var fundId = 1 
+var userId = null
+var fundId = null 
 
 async function currentDonutChart() {
+    userId = sessionStorage.getItem("user_id");
+    fundId = sessionStorage.getItem("fund_id");
 	await getFundStocksData()
+    
 
 new Chart("currentpiechart", {
 	type: "doughnut",

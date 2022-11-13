@@ -26,10 +26,13 @@ updateFund.component("updatefunds", {
     },
     created() {
         let urlParams = new URLSearchParams(window.location.search);
-    
+        
         if (urlParams.has("fund_id")) {
             this.fund_id = urlParams.get("fund_id");
         }
+        this.user_id = sessionStorage.getItem("user_id");
+        this.fund_id = sessionStorage.getItem("fund_id");
+
     },
     async mounted() {
         // this.user_id = sessionStorage.getItem("user_id");

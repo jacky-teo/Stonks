@@ -3,8 +3,8 @@ const currentfundpiechart = Vue.createApp({
 		return {
 			stockList: [],
 			stockTitle: ["Name", "Allocation", "Volume", "Price (SGD)", "Value (SGD)"],
-			userId: 1,
-			fundId: 1,
+			userId: null,
+			fundId: null,
 		};
 	},
 	methods: {
@@ -21,16 +21,21 @@ const currentfundpiechart = Vue.createApp({
 				.catch(error => {
 					console.log(error);
 				});
-		}
+		},
+        redirectBalance(){
+            window.location.href = "rebalance.html?fund_id=" + this.fundId;
+        }
   	},
     async created() {
         await this.getUsersFunds();
         console.log(this.stockList);
+        this.userId = sessionStorage.getItem("user_id");
+        this.fundId = sessionStorage.getItem("fund_id");
     },
 	template: `
 	<div class="shadow-lg p-3 mb-5 bg-white rounded">
 
-		<h1 class="text-center mb-4" style="color:black;">Current Fund {{userId}} Investment Value</h1>
+		<h1 class="text-center mb-4" style="color:black;">Current Fund {{fundId}} Investment Value</h1>
 
 		<div class="row d-flex justify-content-center align-content-center">
 			<canvas id="currentpiechart" style="width:100%;max-width:700px"></canvas>
@@ -54,6 +59,8 @@ const currentfundpiechart = Vue.createApp({
 				</tr>
 				</tbody>
 			</table>
+            <button type="button" class="btn btn-success float-end" @click="
+            redirectBalance()">Rebalance Fund</button>
 		</div>
 
 	</div>`
