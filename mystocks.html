@@ -85,25 +85,6 @@
     <!-- Current Funds -->
     <script src="Components/CurrentPieChart/CurrentFundPieChart.js"></script>
     <script src="Components/CurrentPieChart/CurrentPieChart.js"></script>
-
-    <!-- i used vanilla but we can comment it out if dw to use at all. -->
-    <script>
-        document.getElementById( "sidenav" ).onmouseover = function(){
-        fireEvent();
-        };
-    
-        // This function will be called whenever mousedown event occurs
-        function fireEvent() {
-        let m = document.getElementById('sidenav').firstElementChild.className;
-            if (m.includes('dark')){
-                document.body.className = "dark";
-            }
-            else{
-                document.body.className = "";
-            }
-        }
-        </script>
-
 </body>
 
 </html>

@@ -75,27 +75,6 @@
     <script src="Components/StocksList/UnownedStocks.js"></script>
     <script src="Components/NewFund/createfund.js"></script>
     <script src="Components/Navbar/sidenav.js"></script>
-
-    <script>
-    document.getElementById( "sidenav" ).onmouseover = function(){
-    fireEvent();
-    };
-
-    // This function will be called whenever mousedown event occurs
-    function fireEvent() {
-    let m = document.getElementById('sidenav').firstElementChild.className;
-        if (m.includes('dark')){
-            document.body.className = "dark";
-            document.getElementsByClassName("table")[1].classList.add("table-dark");
-        }
-        else{
-            document.body.className = "";
-            document.getElementsByClassName("table")[1].classList.remove("table-dark");
-            console.log(document.getElementsByClassName("table")[1].className)
-        }
-    }
-    </script>
-    
 </body>
 </body>
 
