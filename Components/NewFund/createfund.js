@@ -119,6 +119,7 @@ createFund.component("createfunds", {
     var loadTbankStocks = await this.getCustomerStocks(this.user_id)
     var loadStocksThatIsNotInCustomerStocks = await this.getListStocks(this.user_id)
     var loadMainStockList = await this.getOurStocks()
+    console.log(loadMainStockList)
     // var loadCustomerStocksInStonks = await this.updateStonksDb(this.user_id)
     loadTbankStocks && loadStocksThatIsNotInCustomerStocks && loadMainStockList ? this.tbankStock_loaded = true : console.log("Error loading stocks")
     this.tbank_stocks = loadTbankStocks
@@ -417,7 +418,7 @@ createFund.component("createfunds", {
                 </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="AddItem(this.stockSelected.stock_symbol, this.stockSelected.stock_name, this.stockSelected.stock_price.Price)">Add new stock</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="AddItem(this.stockSelected.stock_symbol, this.stockSelected.stock_name, this.stockSelected.stock_price)">Add new stock</button>
           </div>
         </div>
       </div>
