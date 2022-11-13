@@ -97,7 +97,6 @@ const currentfundpiechart = Vue.createApp({
                 axios.get('http://localhost:5005/user_info/user/' + this.userId)
                 .then((response) => {
                     var data = response.data.data
-                    console.log(data)
                     resolve(data)
                 }).catch((error) => {
                     reject(error)
@@ -119,7 +118,6 @@ const currentfundpiechart = Vue.createApp({
             }
         },
 		async deposit(){
-			console.log(this.depositAmt)
 			var user = await this.getUser();
 			var response = await this.placeMarketOrder(user.user_acc_id, user.user_pin, user.settlement_acc, this.allocations, this.depositAmt);
 			
