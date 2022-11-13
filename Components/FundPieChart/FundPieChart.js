@@ -9,20 +9,27 @@ const fundpiechart = Vue.createApp({
 	},
 	async created() {
 		await this.getUsersFunds();
-		console.log(this.stockList);
         this.userId = sessionStorage.getItem("user_id");
         this.fundId = sessionStorage.getItem("fund_id");
-        console.log(this.userId)
-        console.log(this.fundId)
 	},
 	methods: {
+		compare( a, b ) {
+			if ( a.stock_name < b.stock_name ){
+			  return -1;
+			}
+			if ( a.stock_name > b.stock_name ){
+			  return 1;
+			}
+			return 0;
+		},
 		getUsersFunds() {
-			// this.userId = sessionStorage.getItem("userId");
-			// this.fundId = sessionStorage.getItem("fundId");
+			this.userId = sessionStorage.getItem("user_id");
+            
+			this.fundId = sessionStorage.getItem("fund_id");
 			axios.get('http://localhost:5001/fund_stocks/user/' + this.fundId + '/' + this.userId)
 				.then(response => {
 					this.stockList = response.data.data.fundsSettlement;
-					console.log(response.data.data.stocks);
+					this.stockList.sort( this.compare );
 				})
 				.catch(error => {
 					console.log(error);

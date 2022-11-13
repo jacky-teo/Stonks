@@ -31,7 +31,6 @@ new Chart("currentpiechart", {
 				formatter: (value, ctx) => {
 					let sum = 0;
 					let currentArr = ctx.chart.data.datasets[0].data;
-                    console.log(currentArr)
                     currentArr.map(data => {
 						sum += data;
 					});
@@ -53,19 +52,30 @@ function dynamicColors() {
 	return "rgb(" + r + "," + g + "," + b + ")";
 };
 
+function compare( a, b ) {
+	if ( a.stock_name < b.stock_name ){
+		return -1;
+	}
+	if ( a.stock_name > b.stock_name ){
+		return 1;
+	}
+	return 0;
+}
+
+var dict = {};
 async function getFundStocksData() {
 	this.userId = sessionStorage.getItem("user_id");
 	this.fundId = sessionStorage.getItem("fund_id");
     await axios
         .get('http://localhost:5001/current_funds_stocks/' + this.fundId + '/' + this.userId)
 	.then((response) => {
-        console.log(response)
 		var currentData = response.data.data;
-        
+        currentData.sort( this.compare );
+
         for (stock in currentData){
             currentStocksData.push(currentData[stock]["allocation"]);
-            currentStocksLabel.push(currentData[stock]["stock_name"]);
-			backgroundColorList.push(dynamicColors());
+            this.currentStocksLabel.push(currentData[stock]["stock_name"]);
+			this.backgroundColorList.push(dynamicColors());
 		}
 	});
 }
