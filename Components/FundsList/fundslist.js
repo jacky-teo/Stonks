@@ -14,8 +14,8 @@ fund.component('fundslist', {
         };
     },
     async created() {
-        await this.getUsersFunds();
         this.user_id = sessionStorage.getItem("user_id");
+        await this.getUsersFunds();
         console.log(this.user_id);
         
         
