@@ -224,11 +224,14 @@ def get_stock_history(fund_id,user_id, pin):
     fundStocks = db.session.query(FundsStocks.fund_id)\
         .filter(FundsStocks.fund_id == fund_id)\
         .join(Stocks, FundsStocks.stock_id == Stocks.stock_id)\
-        .add_columns(Stocks.stock_symbol)
+        .add_columns(Stocks.stock_symbol)\
+        .add_columns(Stocks.stock_name)
+
     fund_stocks = {}
+    stock_names = {}
     for stock in fundStocks:
         fund_stocks.update(getStockHistory(userID = user_id,PIN = pin, symbol=stock.stock_symbol, numDays='30'))
-
+        fund_stocks[stock.stock_name] = fund_stocks.pop(stock.stock_symbol)
     if len(fund_stocks):
 
         return jsonify(
