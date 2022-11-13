@@ -35,7 +35,7 @@ sidenav.component("sidenav", {
             return{
             dashboardLink: "index.html",
             fundsLink: "create-fund.html",
-            myStocksLink: "mystocks.html",
+            // myStocksLink: "mystocks.html",
             }
         },
         toggleClass() {
@@ -73,12 +73,7 @@ sidenav.component("sidenav", {
                             <span class="text nav-text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-link">
-                        <a :href=links.myStocksLink>
-                            <i class='bx bx-wallet icon'></i>
-                            <span class="text nav-text">My Stocks</span>
-                        </a>
-                    </li>
+
                     <li class="nav-link">
                         <a :href=links.fundsLink>
                             <i class='bx bx-bar-chart-alt-2 icon'></i>
