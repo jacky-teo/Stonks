@@ -107,7 +107,7 @@ def process_rebalance(additional_invest, allocation, price, userID, PIN, settlem
 
             response_dict[symbol] = {
                 "response": response,
-                "fund_portfolio": fund_portfolio[symbol],
+                # "fund_portfolio": fund_portfolio[symbol],
             }
     
     # Output Statement - for debugging purpose
