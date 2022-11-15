@@ -78,8 +78,7 @@ def get_stocks_by_not_owned_customer_id(user_id):
             print(us)
             #Check if symbol in stonks database
             stock = Stocks.query.filter_by(stock_symbol=us['symbol']).first()
-            # stock_id = len(stocksList)+1
-            stock_id = None
+            stock_id = len(stocksList)+1
             if stock is None:
                 # Add stock to marketplacestocks
                 
@@ -89,14 +88,13 @@ def get_stocks_by_not_owned_customer_id(user_id):
                 stock_details = getStockPrice(us['symbol'])
                 print(stock_details['company'])
                 new_stock = Stocks(stock_id = stock_id,stock_symbol = us['symbol'],stock_name = stock_details['company'])
-                print(new_stock)
                 db.session.add(new_stock)
                 db.session.commit()
-                stock_id = len(stocksList)+1
+
+                
                 marketplace_stocks = MarketplaceStocks(1,stock_id,1000000)
                 db.session.add(marketplace_stocks)
                 db.session.commit()
-                print(marketplace_stocks)
 
         for us in user_stocks['Depository']:
             usList.append(us['symbol'])
